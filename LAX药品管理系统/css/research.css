@@ -1,0 +1,70 @@
+body{
+    background-image: ;
+}
+.col2{
+    width: 930px;
+    /*float: right;*/
+    height: 100px;
+}
+.mt{
+    height: 43px;
+    margin-bottom: 40px;
+    border-bottom: 2px solid grey;
+    line-height: 41px;
+}
+.mt h2{
+    background: url("../imgs/col2-mt.png") no-repeat left center;
+    padding-left: 38px;
+}
+.inputBox{
+    margin-bottom: 20px;
+    height: 40px;
+}
+.inputBox label{
+    float: left;
+    margin: 0;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    text-align: right;
+}
+.inputBox input{
+    float: left;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid #CCC;
+    margin-left: 22px;
+}
+.selectBox{
+    margin-bottom: 20px;
+    height: 40px;
+}
+.selectBox label{
+    float: left;
+    width: 80px;
+    margin: 0 20px;
+    height: 40px;
+    line-height: 40px;
+    text-align: right;
+}
+.selectBox select{
+    float: left;
+    height: 40px;
+    padding-left: 10px;
+    border: 1px solid #CCC;
+}
+.selectBox .search_submit{
+    height: 40px;
+    line-height: 40px;
+    background-color: dodgerblue;
+    width: 150px;
+    margin: 0 20px;
+    border: none;
+    outline: none;
+}
+table{
+    text-align: center;
+}
+.tHeader th{
+    text-align: center;
+}

@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+table{
+    margin-left: 1px;
+    text-align: center;
+}
+.page-header{
+    /*margin: 40px 20px 20px;*/
+}
+.tHeader{
+    background-color: rgb(239,239,239);
+}
+.tHeader th{
+    text-align: center;
+}
+h3{
+    color: dimgrey;
+}
+.table-hover>tbody>tr:hover{
+    background-color:rgba(239,239,239,0.3);
+}
+button{
+    outline-style: none;
+    border: none;
+}
+button:focus,.btn:focus,.btn:active:focus,.btn.active:focus,.btn:active.focus,.btn.active.focus{
+    outline: none;
+    box-shadow: none;
+}
+input[type='checkbox']{
+    margin: 5px;
+}
+#myModalLabel{
+    text-align: center;
+}
+#formContent .row {
+    padding:3px;
+}

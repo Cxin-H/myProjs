@@ -1,0 +1,135 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+html,body{
+    height: 100%;
+}
+#main{
+    height: 570px;
+}
+/*第一行导航*/
+nav{
+    position: relative;
+    background: rgb(13,132,140);
+    height: 115px;
+}
+/*第一行导航图标*/
+nav #biaTi{
+    position: absolute;
+    width: 540px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+#biaTi div{
+    clear: both;
+}
+#biaTi img{
+    float: left;
+    height: 115px;
+}
+/*第一行导航标题*/
+nav h1{
+    width: 400px;
+    height: 56px;
+    text-align: center;
+    color: white;
+    font-size: 50px;
+    float: right;
+    line-height: 56px;
+}
+/*第二行导航*/
+.topNav .col-lg-12{
+    height: 65px;
+    background: rgba(13,132,140,0.8);
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+#tiShi{
+    overflow: hidden;
+}
+/*欢迎*/
+#tiShi p:first-child{
+    float: left;
+    line-height: 65px;
+    color: white;
+    font-size: 20px;
+    width: 200px;
+    margin-left: 30px;
+}
+/*退出按钮*/
+#tiShi p:nth-child(2){
+    float: right;
+    line-height: 65px;
+    color: white;
+    font-size: 20px;
+    width: 55px;
+}
+/*日期*/
+#tiShi p:nth-child(3){
+    float: right;
+    line-height: 65px;
+    color: white;
+    font-size: 20px;
+    width: 300px;
+
+}
+/*左侧菜单*/
+#left ul{
+    height: 560px;
+    background: rgb(239,239,239);
+    width: 160px;
+
+}
+/*一级菜单*/
+li{
+    width:160px ;
+    height:50px;
+    background: rgb(239,239,239);
+    font-size: 16px;
+    text-align: left;
+    line-height: 50px;
+    overflow: hidden;
+    border-bottom:1px solid rgba(0,0,0,0.2);
+}
+/*二级菜单*/
+li>.dropDown>div{
+    text-align: center;
+    border-top:1px solid rgba(0,0,0,0.2);
+
+}
+.firstNav:hover{
+    background: rgba(0, 0, 0,0.2);
+}
+#erJi div:hover{
+    background-color: rgba(13,132,140,0.2);
+}
+#erJi span{
+    color: #00a0af;
+    font-weight: bold;
+    padding-right: 10px;
+}
+    /*给li添加的样式*/
+.actives{
+    height: auto;
+}
+.firstNav{
+    padding-left: 20px;
+}
+.firstNav>span{
+    color: #00a0af;
+    font-weight: bold;
+    font-size: 25px;
+    padding-right: 10px;
+}
+#left,#right{
+    float: left;
+}
+/*#left ul>li:last-child,#left ul>li:last-child img {
+    height: 50px;
+}*/
+#right{
+    height: 560px;
+    width: calc(100% - 160px);
+}

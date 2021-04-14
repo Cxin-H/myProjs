@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap 101 Template</title>
+
+    <link rel="stylesheet" href="../css/research.css"/>
+
+    <!-- Bootstrap -->
+    <link href="../util/bootstarp/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div></div>
+    <div class="col2 container-fluid">
+        <div class="mt relative">
+            <h2>药品库存查询</h2>
+            <em></em>
+        </div>
+        <div>
+            <!--<div>
+                <form action method="post">
+                    <div class="inputBox clearfix">
+
+                        <label>药品名称</label>
+                        <input type="text" name="name" id="keyword"/>
+                        <label>生产厂家</label>
+                        <input type="text" name="company" class="mr" value/>
+
+                    </div>
+                    <div class="selectBox clearfix">
+                        <label>选择类别</label>
+                        <select name="lb" id="">
+                            <option value>请选择类别</option>
+                            <option value="1">抗焦虑药和镇静催眠药</option>
+                            <option value="2">抗抑郁药</option>
+                            <option value="3">抗精神病药</option>
+                            <option value="4">神经系统用药物</option>
+                        </select>
+                        <label>医保类别</label>
+                        <select name="lx" >
+                            <option value>请选择医保类型</option>
+                            <option value="乙">乙</option>
+                            <option value="甲">甲</option>
+                            <option value="丙">丙</option>
+                        </select>
+                        <input type="submit" value="点击搜索" class="search_submit"/>
+                    </div>
+                </form>
+            </div>-->
+            <label>药品名称</label>
+            <input type="text" name="name" id="keyword"/>
+            <input type="submit" value="点击搜索" id="search_submit"/>
+            <label>选择类别</label>
+            <select name="lb" id="leiBie">
+                <option value>请选择类别</option>
+                <option value="抗焦虑药和镇静催眠药">抗焦虑药和镇静催眠药</option>
+                <option value="抗抑郁药">抗抑郁药</option>
+                <option value="抗精神病药">抗精神病药</option>
+                <option value="神经系统用药物">神经系统用药物</option>
+            </select>
+
+            <input type="submit" value="点击搜索" id="search_sm"/>
+            <table class="table table-striped" id="theader">
+                <thead class="tHeader">
+                <tr>
+                    <th>序号</th>
+                    <th>类别</th>
+                    <th>药品名称</th>
+                    <th>规格</th>
+                    <th>生产厂家</th>
+                    <th>参考价格</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>抗焦虑药和镇静催眠药</td>
+                        <td>丁螺环酮片</td>
+                        <td>5mg*60片</td>
+                        <td>山东信谊制药有限公司</td>
+                        <td>42.12</td>
+                        <td>精神二类</td>
+                        <td>
+                            <a class="btn btn-default" href="#" role="button">修改</a>
+                            <button class="btn btn-default del">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>抗焦虑药和镇静催眠药</td>
+                        <td>劳拉西泮片[罗拉]</td>
+                        <td>0.5mg*20片</td>
+                        <td>泰国大西洋制药有限公司</td>
+                        <td>7.6</td>
+                        <td>精神二类</td>
+                        <td>
+                            <a class="btn btn-default" href="#" role="button">修改</a>
+                            <button class="btn btn-default del">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>抗焦虑药和镇静催眠药</td>
+                        <td>劳拉西泮片</td>
+                        <td>1mg*24片</td>
+                        <td>山东信谊制药有限公司</td>
+                        <td>14.96</td>
+                        <td>精神二类</td>
+                        <td>
+                            <a class="btn btn-default" href="#" role="button">修改</a>
+                            <button class="btn btn-default del">删除</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>抗抑郁药</td>
+                        <td>阿米替林片</td>
+                        <td>25mg*100片</td>
+                        <td>湖南洞庭药业股份有限公司</td>
+                        <td>19.84</td>
+                        <td>精神二类</td>
+                        <td>
+                            <a class="btn btn-default" href="#" role="button">修改</a>
+                            <button class="btn btn-default del">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="8">
+                        <ul class="pagination">
+                            <li class="prePage">
+                                <a href="#" class="prePage" aria-label="Previous">
+                                    <span aria-hidden="true">上一页</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="pagination" id="ul">
+
+                        </ul>
+                        <ul class="pagination">
+                            <li class="nextPage">
+                                <a href="#" class="nextPage" aria-label="Next">
+                                    <span aria-hidden="true">下一页</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../util/jQuery/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../util/bootstarp/js/bootstrap.min.js"></script>
+    <script src="../js/research.js"></script>
+</body>
+</html>

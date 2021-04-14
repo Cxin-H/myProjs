@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>药品出库管理</title>
+
+    <!-- Bootstrap -->
+    <link href="../util/bootstarp/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="../css/getin_style.css">
+</head>
+<body>
+
+<div class="container-fluid">
+    <!--    头部-->
+    <div class="header">药品出库管理</div>
+    <div class="hr"></div>
+    <!--    表格-->
+    <table class="table table-bordered">
+        <!--        表格头部-->
+        <thead>
+        <tr class="operation">
+            <td colspan="12">
+                <button class="btn btn-default" id="jilu" type="button">
+                    出库记录
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <th>序号</th>
+            <th>名称&规格</th>
+            <th>类别</th>
+            <th>批号</th>
+            <th>产地</th>
+            <th>生产厂家</th>
+            <th>有效期</th>
+            <th>数量</th>
+            <th>单价（元）</th>
+            <th>总价（元）</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <!--        表格身体-->
+        <tbody id="dataRender">
+
+        </tbody>
+    </table>
+    <!--        分页-->
+    <nav aria-label="Page navigation" id="fenye">
+        <ul class="pagination">
+            <li class="prePage" id="pre">
+                <a href="#" class="prePage" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <!--<li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>-->
+            <li class="nextPage" id="next">
+                <a href="#" class="nextPage" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+<!--    出库记录模态框-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="jilu_pop">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">出库记录</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <!--        表格头部-->
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>名称&规格</th>
+                            <th>类别</th>
+                            <th>批号</th>
+                            <th>产地</th>
+                            <th>生产厂家</th>
+                            <th>有效期</th>
+                            <th>数量</th>
+                            <th>单价（元）</th>
+                            <th>总价（元）</th>
+                        </tr>
+                        </thead>
+                        <!--        表格身体-->
+                        <tbody id="jiluRender">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+    <!--    添加成功提示框-->
+    <div class="alert alert-success alert-dismissible hide" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;
+        </span></button>
+        <strong>Well done!</strong> 操作成功！
+    </div>
+</div>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="../util/jQuery/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="../util/bootstarp/js/bootstrap.min.js"></script>
+<script src="../js/getout_fun.js"></script>
+<script src="../js/fenye.js"></script>
+</body>
+</html>

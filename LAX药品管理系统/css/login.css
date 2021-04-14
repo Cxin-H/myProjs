@@ -1,0 +1,39 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+body{
+    background-image: url("../imgs/background.jpg");
+    width: 100%;
+    height: 600px;
+    position: relative;
+}
+#background{
+    width: 600px;
+    height: 300px;
+    background: #b1f3ff;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+
+}
+#login{
+    width: 400px;
+    height: 200px;
+    margin: auto;
+}
+#background>p{
+    padding: 20px;
+    font-size: 40px;
+}
+#login button{
+    margin: 10px 10px;
+}
+#login span{
+    font-size: 20px;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>注册</title>
+    <link rel="stylesheet" href="../util/bootstarp/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../css/register.css"/>
+</head>
+<body>
+<div id="background">
+    <p>账号注册</p>
+    <div id="login">
+        <div class="input-group">
+            <span class="glyphicon glyphicon-user input-group-addon"></span>
+            <input type="text" class="form-control" placeholder="请输入用户名" id="uname">
+        </div>
+        <div class="input-group">
+            <span class="glyphicon glyphicon-lock input-group-addon"></span>
+            <input type="password" class="form-control" placeholder="请输入6-12位密码" id="pwd">
+        </div>
+        <div class="input-group">
+            <span class="glyphicon glyphicon-lock input-group-addon"></span>
+            <input type="password" class="form-control" placeholder="请再次输入密码" id="rePwd">
+        </div>
+        <button type="button" class="btn btn-primary btn-lg" id="btnRegister">立即注册</button>
+        <button type="button" class="btn btn-primary btn-lg" id="btnBack">返回登录</button>
+    </div>
+</div>
+<script src="../util/jQuery/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+<script src="../util/bootstarp/js/bootstrap.min.js"></script>
+<script src="../js/register.js"></script>
+</body>
+</html>
