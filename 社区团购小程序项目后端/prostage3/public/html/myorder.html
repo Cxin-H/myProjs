@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>个人中心 订单管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="../comm/bootstrap-4.4.1-dist/css/bootstrap.css">
+		<link rel="stylesheet" href="../comm/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="../css/header.css">
+		<link rel="stylesheet" href="../css/footer.css">
+		<style>
+			a:hover{
+				text-decoration: none;
+			}
+			a:focus,a:active{
+				outline: 0;
+			}
+			/* 支付密码输入框效果 */
+			.pwd-box{
+				width: 248px;
+				height: 42px;
+				border: 1px solid gray;
+				float: left;
+				line-height: 40px;
+				
+			}
+			.pwd-box > div:last-child > input{
+				border: 0;
+			}
+			.pwd-div{
+				width: 40px;
+				height: 40px;
+				border: 1 solid #007BFF;
+				/* margin: 2px; */
+				float: left;
+				padding-bottom: 2px;
+				margin-right: 1px;
+			}
+			.pwd-input{
+				width: 40px;
+				height: 38px;
+				border-width: 0;
+				border-right: 1px dashed darkgray;
+				text-align: center;
+			}
+			.pwd-input:focus{
+				border-right: 0px ;
+			}
+			/* 订单图片大小 */
+			.money-icon{
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				border-radius: 10px;
+				text-align: center;
+				line-height: 20px;
+				background-color: orange;
+				color: white;
+				font-size: 0.7rem;
+				font-style: normal;
+			}
+			.zhifu-img{
+				height: 80px;
+			}
+			/* 选择地址 */
+			.check-address{
+				position: absolute;
+				right: 10px;
+				top: 10px;
+			}
+			.order-detail{
+				font-size: 0.8rem;
+			}
+			.address-item{
+				font-size: 0.8rem;
+				height: 150;
+			}
+			.border-circle-no{
+				border-radius: 0;
+			}
+			.mouse-style{
+				cursor: pointer;
+			}
+			/* 修改导航中的背景透明效果 */
+			.bg-header:hover, body:hover .bg-header,.bg-header {
+				background-color: #fff;
+			}	
+			/* 关于我们 添加背景图片 */
+			.bg-img{
+				background-image: url(../img/about/aboutour.jpg);
+				background-size: cover;
+				background-repeat: no-repeat;
+				/* background-position: right center; */
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 头部导航 -->
+		<header class="container-fluid bg-header">
+			<div class="row">
+				<div class="col-lg-2 header-logo">
+					<a href="../../view/index.html">
+						<img src="../img/logo.png">
+					</a>
+				</div>
+				<nav class="col-lg-9 header-menu">
+					<ul>
+						<li>
+							<a href="../../view/index.html">首页</a>
+						</li>
+						<li>
+							<a href="aviator.html">私人订制</a>
+						</li>
+						<li>
+							<a href="javascript:void()">太阳镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li>女式系列：</li>
+									<li><a href="../../view/modern-lady.html">摩登女郎</a></li>
+									<li><a href="pure-lady.html">清新淑女</a></li>
+									<li><a href="indolent-goddess.html">慵懒女神</a></li>
+								</ul>
+								<ul>
+									<li>男式系列：</li>
+									<li><a href="city-man.html">都市雅痞</a></li>
+									<li><a href="fashion-man.html">时尚先生</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">光学镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="manjd.html">男式经典</a></li>
+									<li><a href="ladyjd.html">女式经典</a></li>
+								</ul>
+
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">专属服务</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="aftersales.html">售后服务</a></li>
+									<li><a href="infomation.html">时尚资讯</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">走进迷洛</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="progress.html">品牌故事</a></li>
+									<li><a href="about.html">关于我们</a></li>
+									<li><a href="design.html">设计概念</a></li>
+									<li><a href="technology.html">生产工艺</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<ul class="col-lg-1 header-user">
+					<li>
+						<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>登录</a>
+					</li>
+					<li>
+						<a href="../../view/shoppingcart.html">
+							<i class="fa fa-shopping-cart"></i>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</header>
+		<!-- 使用bootstrap 的模态框 -->
+		<div class="modal" tabindex="-1" role="dialog" id="loginModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" id="loginContent">
+					<div class="modal-header login-modal-header">
+						<h5 class="modal-title">登录Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript:void(0)" class="float-left"   onclick="_toggleModal('registerContent')">没有帐号</a>
+								<a href="javascript:void(0)" class="float-right"   onclick="_toggleModal('forgetPwdContent')">忘记密码</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"  data-dismiss="modal">登录</button>
+					</div>
+				</div>
+				<div class="modal-content" id="registerContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">加入Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"   onclick="_toggleModal('loginContent')">注册</button>
+					</div>
+				</div>
+				<div class="modal-content" id="forgetPwdContent"  style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">重置密码</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">提交</button>
+					</div>
+				</div>
+		
+			</div>
+		</div>
+		<!-- 未登录时，显示的内容 -->
+		<div class="container mt-5 pt-5" style="min-height: 576px; display: none;">
+			<div class="row">
+				<div class="col-lg-12">
+					<p class="h3 mt-5">要先登录才能进到这里面哟...</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 p-5 text-warning fa-2x">
+					要不人家很困扰的...
+
+					请登录后刷新再来吧 ：）
+
+					或者去首页看看...
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-3 p-5 text-right">
+					<a class="btn btn-outline-info" href="../../view/index.html">去首页</a>
+				</div>
+			</div>
+		</div>
+		<!-- 登录时，显示的内容 -->
+		<div class="container-fluid mt-5 pt-5">
+			<div class="row">
+				<div class="col-lg-2 position-fixed text-center overflow-auto" style="height: 570px;">
+					<div>
+						<img class="img-thumbnail" src="../img/宋承宪4-1600-2.jpg" alt="">
+					</div>
+					<p class="h6 mt-3"><span>猪头！</span>你好</p>
+					<div>
+						<button type="button" class="btn btn-outline-dark btn-sm">修改密码</button>
+					</div>
+					<!-- 下面菜单的跳转，在页面内通过a的锚点来实现，模拟出数据的更新效果 -->
+					<div class="text-center border border-secondary mt-3">
+						<a href="#userinfo" class="fa fa-user btn-outline-dark btn-block pt-2 pb-2">
+							个人资料
+						</a>
+					</div>
+					<div class="text-center border border-secondary mt-3">
+						<a href="#myaddress" class="fa fa-map-marker btn-outline-dark btn-block pt-2 pb-2">
+							收货地址
+						</a>
+					</div>
+					<div class="text-center border border-secondary mt-3">
+						<a href="#myorder" class="fa fa-list btn-outline-dark btn-block pt-2 pb-2">
+							我的订单
+						</a>
+					</div>
+					<div class="text-center border border-secondary mt-3">
+						<a href="#myfav" class="fa fa-star-o btn-outline-dark btn-block pt-2 pb-2">
+							我的收藏
+						</a>
+					</div>
+					<div class="text-center border border-secondary mt-3">
+						<a href="#myintegral" class="fa fa-usd btn-outline-dark btn-block pt-2 pb-2">
+							我的积分
+						</a>
+					</div>
+					<div class="text-center mt-3">
+						<a href="#myfootprint" class="fa fa-car btn-outline-dark btn-block pt-2 pb-2  border border-secondary">
+							我的足迹
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-10 offset-2 border-left">
+					<!-- 我的订单 -->
+					<div class="row">
+						<div class="col-lg-12">
+							<a name="myorder"></a>
+							<p class="h6 mt-3 pb-2 border-bottom" style="padding-top: 100px;">我的订单</p>
+						</div>
+						<div class="col-lg-12 ">
+							<div class="row">
+								<div class="col-lg-4">
+									<strong>商品</strong>
+								</div>
+								<div class="col-lg-1">
+									<strong>颜色</strong>
+								</div>
+								<div class="col-lg-1">
+									<strong>价格</strong>
+								</div>
+								<div class="col-lg-1">
+									<strong>数量</strong>
+								</div>
+								<div class="col-lg-1">
+									<strong>合计</strong>
+								</div>
+								<div class="col-lg-3">
+									<select name="paystate" id="paystate">
+										<option value="0">已付款</option>
+										<option value="1">待付款</option>
+										<option value="2">交易成功</option>
+										<option value="3">已取消</option>
+										<option value="4">全部</option>
+									</select>
+								</div>
+								<!-- <div class="col-lg-1">
+									<strong>更多</strong>
+								</div> -->
+							</div>
+						</div>
+						<div class="col-lg-12"  style="height: 580px;">
+							<div class="bg-light p-3 ">
+								<strong>2018/5/8</strong>
+								<span class="ml-5">订单号：</span>
+								<span>7009</span>
+								<!-- 最简单的表示 订单啦 -->
+							</div>
+							<div class="row border border-top-0 align-items-center ml-0 mr-0">
+								<div class="col-lg-4">
+									<span>J6673</span>
+									<img src="../img/mdnl/J6673/J6673.jpg" height="80" alt="">
+									<span>摩登女郎</span>
+								</div>
+								<div class="col-lg-1">
+									黑色
+								</div>
+								<div class="col-lg-1">
+									<i class="fa fa-rmb">1300</i>
+								</div>
+								<div class="col-lg-1">
+									1
+								</div>
+								<div class="col-lg-1">
+									<i class="fa fa-rmb">1300</i>
+								</div>
+								<div class="col-lg-3">
+									<sapn>待付款</sapn>
+									<a href="myorder.html#myorder">取消订单</a>
+								</div>
+								<!-- <div class="col-lg-1">
+									
+								</div> -->
+							</div>
+						</div>
+					</div>
+					<!-- 个人资料 -->
+					<div class="row mt-5 pt-5">
+						<div class="col-lg-12" >
+							<a name="userinfo"></a>
+							<p class="h6 mt-3  pb-2 border-bottom"  style="padding-top: 100px;">个人资料</p>
+						</div>
+						<div class="col-lg-12"  style="height: 500px;">
+							<form>
+								<div class="form-group row">
+									<label for="usernick" class="col-lg-2 text-right col-form-label col-form-label-sm">昵称</label>
+									<div class="col-lg-8">
+										<input type="text" class="form-control " placeholder="用户昵称" value="张三" id="usernick">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="userPhoto" class="col-md-2 text-right col-form-label">用户头像</label>
+									<div class="col-md-8">
+										<input type="file" class="form-control" placeholder="请选择一个本地文件" id="userPhoto">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="userbirthday" class="col-md-2 text-right col-form-label">出生日期</label>
+									<div class="col-lg-8">
+										<input type="datetime-local" class="form-control" id="userbirthday">
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-lg-2 text-right">性别</div>
+									<div class="col-lg-8">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="sex" id="sex1" value="男" checked>
+											<label class="form-check-label" for="sex1">
+												男
+											</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="sex" id="sex2" value="女" checked>
+											<label class="form-check-label" for="sex2">
+												女
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="usertel" class="col-md-2 text-right col-form-label">电话</label>
+									<div class="col-lg-8">
+										<input type="tel" class="form-control" id="usertel">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="usermail" class="col-md-2 text-right col-form-label">电子邮箱</label>
+									<div class="col-lg-8">
+										<input type="email" class="form-control" id="usermail">
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-lg-4 offset-2 text-right">
+										<button type="button" class="btn btn-dark">提交</button>
+									</div>
+									<div class="col-lg-4">
+										<button type="button" class="btn btn-secondary">取消</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- 收货地址 -->
+					<div class="row pt-5">
+						<div class="col-lg-12">
+							<a name="myaddress"></a>
+							<p class="h6b  mt-3  pb-2 border-bottom"  style="padding-top: 100px;">收货地址</p>
+						</div>
+						<div class="col-lg-12"  style="height: 500px;">
+							<form>
+								<div class="form-group row">
+									<label for="usernick2" class="col-lg-2 text-right col-form-label col-form-label-sm">昵称</label>
+									<div class="col-lg-8">
+										<input type="text" class="form-control " placeholder="用户昵称" value="张三" id="usernick2">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="usertel2" class="col-md-2 text-right col-form-label">电话</label>
+									<div class="col-lg-8">
+										<input type="tel" class="form-control" id="usertel2">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="useraddres2" class="col-md-2 text-right col-form-label">地址</label>
+									<div class="col-lg-8">
+										<input type="text" class="form-control" id="useraddres2">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label for="userzip" class="col-md-2 text-right col-form-label">邮编</label>
+									<div class="col-lg-8">
+										<input type="text" class="form-control" id="userzip">
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-lg-4 offset-2 text-right">
+										<button type="button" class="btn btn-dark">提交</button>
+									</div>
+									<div class="col-lg-4">
+										<button type="button" class="btn btn-secondary">取消</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- 我的收藏 -->
+					<div class="row mt-5 pt-5">
+						<div class="col-lg-12">
+							<a name="myfav"></a>
+							<p class="h6b  mt-3  pb-2 border-bottom"  style="padding-top: 100px;">我的收藏</p>
+						</div>
+						<div class="col-lg-12"  style="height: 500px;">
+							<div class="row">
+								<div class="col-lg-3">
+									<div class="card border-0">
+									  <img src="../img/mdnl/J6670/J6670.jpg" class="img-fluid" alt="...">
+									  <div class="card-body">
+									    <h5 class="card-title">J6670</h5>
+									    <p class="card-text">摩登女郎系列产品</p>
+									    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="card border-0">
+									  <img src="../img/mdnl/J6670/J6670.jpg" class="img-fluid" alt="...">
+									  <div class="card-body">
+									    <h5 class="card-title">J6670</h5>
+									    <p class="card-text">摩登女郎系列产品</p>
+									    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="card border-0">
+									  <img src="../img/mdnl/J6670/J6670.jpg" class="img-fluid" alt="...">
+									  <div class="card-body">
+									    <h5 class="card-title">J6670</h5>
+									    <p class="card-text">摩登女郎系列产品</p>
+									    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+									  </div>
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="card border-0">
+									  <img src="../img/mdnl/J6670/J6670.jpg" class="img-fluid" alt="...">
+									  <div class="card-body">
+									    <h5 class="card-title">J6670</h5>
+									    <p class="card-text">摩登女郎系列产品</p>
+									    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+									  </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 我的积分 -->
+					<div class="row pt-5">
+						<div class="col-lg-12">
+							<a name="myintegral"></a>
+							<p class="h6b  mt-3  pb-2 border-bottom"  style="padding-top: 100px;">我的积分</p>
+						</div>
+						<div class="col-lg-12"  style="height: 500px;">
+							<table class="table">
+							  <thead class="thead-light">
+							    <tr>
+							      <th scope="col">#</th>
+							      <th scope="col">时间</th>
+							      <th scope="col">分数</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							    <tr>
+							      <th scope="row">1</th>
+							      <td>2020-2-14</td>
+							      <td>520</td>
+							    </tr>
+							    <tr>
+							      <th scope="row">2</th>
+							      <td>2020-3-8</td>
+							      <td>380</td>
+							    </tr>
+							    <tr>
+							      <th scope="row">3</th>
+							      <td>2020-5-10</td>
+							      <td>666</td>
+							    </tr>
+							  </tbody>
+							  <tfoot>
+							  	<tr>
+									<td colspan="3">合计：<span>1266</span></td>
+								</tr>
+							  </tfoot>
+							</table>
+						</div>
+					</div>
+					<!-- 我的足迹 -->
+					<div class="row pt-5">
+						<div class="col-lg-12">
+							<a name="myfootprint"></a>
+							<p class="h6b  mt-3  pb-2 border-bottom"  style="padding-top: 100px;">我的足迹</p>
+						</div>
+						<div class="col-lg-12"  style="height: 500px;">
+							<div class="row">
+									<div class="col-lg-2">
+										<div class="card border-0">
+										  <img src="../img/manjd/PB76086/PB76086.jpg" class="img-fluid" alt="...">
+										  <div class="card-body">
+										    <h5 class="card-title">PB76123</h5>
+										    <p class="card-text">男士经典系列产品</p>
+										    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+										  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<div class="card border-0">
+										  <img src="../img/manjd/PB76123/PB76123.jpg" class="img-fluid" alt="...">
+										  <div class="card-body">
+										    <h5 class="card-title">PB76123</h5>
+										    <p class="card-text">男士经典系列产品</p>
+										    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+										  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<div class="card border-0">
+										  <img src="../img/mdnl/J6670/J6670.jpg" class="img-fluid" alt="...">
+										  <div class="card-body">
+										    <h5 class="card-title">J6670</h5>
+										    <p class="card-text">摩登女郎系列产品</p>
+										    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+										  </div>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<div class="card border-0">
+										  <img src="../img/mdnl/J6670/J6670.jpg" class="img-fluid" alt="...">
+										  <div class="card-body">
+										    <h5 class="card-title">J6670</h5>
+										    <p class="card-text">摩登女郎系列产品</p>
+										    <a href="../../view/particulars.html" class="btn btn-outline-info btn-sm">了解详细</a>
+										  </div>
+										</div>
+									</div>
+								</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		<!-- 底部页脚 -->
+		<!-- <footer class="container-fluid index-footer">
+			<div class="row">
+				<div class="col-lg-4">
+					Copyright &copy; Mirror.All Rights Reserved | ICP-12393423
+				</div>
+				<div class="col-lg-5">
+					<ul>
+						<li><a href="about.html"><i class="fa fa-hand-peace-o"></i>关于我们</a></li>
+						<li><a href="privacy.html"><i class="fa fa-user-secret"></i>隐私政策</a></li>
+						<li><a href="store.html"><i class="fa fa-map"></i>店铺分布</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3">
+					<ul>
+						<li><a href=""><i class="fa fa-github"></i></a></li>
+						<li><a href=""><i class="fa fa-weibo"></i></a></li>
+						<li><a href=""><i class="fa fa-weixin"></i></a></li>
+						<li><a href=""><i class="fa fa-qq"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+ -->
+		<script src="../js/jquery.js"></script>
+		<script src="../comm/bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+		<script src="../js/header.js" type="text/javascript"></script>
+		
+	</body>
+</html>

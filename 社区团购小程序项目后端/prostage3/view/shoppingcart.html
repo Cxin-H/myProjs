@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>购物车</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="/comm/bootstrap-4.4.1-dist/css/bootstrap.css">
+		<link rel="stylesheet" href="/comm/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="/css/header.css">
+		<link rel="stylesheet" href="/css/footer.css">
+		<style>
+			.des-size{
+				font-size: 0.8rem;
+			}
+			.border-circle-no{
+				border-radius: 0;
+			}
+			.mouse-style{
+				cursor: pointer;
+			}
+			/* 修改导航中的背景透明效果 */
+			.bg-header:hover, body:hover .bg-header,.bg-header {
+				background-color: #fff;
+			}
+			.cart{
+				height: 617px;
+			}
+			/* 关于我们 添加背景图片 */
+			.bg-img{
+				background-image: url(/img/about/aboutour.jpg);
+				background-size: cover;
+				background-repeat: no-repeat;
+				/* background-position: right center; */
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 头部导航 -->
+		<header class="container-fluid bg-header">
+			<div class="row">
+				<div class="col-lg-2 header-logo">
+					<a href="index">
+						<img src="/img/logo.png">
+					</a>
+				</div>
+				<nav class="col-lg-9 header-menu">
+					<ul>
+						<li>
+							<a href="index">首页</a>
+						</li>
+						<li>
+							<a href="/html/aviator.html">私人订制</a>
+						</li>
+						<li>
+							<a href="javascript:void()">太阳镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li>女式系列：</li>
+									<li><a href="modern-lady.html">摩登女郎</a></li>
+									<li><a href="/html/pure-lady.html">清新淑女</a></li>
+									<li><a href="/html/indolent-goddess.html">慵懒女神</a></li>
+								</ul>
+								<ul>
+									<li>男式系列：</li>
+									<li><a href="/html/city-man.html">都市雅痞</a></li>
+									<li><a href="/html/fashion-man.html">时尚先生</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">光学镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/manjd.html">男式经典</a></li>
+									<li><a href="/html/ladyjd.html">女式经典</a></li>
+								</ul>
+
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">专属服务</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/aftersales.html">售后服务</a></li>
+									<li><a href="/html/infomation.html">时尚资讯</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">走进迷洛</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/progress.html">品牌故事</a></li>
+									<li><a href="/html/about.html">关于我们</a></li>
+									<li><a href="/html/design.html">设计概念</a></li>
+									<li><a href="/html/technology.html">生产工艺</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<ul class="col-lg-1 header-user">
+					<li>
+						<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>登录</a>
+					</li>
+					<li>
+						<a href="shoppingcart.html">
+							<i class="fa fa-shopping-cart"></i>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</header>
+		<!-- 使用bootstrap 的模态框 -->
+		<div class="modal" tabindex="-1" role="dialog" id="loginModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" id="loginContent">
+					<div class="modal-header login-modal-header">
+						<h5 class="modal-title">登录Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript:void(0)" class="float-left" onclick="_toggleModal('registerContent')">没有帐号</a>
+								<a href="javascript:void(0)" class="float-right" onclick="_toggleModal('forgetPwdContent')">忘记密码</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" data-dismiss="modal">登录</button>
+					</div>
+				</div>
+				<div class="modal-content" id="registerContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">加入Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward" onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">注册</button>
+					</div>
+				</div>
+				<div class="modal-content" id="forgetPwdContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">重置密码</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward" onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">提交</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- 购物车 -->
+		<div class="container mt-5 pt-5 mb-3 cart">
+			<div class="row">
+				<div class="col-lg-8 pr-5">
+					<table class="table ">
+						<thead>
+							<tr class="des-size">
+								<th scope="col" width="12%">全选 <input type="checkbox"></th>
+								<th scope="col" width="38%">商品信息</th>
+								<th scope="col" width="13%">单价</th>
+								<th scope="col" width="12%">数量</th>
+								<th scope="col" width="15%">合计</th>
+								<th scope="col" width="10%">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% data.forEach(function(v,i){ %>
+							<tr>
+								<td>
+									<input type="checkbox" name="shoppingcart" id="sc1" value="1" />
+								</td>
+								<td style="display: none">
+									<div class="col-lg-3" id="goodsId"><%= v.shop_color_id%></div>
+								</td>
+								<td>
+									<div class="row">
+										<div class="col-lg-4"><img src="/img/<%= v.color_glassImgUrl %>" class="img-thumbnail" alt=""></div>
+										<div class="col-lg-8">
+											<div class="h6"><%= v.style_name %> <%= v.goods_num %> </div>
+											<div class="des-size d-inline-block  text-truncate" style="max-width: 150px;"><%= v.goods_describe %></div>
+											<div><a class="des-size" href="particulars.html">商品详细</a></div>
+										</div>
+									</div>
+								</td>
+								<td>
+									<%= v.goods_price %>
+								</td>
+								<td>
+									<div class="input-group input-group-sm flex-row justify-content-center align-items-center">
+										<div class="input-group-prepend">
+											<i class="fa fa-minus"></i>
+										</div>
+										<input type="text" class="form-control text-center ml-1 mr-1" value="1">
+										<div class="input-group-append">
+											<i class="fa fa-plus-circle"></i>
+										</div>
+									</div>
+								</td>
+								<td>
+									<%= v.goods_price %>
+								</td>
+								<td class="alBtn">
+									<button class="btn btn-link btn-sm des-size delBtn">删除</button>
+								</td>
+							</tr>
+							<!--<tr>
+								<td>
+									<input type="checkbox" name="shoppingcart" id="sc1" value="1" />
+								</td>
+								<td>
+									<div class="row">
+										<div class="col-lg-4"><img src="/img/mdnl/B6791/B6791blue.jpg" class="img-thumbnail" alt=""></div>
+										<div class="col-lg-8">
+											<div class="h6">摩登女郎 B6791 </div>
+											<div class="des-size d-inline-block  text-truncate" style="max-width: 150px;">宝石切面的镜框及镜臂设计与金属镂空的帕莎LOGO花形缀饰完美搭配，
+												无需过多装饰，即已释放女性简约率真的个性。</div>
+											<div><a class="des-size" href="particulars.html">商品详细</a></div>
+										</div>
+									</div>
+								</td>
+								<td>
+									1300.00
+								</td>
+								<td>
+									<div class="input-group input-group-sm flex-row justify-content-center align-items-center">
+										<div class="input-group-prepend">
+											<i class="fa fa-minus"></i>
+										</div>
+										<input type="text" class="form-control text-center ml-1 mr-1" value="1">
+										<div class="input-group-append">
+											<i class="fa fa-plus-circle"></i>
+										</div>
+									</div>
+								</td>
+								<td>
+									1300.00
+								</td>
+								<td>
+									<button class="btn btn-link btn-sm des-size">删除</button>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" name="shoppingcart" id="sc1" value="3" />
+								</td>
+								<td>
+									<div class="row">
+										<div class="col-lg-4"><img src="/img/mdnl/B6791/B6791blue.jpg" class="img-thumbnail" alt=""></div>
+										<div class="col-lg-8">
+											<div class="h6">摩登女郎 B6791 </div>
+											<div class="des-size d-inline-block  text-truncate" style="max-width: 150px;">宝石切面的镜框及镜臂设计与金属镂空的帕莎LOGO花形缀饰完美搭配，
+												无需过多装饰，即已释放女性简约率真的个性。</div>
+											<div><a class="des-size" href="particulars.html">商品详细</a></div>
+										</div>
+									</div>
+								</td>
+								<td>
+									1300.00
+								</td>
+								<td>
+									<div class="input-group input-group-sm flex-row justify-content-center align-items-center">
+										<div class="input-group-prepend">
+											<i class="fa fa-minus"></i>
+										</div>
+										<input type="text" class="form-control text-center ml-1 mr-1" value="2">
+										<div class="input-group-append">
+											<i class="fa fa-plus-circle"></i>
+										</div>
+									</div>
+								</td>
+								<td>
+									1300.00
+								</td>
+								<td>
+									<button class="btn btn-link btn-sm des-size">删除</button>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="checkbox" name="shoppingcart" id="sc1" value="3" />
+								</td>
+								<td>
+									<div class="row">
+										<div class="col-lg-4"><img src="/img/mdnl/B6791/B6791blue.jpg" class="img-thumbnail" alt=""></div>
+										<div class="col-lg-8">
+											<div class="h6">摩登女郎 B6791 </div>
+											<div class="des-size d-inline-block  text-truncate" style="max-width: 150px;">宝石切面的镜框及镜臂设计与金属镂空的帕莎LOGO花形缀饰完美搭配，
+												无需过多装饰，即已释放女性简约率真的个性。</div>
+											<div><a class="des-size" href="particulars.html">商品详细</a></div>
+										</div>
+									</div>
+								</td>
+								<td>
+									1300.00
+								</td>
+								<td>
+									<div class="input-group input-group-sm flex-row justify-content-center align-items-center">
+										<div class="input-group-prepend">
+											<i class="fa fa-minus"></i>
+										</div>
+										<input type="text" class="form-control text-center ml-1 mr-1" value="2">
+										<div class="input-group-append">
+											<i class="fa fa-plus-circle"></i>
+										</div>
+									</div>
+								</td>
+								<td>
+									1300.00
+								</td>
+								<td>
+									<button class="btn btn-link btn-sm des-size">删除</button>
+								</td>
+							</tr>-->
+							<% }) %>
+						</tbody>
+						<!-- 有数据时，不显示 -->
+						<tfoot>
+							<tr>
+								<td colspan="6" align="center" class="text-secondary invisible">亲，你的购物车空空如也哦，赶快去挑选商品吧！</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<div class="col-lg-4 pl-5 border-left">
+					<p class="h4 pb-3 border-bottom border-secondary">购物车总计</p>
+					<p class="border-bottom border-secondary pt-3 pb-3">
+						<span>运费</span>
+						<span class="float-right">免运费</span>
+					</p>
+					<p class="border-bottom border-secondary  pt-3 pb-3">
+						<span>购物车小计:</span>
+						<span class="float-right"><b>￥</b><strong>3900</strong></span>
+					</p>
+					<div class="pt-5">
+						<a href="/html/sureorder.html">
+							<button class="btn btn-block btn-dark border-circle-no">结算</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 底部页脚 -->
+		<footer class="container-fluid index-footer">
+			<div class="row">
+				<div class="col-lg-4">
+					Copyright &copy; Mirror.All Rights Reserved | ICP-12393423
+				</div>
+				<div class="col-lg-5">
+					<ul>
+						<li><a href="/html/about.html"><i class="fa fa-hand-peace-o"></i>关于我们</a></li>
+						<li><a href="/html/privacy.html"><i class="fa fa-user-secret"></i>隐私政策</a></li>
+						<li><a href="/html/store.html"><i class="fa fa-map"></i>店铺分布</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3">
+					<ul>
+						<li><a href=""><i class="fa fa-github"></i></a></li>
+						<li><a href=""><i class="fa fa-weibo"></i></a></li>
+						<li><a href=""><i class="fa fa-weixin"></i></a></li>
+						<li><a href=""><i class="fa fa-qq"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+
+		<script src="/js/jquery.js"></script>
+		<script src="/comm/bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+		<script src="/js/header.js" type="text/javascript"></script>
+		<script src="/js/ajaxgetpost.js"></script>
+		<script>
+			let delBtn=document.getElementsByClassName('delBtn')[0];
+			let goodsId = document.getElementById('goodsId').innerText;
+			console.log(goodsId)
+			delBtn.onclick = function (){
+				ajax({
+					url: '/delBtn',
+					type: 'get',
+					jsonData: {goodsId:goodsId},
+					fun:function (data) {
+						console.log('==========del1==========');
+						if (data.code == 200){
+							alert('删除成功！');
+							location.reload();
+						}else if (data.code == 201){
+							alert('删除失败！')
+						}
+					}
+				})
+			}
+		</script>
+	</body>
+</html>

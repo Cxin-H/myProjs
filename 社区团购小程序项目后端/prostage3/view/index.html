@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>Mirror,我是你眼,带你走遍天涯海角</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="/comm/bootstrap-4.4.1-dist/css/bootstrap.css">
+		<!-- bootstrap 4.x 只支持IE10+  ， 不自带图标库了。-->
+		<link rel="stylesheet" href="/css/header.css">
+		<link rel="stylesheet" href="/css/footer.css">
+		<link rel="stylesheet" href="/comm/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="/css/index.css">
+	</head>
+	<body>
+		<!-- 头部导航 -->
+		<header class="container-fluid bg-header">
+			<div class="row">
+				<div class="col-lg-2 header-logo">
+					<a href="/view/index.html">
+						<img src="/img/logo.png" >
+					</a>
+				</div>
+				<nav class="col-lg-9 header-menu">
+					<ul>
+						<li>
+							<a href="index.html">首页</a>
+						</li>
+						<li>
+							<a href="/html/aviator.html">私人订制</a>
+						</li>
+						<li>
+							<a href="javascript:void()">太阳镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li>女式系列：</li>
+									<li><a href="/html/modern-lady.html">摩登女郎</a></li>
+									<li><a href="/html/pure-lady.html">清新淑女</a></li>
+									<li><a href="/html/indolent-goddess.html">慵懒女神</a></li>
+								</ul>
+								<ul>
+									<li>男式系列：</li>
+									<li><a href="/html/city-man.html">都市雅痞</a></li>
+									<li><a href="/html/fashion-man.html">时尚先生</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">光学镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/manjd.html">男式经典</a></li>
+									<li><a href="/html/ladyjd.html">女式经典</a></li>
+								</ul>
+						
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">专属服务</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/aftersales.html">售后服务</a></li>
+									<li><a href="/html/infomation.html">时尚资讯</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">走进迷洛</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/progress.html">品牌故事</a></li>
+									<li><a href="/html/about.html">关于我们</a></li>
+									<li><a href="/html/design.html">设计概念</a></li>
+									<li><a href="/html/technology.html">生产工艺</a></li>
+								</ul>								
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<ul class="col-lg-1 header-user">
+					<li>
+						<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>登录</a>
+					</li>
+					<li>
+						<a href="/shoppingcart">
+							<i class="fa fa-shopping-cart"></i>
+						</a>
+					</li>										
+				</ul>
+				
+			</div>
+		</header>
+		<!-- 使用bootstrap 的模态框 -->
+		<div class="modal" tabindex="-1" role="dialog" id="loginModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" id="loginContent">
+					<div class="modal-header login-modal-header">
+						<h5 class="modal-title">登录Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" name="u_tel" id="u_tel" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" name="u_pwd" id="u_pwd" placeholder="请输入密码"></div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript:void(0)" class="float-left"   onclick="_toggleModal('registerContent')">没有帐号</a>
+								<a href="javascript:void(0)" class="float-right"   onclick="_toggleModal('forgetPwdContent')">忘记密码</a>
+							</div>
+						</div>
+
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<div id="logmsg" class="msg">XXXXX</div>
+						<button type="button" class="login-modal-footer-btn" id="loginBtn">登录</button>
+					</div>
+				</div>
+<!--				注册-->
+				<div class="modal-content" id="registerContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">加入Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号" id="u_tel0"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码" id="u_pwd0"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码" id="u_pwd1"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码" id="yanzheng0">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<div id="regmsg" class="msg">XXXXX</div>
+						<button type="button" class="login-modal-footer-btn" id="regBtn" ><!--onclick="_toggleModal('loginContent')"-->注册</button>
+					</div>
+				</div>
+<!--				找回密码-->
+				<div class="modal-content" id="forgetPwdContent"  style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">重置密码</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">提交</button>
+					</div>
+				</div>
+		
+			</div>
+		</div>
+		
+		<!-- 中间6个分类产品展示 -->
+
+		<section class="show-case">
+			<% data.forEach(function(v,i){ %>
+			<% if(v.i_url == '/img/index/1.jpg'){ %>
+			<img src="<%= v.i_url %>" alt="">
+			<div class="hover-msg">
+				<h1>摩登女郎</h1>
+				<a href="<%= v.i_href %>">查看</a>
+			</div>
+		</section>
+		<section class="show-case">
+			<% }else if(v.i_url == '/img/index/2.jpg'){ %>
+			<img src="<%= v.i_url %>" alt="">
+			<div class="hover-msg">
+				<h1>慵懒女神</h1>
+				<a href="<%= v.i_href %>">查看</a>
+			</div>
+		</section>
+		<section class="show-case">
+			<% }else if(v.i_url == '/img/index/3.jpg'){ %>
+			<img src="<%= v.i_url %>" alt="">
+			<div class="hover-msg">
+				<h1>私人定制</h1>
+				<a href="<%= v.i_href %>">查看</a>
+			</div>
+		</section>
+		<section class="show-case">
+			<% }else if(v.i_url == '/img/index/4.jpg'){ %>
+			<img src="<%= v.i_url %>" alt="">
+			<div class="hover-msg">
+				<h1>时尚先生</h1>
+				<a href="<%= v.i_href %>">查看</a>
+			</div>
+		</section>
+		<section class="show-case">
+			<% }else if(v.i_url == '/img/index/5.jpg'){ %>
+			<img src="<%= v.i_url %>" alt="">
+			<div class="hover-msg">
+				<h1>都市雅痞</h1>
+				<a href="<%= v.i_href %>">查看</a>
+			</div>
+		</section>
+		<section class="show-case">
+			<% }else if(v.i_url == '/img/index/6.jpg'){ %>
+			<img src="<%= v.i_url %>" alt="">
+			<div class="hover-msg">
+				<h1>经典光学</h1>
+				<a href="<%= v.i_href %>">查看</a>
+			</div>
+		</section>
+		<% } %>
+		<% }) %>
+
+
+		<!-- 底部页脚 -->
+		<footer class="container-fluid index-footer">
+			<div class="row">
+				<div class="col-lg-4">
+					Copyright &copy; Mirror.All Rights Reserved | ICP-12393423
+				</div>
+				<div class="col-lg-5">
+					<ul>
+						<li><a href="/public/html/about.html"><i class="fa fa-hand-peace-o"></i>关于我们</a></li>
+						<li><a href="/public/html/about.html"><i class="fa fa-user-secret"></i>隐私政策</a></li>
+						<li><a href="/public/html/about.html"><i class="fa fa-map"></i>店铺分布</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3">
+					<ul>
+						<li><a href=""><i class="fa fa-github"></i></a></li>
+						<li><a href=""><i class="fa fa-weibo"></i></a></li>
+						<li><a href=""><i class="fa fa-weixin"></i></a></li>
+						<li><a href=""><i class="fa fa-qq"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>		
+		
+		<!-- 回到顶部 -->
+		<div id="goTop"><i class="fa fa-arrow-circle-up"></i></div>
+		<script src="/js/jquery.js"></script>
+		<script src="/comm/bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+		<script src="/js/index.js"></script>
+		<script src="/js/header.js" type="text/javascript"></script>
+		<script src="/js/ajaxgetpost.js"></script>
+		<script>
+			// 登录
+			var tel = document.getElementById('u_tel');
+			var pwd = document.getElementById('u_pwd')
+			var sub = document.getElementById('loginBtn');
+			//注册
+			var r_tel0 = document.getElementById('u_tel0');
+			var r_pwd0 = document.getElementById('u_pwd0');
+			var r_pwd1 = document.getElementById('u_pwd1');
+			var reg = document.getElementById('regBtn');
+
+			//登录按钮
+			sub.onclick = function () {
+				ajax({
+					url:'/login',
+					type:'get',
+					jsonData:{u_tel:tel.value,u_pwd:pwd.value},
+					fun:function (data) {
+						console.log('==========4==========');
+						console.log(data.msg);
+						if (data.code == 200){
+							alert('登陆成功！');
+							location.href = 'index';
+						}else if (data.code == 201){
+							$('#logmsg').text(data.msg);
+							$(".msg").addClass('showMsg');
+						}
+					}
+				})
+			}
+			//注册按钮
+			reg.onclick = function () {
+				var regMsg = document.getElementById('regmsg');
+				if (r_pwd0.value == r_pwd1.value){
+					ajax({
+						url: '/register',
+						type: 'post',
+						jsonData: {u_tel: r_tel0.value,u_pwd: r_pwd0.value},
+						fun:function (data) {
+							console.log('=========5=========');
+							console.log(data);
+							if (!data.errCode){
+								alert(data.successMsg);
+								_toggleModal('loginContent');
+							}else if(data.errCode){
+								regMsg.innerText = data.errMsg;
+								regMsg.classList.add('showMsg');
+							}
+						}
+					})
+				}else {
+					regMsg.innerText = ('重复密码错误');
+					regMsg.classList.add('showMsg');
+				}
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>产品详细</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="/comm/bootstrap-4.4.1-dist/css/bootstrap.css">
+		<link rel="stylesheet" href="/comm/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="/css/header.css">
+		<link rel="stylesheet" href="/css/footer.css">
+		<style>
+			.check-color{
+				width: 40px;
+				height:40px;
+				border-radius: 20px;
+				margin-left: 5px;
+				margin-right: 5px;
+			}
+			.choice{
+				width: 42px;
+				height: 42px;
+				border-radius: 21px;
+				border: 2px solid teal;
+			}
+			.bg-pink{
+				background-color: pink;
+			}
+			.des-size{
+				font-size: 0.8rem;
+				line-height: 1.5rem;
+			}
+			.border-circle-no{
+				border-radius: 0;
+			}
+			.mouse-style{
+				cursor: pointer;
+			}
+			/* 修改导航中的背景透明效果 */
+			.bg-header:hover, body:hover .bg-header,.bg-header {
+				background-color: #fff;
+			}	
+			/* 关于我们 添加背景图片 */
+			.bg-img{
+				background-image: url(/img/about/aboutour.jpg);
+				background-size: cover;
+				background-repeat: no-repeat;
+				/* background-position: right center; */
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 头部导航 -->
+		<header class="container-fluid bg-header">
+			<div class="row">
+				<div class="col-lg-2 header-logo">
+					<a href="index">
+						<img src="/img/logo.png">
+					</a>
+				</div>
+				<nav class="col-lg-9 header-menu">
+					<ul>
+						<li>
+							<a href="index">首页</a>
+						</li>
+						<li>
+							<a href="/html/aviator.html">私人订制</a>
+						</li>
+						<li>
+							<a href="javascript:void()">太阳镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li>女式系列：</li>
+									<li><a href="modern-lady.html">摩登女郎</a></li>
+									<li><a href="/html/pure-lady.html">清新淑女</a></li>
+									<li><a href="/html/indolent-goddess.html">慵懒女神</a></li>
+								</ul>
+								<ul>
+									<li>男式系列：</li>
+									<li><a href="/html/city-man.html">都市雅痞</a></li>
+									<li><a href="/html/fashion-man.html">时尚先生</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">光学镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/manjd.html">男式经典</a></li>
+									<li><a href="/html/ladyjd.html">女式经典</a></li>
+								</ul>
+
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">专属服务</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/aftersales.html">售后服务</a></li>
+									<li><a href="/html/infomation.html">时尚资讯</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">走进迷洛</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="/html/progress.html">品牌故事</a></li>
+									<li><a href="/html/about.html">关于我们</a></li>
+									<li><a href="/html/design.html">设计概念</a></li>
+									<li><a href="/html/technology.html">生产工艺</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<ul class="col-lg-1 header-user">
+					<li>
+						<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>登录</a>
+					</li>
+					<li>
+						<a href="/html/shoppingcart.html">
+							<i class="fa fa-shopping-cart"></i>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</header>
+		<!-- 使用bootstrap 的模态框 -->
+		<div class="modal" tabindex="-1" role="dialog" id="loginModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" id="loginContent">
+					<div class="modal-header login-modal-header">
+						<h5 class="modal-title">登录Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript:void(0)" class="float-left"   onclick="_toggleModal('registerContent')">没有帐号</a>
+								<a href="javascript:void(0)" class="float-right"   onclick="_toggleModal('forgetPwdContent')">忘记密码</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"  data-dismiss="modal">登录</button>
+					</div>
+				</div>
+				<div class="modal-content" id="registerContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">加入Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"   onclick="_toggleModal('loginContent')">注册</button>
+					</div>
+				</div>
+				<div class="modal-content" id="forgetPwdContent"  style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">重置密码</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">提交</button>
+					</div>
+				</div>
+		
+			</div>
+		</div>
+		
+		<!-- 产品详细页面模板 -->
+		<div class="container mt-5 pt-5">
+			<div class="row">
+				<div class="col-lg-12 mb-4">
+					<a class="btn-link text-dark" href="/">返回上一级</a>
+				</div>
+				<div class="col-lg-2">
+					<!-- 商品类名 -->
+					<p class="h4">摩登女郎</p>
+					<!-- 商品别名 -->
+					<p class="text-dark">Cool Girl</p>
+					<!-- 商品型号类名 -->
+					<p class="text-uppercase font-weight-bold">B6791</p>
+				</div>
+				<!--**********************************************-->
+				<div class="col-lg-5">
+					<% data.forEach(function(v,i){ %>
+					<% if(v.color_ids == 24){ %>
+					<img class="img-fluid ckimgs" src="/img/<%= v.color_glassImgUrl %>" alt="">
+					<% }else if(v.color_ids == 25){ %>
+					<img class="img-fluid ckimgs" src="/img/<%= v.color_glassImgUrl %>" alt="">
+					<% }else if(v.color_ids == 26){ %>
+					<img class="img-fluid ckimgs" src="/img/<%= v.color_glassImgUrl %>" alt="">
+					<% } %>
+					<% }) %>
+				</div>
+				<div class="col-lg-5">
+					<div class="border-bottom pb-2 pl-1 pr-1 des-size">
+						宝石切面的镜框及镜臂设计与金属镂空的帕莎LOGO花形缀饰完美搭配， 无需过多装饰，即已释放女性简约率真的个性。
+					</div>
+					<div class="border-bottom pb-2 pt-2 text-center">
+						<img src="/img/21.jpg" alt="">
+						<img src="/img/22.jpg" alt="">
+						<img src="/img/33.png" alt="">
+						<img src="/img/44.jpg" alt="">
+						<img src="/img/55.jpg" alt="">
+					</div>
+					<!-- 颜色 -->
+					<div class="mb-3 mt-3 row justify-content-center">
+						<div class="check-color bg-blue choice"></div>
+						<div class="check-color bg-pink"></div>
+						<div class="check-color bg-zi"></div>
+					</div>
+					<div class="row pt-5 justify-content-around align-items-center">
+						<!-- 价格 -->
+						<span class="text-danger fa-2x mouse-style">1300.00</span>
+						<a href="/shoppingCart" class="text-dark"><i class="fa fa-shopping-cart fa-2x mouse-style" id="cart"></i></a>
+						<a href="/html/sureorder.html">
+							<button class="btn btn-dark btn-sm border-circle-no">立即购买</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- 产品详细 图片排版 -->
+		<div class="container-fiuld pb-4">
+			<div class="row justify-content-center">
+				<div class="col-lg-12">
+					<img src="/img/styleimg/m.jpg" alt="" class="img-fluid">
+				</div>
+				<div>
+					<img src="/img/mdnl/B6791/B6791a.jpg" alt="">
+				</div>
+				<div>
+					<img src="/img/mdnl/B6791/B6791b.jpg" alt="">
+				</div>
+				<div>
+					<img src="/img/mdnl/B6791/B6791c.jpg" alt="">
+				</div>
+				<div>
+					<img src="/img/77.jpg" alt="">
+				</div>
+			</div>
+		</div>
+		
+		<!-- 底部页脚 -->
+		<footer class="container-fluid index-footer">
+			<div class="row">
+				<div class="col-lg-4">
+					Copyright &copy; Mirror.All Rights Reserved | ICP-12393423
+				</div>
+				<div class="col-lg-5">
+					<ul>
+						<li><a href="/html/about.html"><i class="fa fa-hand-peace-o"></i>关于我们</a></li>
+						<li><a href="/html/privacy.html"><i class="fa fa-user-secret"></i>隐私政策</a></li>
+						<li><a href="/html/store.html"><i class="fa fa-map"></i>店铺分布</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3">
+					<ul>
+						<li><a href=""><i class="fa fa-github"></i></a></li>
+						<li><a href=""><i class="fa fa-weibo"></i></a></li>
+						<li><a href=""><i class="fa fa-weixin"></i></a></li>
+						<li><a href=""><i class="fa fa-qq"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+
+		<script src="/js/jquery.js"></script>
+		<script src="/comm/bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+		<script src="/js/header.js" type="text/javascript"></script>
+		<script src="/js/ajaxgetpost.js"></script>
+		<script>
+			//购物车按钮
+			let cart = document.getElementById('cart')
+			cart.onclick = function (){
+				ajax({
+					url:'/cart',
+					type:'get',
+					fun:function (data){
+						console.log('========cart1=======')
+						console.log(data)
+						location.href = 'shoppingcart';
+					}
+				})
+			}
+
+
+			//样式选择
+			$(".ckimgs").eq(1).hide();
+			$(".ckimgs").eq(2).hide();
+			$('.check-color').click(function (){
+				$(this).addClass('choice')
+				$(this).siblings().removeClass("choice")
+				let index = $(this).index();
+				$(".ckimgs").eq(index).show().siblings().hide();
+			})
+
+
+
+			/*console.log(data);*/
+		</script>
+	</body>
+</html>
