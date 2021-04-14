@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>时尚资讯</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="../comm/bootstrap-4.4.1-dist/css/bootstrap.css">
+		<link rel="stylesheet" href="../comm/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="../css/header.css">
+		<link rel="stylesheet" href="../css/footer.css">
+		<style>
+			/* 修改bootstrap card 的边框 */
+			.info-item{
+				border-width: 0;
+				border-bottom: 1px solid darkblue;
+				border-radius: 0;
+			}
+			/* 增加模块的martin-top */
+			.mt-100{
+				margin-top: 100px;
+			}
+			/* 修改导航中的背景透明效果 */
+			.bg-header:hover, body:hover .bg-header,.bg-header {
+				background-color: #fff;
+			}	
+			.card-title{
+				font-size: 1rem;
+			}
+			.card-text{
+				font-size: 0.8rem;
+				color: gray;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 头部导航 -->
+		<header class="container-fluid bg-header">
+			<div class="row">
+				<div class="col-lg-2 header-logo">
+					<a href="../../view/index.html">
+						<img src="../img/logo.png">
+					</a>
+				</div>
+				<nav class="col-lg-9 header-menu">
+					<ul>
+						<li>
+							<a href="../../view/index.html">首页</a>
+						</li>
+						<li>
+							<a href="aviator.html">私人订制</a>
+						</li>
+						<li>
+							<a href="javascript:void()">太阳镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li>女式系列：</li>
+									<li><a href="../../view/modern-lady.html">摩登女郎</a></li>
+									<li><a href="pure-lady.html">清新淑女</a></li>
+									<li><a href="indolent-goddess.html">慵懒女神</a></li>
+								</ul>
+								<ul>
+									<li>男式系列：</li>
+									<li><a href="city-man.html">都市雅痞</a></li>
+									<li><a href="fashion-man.html">时尚先生</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">光学镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="manjd.html">男式经典</a></li>
+									<li><a href="ladyjd.html">女式经典</a></li>
+								</ul>
+
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">专属服务</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="aftersales.html">售后服务</a></li>
+									<li><a href="infomation.html">时尚资讯</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">走进迷洛</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="progress.html">品牌故事</a></li>
+									<li><a href="about.html">关于我们</a></li>
+									<li><a href="design.html">设计概念</a></li>
+									<li><a href="technology.html">生产工艺</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<ul class="col-lg-1 header-user">
+					<li>
+						<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>登录</a>
+					</li>
+					<li>
+						<a href="../../view/shoppingcart.html">
+							<i class="fa fa-shopping-cart"></i>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</header>
+		<!-- 使用bootstrap 的模态框 -->
+		<div class="modal" tabindex="-1" role="dialog" id="loginModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" id="loginContent">
+					<div class="modal-header login-modal-header">
+						<h5 class="modal-title">登录Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript:void(0)" class="float-left"   onclick="_toggleModal('registerContent')">没有帐号</a>
+								<a href="javascript:void(0)" class="float-right"   onclick="_toggleModal('forgetPwdContent')">忘记密码</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"  data-dismiss="modal">登录</button>
+					</div>
+				</div>
+				<div class="modal-content" id="registerContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">加入Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"   onclick="_toggleModal('loginContent')">注册</button>
+					</div>
+				</div>
+				<div class="modal-content" id="forgetPwdContent"  style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">重置密码</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">提交</button>
+					</div>
+				</div>
+		
+			</div>
+		</div>
+		
+		<!-- 时尚资讯 内容 -->
+		<div class="container mt-100">
+			<div class="row">
+				<div class="card-columns">
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/宋承宪4-1600-2.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">宋承宪俘获女神的秘密武器竟然是它？</h5>
+							<p class="card-text">事业爱情双丰收的宋承宪欧巴，作客小资风尚杂志拍摄时尚大片。完美侧颜，强大气场，有迷洛墨镜作陪，引爆少女们的苏心。凭借无可挑剔的演技、完美无缺的名品身材，宋承宪欧巴一步一个脚印，向我们展现出不老男神的无限魅力。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card p-3 info-item">
+						<img class="card-img-top" src="../img/Yuyu-IMG_1185-3.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">街头潮咖们都靠什么在伦敦时装周“横”着走？</h5>
+							<p class="card-text">作为大四国际时装周中最为年轻的伦敦时装周，以永远追求创新的时尚理念使得无数时尚拥趸者为之疯狂。走在伦敦街头，你会恍然发现，原来时尚竟可以以这样的形式来诠释。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/1.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">“转音歌姬”黄龄邂逅迷洛，化身初秋清新精灵</h5>
+							<p class="card-text">素有”转音歌姬“美誉的黄龄，在初秋邂逅迷洛，为《小资风尚》杂志拍摄大片，以清新夺目的水绿系搭配，演绎清新精灵，为早秋带来别样的时尚范！</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card  p-3 info-item">
+						<img class="card-img-top" src="../img/韩彩英-杂志照--news.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">情迷迷洛，欧尼韩彩英上演“美人计”</h5>
+							<p class="card-text">她以古灵精怪的豪杰春香形象走红中国，跃居时尚偶像，她就是韩剧公主欧尼韩彩英。此次，女神情系迷洛，应邀《小资风尚》杂志拍摄风格大片，以抢眼主角的姿态霸屏这一季的时尚，随心流露个性真我风格，简直美苏了。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/0A3B1840%20副本.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">鬼马精灵吴莫愁时尚大片出炉，携手迷洛尽显百变风情</h5>
+							<p class="card-text">音乐小魔女吴莫愁向来对时尚有自己的独到见解，作为中国新生代时尚标杆的她以先锋态度和摩登品味多次获邀出席国际顶尖时尚盛事，彰显另类魅力，个性造型令人惊艳不已。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/何润东-3.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">魅力男神何润东，戴迷洛拍摄杂志大片</h5>
+							<p class="card-text">太阳之子何润东应邀《小资风尚》杂志，拍摄时尚大片。拍摄中戴上迷洛眼镜，完美演绎不老神话。这个有着英俊帅气脸庞的老男孩，浑身都散发着绅士范，笑起来的时候，两颗小虎牙为他增添点小男生的羞涩可爱，年近40，却依旧年轻迷人！</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/题图.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">型男聚集Pitti Uomo男装周，迷洛惊艳亮相</h5>
+							<p class="card-text">于6月19日完美落幕的佛罗伦萨男装周汇聚了众多男性时尚的权威人士，其中最受瞩目的非精致优雅的型男莫属，他们考究优雅的百变穿搭吸睛无数，而什么才是这场盛宴的点睛之笔？国内眼镜领衔品牌——迷洛眼镜绽放了它的惊艳魅力。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/322-178头图副本.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">米兰时装周场外直击，几何拼接风大行其道！</h5>
+							<p class="card-text">无论是延伸感十足的条纹，还是注重空间感的方块拼接，都是每年流行元素中的常客。2015年米兰时装周的春夏秀上，几何纹依旧是T台上不少大牌设计师的心头爱，只不过大师们抛开了经典的黑白几何纹，以更大胆前卫的创意设计和令人眼花缭乱的色彩拼接，呈现出别具一格的不规则美。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/题图.png" alt="">
+						<div class="card-body">
+							<h5 class="card-title">最美红毯瞬间，带你领略百变范爷！</h5>
+							<p class="card-text">华服出席时尚界和娱乐圈两大国际盛事的范爷再掀红毯热潮，无论是有“东海岸奥斯卡”之称的Met Ball还是世界最具影响力之一的戛纳电影节，俨然已是她缔造吸晴神话的舞台。当艳压群芳成为范女神的代名词，红毯女王的桂冠舍她其谁？</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/322-178.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">梦回唐朝，迷洛穿越遇媚娘！</h5>
+							<p class="card-text">《武媚娘传奇》已播过半，虽遭遇了无情“剪刀手”，留给观众满屏的大头和无尽的遐想，但我们依然记得，如今躲藏在电视机上方的华丽冠冕，以及隐匿在电视机下方的巨制服装，曾经闪耀着何等的光辉，显露了何等的美艳。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/322-322.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">何止颜值高？——这些年，你不知道的范冰冰</h5>
+							<p class="card-text">若要用一个词来形容范冰冰，“美”似乎成了最毫无争议的一个评价。无论是近年来的红毯造型，还是《武媚娘传奇》中年龄跨度极大的各种扮相，简直就是范冰冰个人的“花式炫美”。若要给这种美加上一个程度，那可能是日本网友评价的“美得简直不像人类”，也可能是即便数次力证不曾整容的客观证明摆在看官们面前，大家还是免不了哼着气跺着脚说“这么美怎么可能没整嘛！”</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/创作－12.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">Mirror迷洛二度跨界设计师C.J.YAO，只为见证闺蜜情深</h5>
+							<p class="card-text">这次带来了Mirror迷洛与C.J.YAO再次跨界碰撞，擦出新一波的时尚火花：Mirror迷洛 x C.J.YAO “Bestie”系列合作款，一副专门为闺中密友们设计的时尚墨镜。这次合作特别请来了C.J.YAO设计师本人C.J.跟HARDcANDY时尚管理顾问公司创始人Candy Li这对在生活上亲密无间以及在工作上共同奋斗的活宝闺蜜组合来阐述这副墨镜背后的意义。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/DSC00264.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">Mirror迷洛2016秋冬媒体预览日，绽放时尚魅力</h5>
+							<p class="card-text">8月11日 - 12日， Mirror迷洛在位于上海黄浦区的HARDcANDY Showroom中进行了其AW16媒体预览日，上海地区的各时尚媒体与时尚潮人们前往参加了本次预览。迷洛眼镜作为时尚领域重要的一员，其符合东方人轮廓的设计细节，还有洞悉时尚潮流的配色与细节，使得迷洛得到了人们的喜爱。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/85副本.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">Mirror迷洛眼镜与肯德基一起做公益，传递爱的力量</h5>
+							<p class="card-text">时尚眼镜品牌Mirror迷洛一直以来都致力于打造符合东方人面部轮廓特点和审美情趣的眼镜单品，并汲取时下流行元素融入设计，以精湛工艺、卓越品质，将时尚的美感与独特的自我风格巧妙结合，为你彰显与众不同的风格魅力。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+					<div class="card info-item">
+						<img class="card-img-top" src="../img/0620_7.jpg" alt="">
+						<div class="card-body">
+							<h5 class="card-title">迷洛眼镜：魏晨伦敦男装周的风格之选</h5>
+							<p class="card-text">参加时装周，时尚的造型是非常重要的，在刚刚过去的SS17 伦敦男装周中，魏晨受邀作为观秀嘉宾出席了本季伦敦男装周，而在这次魏晨SS17伦敦男装周之旅的直播，得到了580多万人的收看，人气爆表。魏晨除了出彩的服装搭配以外，他最忠实的时尚必备单品就是一副“无处不风格”的迷洛眼镜。</p>
+							<a href="/" class="card-link">阅读</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 底部页脚 -->
+		<footer class="container-fluid index-footer">
+			<div class="row">
+				<div class="col-lg-4">
+					Copyright &copy; Mirror.All Rights Reserved | ICP-12393423
+				</div>
+				<div class="col-lg-5">
+					<ul>
+						<li><a href="about.html"><i class="fa fa-hand-peace-o"></i>关于我们</a></li>
+						<li><a href="privacy.html"><i class="fa fa-user-secret"></i>隐私政策</a></li>
+						<li><a href="store.html"><i class="fa fa-map"></i>店铺分布</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3">
+					<ul>
+						<li><a href=""><i class="fa fa-github"></i></a></li>
+						<li><a href=""><i class="fa fa-weibo"></i></a></li>
+						<li><a href=""><i class="fa fa-weixin"></i></a></li>
+						<li><a href=""><i class="fa fa-qq"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+
+		<script src="../js/jquery.js"></script>
+		<script src="../comm/bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+		<script src="../js/header.js" type="text/javascript"></script>
+
+	</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>时尚资讯</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="../comm/bootstrap-4.4.1-dist/css/bootstrap.css">
+		<link rel="stylesheet" href="../comm/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="../css/header.css">
+		<link rel="stylesheet" href="../css/footer.css">
+		<style>
+			/* 资讯内容文本排版 */
+			.info-content{
+				line-height: 2rem;
+				font-size: 0.9rem;
+				/* text-indent: 2rem; */
+			}
+			
+			/* 修改导航中的背景透明效果 */
+			.bg-header:hover, body:hover .bg-header,.bg-header {
+				background-color: #fff;
+			}		
+		</style>
+	</head>
+	<body>
+		<!-- 头部导航 -->
+		<header class="container-fluid bg-header">
+			<div class="row">
+				<div class="col-lg-2 header-logo">
+					<a href="../../view/index.html">
+						<img src="../img/logo.png">
+					</a>
+				</div>
+				<nav class="col-lg-9 header-menu">
+					<ul>
+						<li>
+							<a href="../../view/index.html">首页</a>
+						</li>
+						<li>
+							<a href="aviator.html">私人订制</a>
+						</li>
+						<li>
+							<a href="javascript:void()">太阳镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li>女式系列：</li>
+									<li><a href="../../view/modern-lady.html">摩登女郎</a></li>
+									<li><a href="pure-lady.html">清新淑女</a></li>
+									<li><a href="indolent-goddess.html">慵懒女神</a></li>
+								</ul>
+								<ul>
+									<li>男式系列：</li>
+									<li><a href="city-man.html">都市雅痞</a></li>
+									<li><a href="fashion-man.html">时尚先生</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">光学镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="manjd.html">男式经典</a></li>
+									<li><a href="ladyjd.html">女式经典</a></li>
+								</ul>
+
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">专属服务</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="aftersales.html">售后服务</a></li>
+									<li><a href="infomation.html">时尚资讯</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">走进迷洛</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="progress.html">品牌故事</a></li>
+									<li><a href="about.html">关于我们</a></li>
+									<li><a href="design.html">设计概念</a></li>
+									<li><a href="technology.html">生产工艺</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<ul class="col-lg-1 header-user">
+					<li>
+						<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>登录</a>
+					</li>
+					<li>
+						<a href="../../view/shoppingcart.html">
+							<i class="fa fa-shopping-cart"></i>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</header>
+		<!-- 使用bootstrap 的模态框 -->
+		<div class="modal" tabindex="-1" role="dialog" id="loginModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" id="loginContent">
+					<div class="modal-header login-modal-header">
+						<h5 class="modal-title">登录Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript:void(0)" class="float-left"   onclick="_toggleModal('registerContent')">没有帐号</a>
+								<a href="javascript:void(0)" class="float-right"   onclick="_toggleModal('forgetPwdContent')">忘记密码</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"  data-dismiss="modal">登录</button>
+					</div>
+				</div>
+				<div class="modal-content" id="registerContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">加入Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"   onclick="_toggleModal('loginContent')">注册</button>
+					</div>
+				</div>
+				<div class="modal-content" id="forgetPwdContent"  style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">重置密码</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">提交</button>
+					</div>
+				</div>
+		
+			</div>
+		</div>
+		
+		<div class="container-fiuld mb-5">
+			<!-- banner图 -->
+			<div class="row">
+				<img class="img-fluid" src="../img/progress1.jpg" alt="">
+			</div>
+<!-- 大事件 -->
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4  text-right text-dark pr-5">
+					<p class="h5">2017</p>
+					<p>10月27号</p>
+					<p class="info-content">Mirror迷诺联合设计师品牌JUNNE在SS18上海时装周走秀中大放异彩。Mirror迷诺将复古主义与当代时尚元素相结合推出18 SS 新款T60114 、
+						J6685眼镜。除此之外，还特别推出T60114限定“安菲”色，将神话色彩融合，展现与众不同的风格之美。</p>
+				</div>
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress2.jpg" alt="">
+				</div>
+			</div>
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4  text-right text-dark pr-5">
+					<!-- <p class="h5">2017</p> -->
+					<p>9月6日 — 9月8日</p>
+					<p class="info-content">第三十届中国国际眼镜业展览会在北京隆重举行。Mirror迷诺携2017新款光学镜闪耀亮相这场时尚盛宴，在品牌馆的打造理念上采用了咖啡馆的时尚
+						概念主题。馆内装饰都是以简洁精致为主，并以粉色与蓝色之间色彩的碰撞与咖啡馆的结构元素交织在一起，营造出了一个温暖而舒适的氛围。</p>
+				</div>
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress3.jpg" alt="">
+				</div>
+			</div>
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4  text-right text-dark pr-5">
+					<!-- <p class="h5">2017</p> -->
+					<p>6月27日</p>
+					<p class="info-content">在上海电影广场海上五号棚举办“2017 World Jewelry Facets环球时尚首饰汇展”，Mirror迷诺倾力打造风格独具的施华洛世奇元素眼镜闪耀登场。</p>
+				</div>
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress4.jpg" alt="">
+				</div>
+			</div>
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4  text-right text-dark pr-5">
+					<!-- <p class="h5">2017</p> -->
+					<p>6月27日</p>
+					<p class="info-content">为庆祝迷诺15周年，Mirror迷诺特别邀请设计师 W by Wenjun在2017秋冬
+上海时装周共同开启Mirror迷诺15周年特别版眼镜发布秀。Mirror迷诺15周年特别限定版——“心悦”眼镜也逐渐揭开神秘面纱，生机勃勃的配色、吸睛的造型配合模特富有张力的呈现，一出场便赢得了众人的目光。</p>
+				</div>
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress5.jpg" alt="">
+				</div>
+			</div>
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress6.jpg" alt="">
+				</div>
+				<div class="col-4  text-dark pl-5">
+					<p class="h5">2016</p>
+					<p>2月15日</p>
+					<p class="info-content">Mirror迷诺眼镜持续与新锐设计师、时尚界人士的跨界合作，并共同推出7
+款风格独独特的合作款眼镜：充满度假气息的热气球款，应景花季的手绘樱花款，与闺蜜分享的Bestie款……成就了跨界合作的鼎盛时期。</p>
+				</div>
+				
+			</div>
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress7.jpg" alt="">
+				</div>
+				<div class="col-4 text-dark pl-5">
+					<!-- <p class="h5">2016</p> -->
+					<p>9月19日</p>
+					<p class="info-content">Mirror迷诺携手中国独立设计师品牌Dumpty Studio完成了伦敦首秀，Prsr帕
+莎 x Dumpty合作款眼镜在本次Fashion Show中大放异彩。</p>
+				</div>
+			</div>
+			
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4  text-right text-dark pr-5">
+					<p class="h5">2015</p>
+					<p>10月14日</p>
+					<p class="info-content">迷诺眼镜与新锐独立设计师C.J.YAO跨界合作，登临2016春夏上海时装周，尽显独特的风格魅力</p>
+				</div>
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress10.jpg" alt="">
+				</div>
+			</div>
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4  text-right text-dark pr-5">
+					<!-- <p class="h5">2015</p> -->
+					<p>6月11日</p>
+					<p class="info-content">作为长期合作伙伴，迷诺应邀亮相施华洛世奇水晶
+
+120周年展，璀璨夺目</p>
+				</div>
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress11.jpg" alt="">
+				</div>
+			</div>
+			
+			<div class="mt-5 row justify-content-center">
+				<div class="col-4">
+					<img class="img-fluid" src="../img/progress7.jpg" alt="">
+				</div>
+				<div class="col-4 text-dark pl-5">
+					<p class="h5">2014</p>
+					<!-- <p>9月19日</p> -->
+					<p class="info-content">迷诺品牌创立</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- 底部页脚 -->
+		<footer class="container-fluid index-footer">
+			<div class="row">
+				<div class="col-lg-4">
+					Copyright &copy; Mirror.All Rights Reserved | ICP-12393423
+				</div>
+				<div class="col-lg-5">
+					<ul>
+						<li><a href="about.html"><i class="fa fa-hand-peace-o"></i>关于我们</a></li>
+						<li><a href="privacy.html"><i class="fa fa-user-secret"></i>隐私政策</a></li>
+						<li><a href="store.html"><i class="fa fa-map"></i>店铺分布</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3">
+					<ul>
+						<li><a href=""><i class="fa fa-github"></i></a></li>
+						<li><a href=""><i class="fa fa-weibo"></i></a></li>
+						<li><a href=""><i class="fa fa-weixin"></i></a></li>
+						<li><a href=""><i class="fa fa-qq"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+
+		<script src="../js/jquery.js"></script>
+		<script src="../comm/bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+		<script src="../js/header.js" type="text/javascript"></script>
+
+	</body>
+</html>

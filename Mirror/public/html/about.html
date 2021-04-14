@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<title>关于我们</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="../comm/bootstrap-4.4.1-dist/css/bootstrap.css">
+		<link rel="stylesheet" href="../comm/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" href="../css/header.css">
+		<link rel="stylesheet" href="../css/footer.css">
+		<style>
+
+			.mt-100{
+				margin-top: 100px;
+			}
+			.pb-100{
+				padding-bottom: 100px;
+			}
+			.about-size{
+				font-size: 0.8rem;
+				line-height: 1.5rem;
+			}
+			/* 修改导航中的背景透明效果 */
+			.bg-header:hover, body:hover .bg-header,.bg-header {
+				background-color: #fff;
+			}	
+			/* 关于我们 添加背景图片 */
+			.bg-img{
+				background-image: url(../img/about/aboutour.jpg);
+				background-size: cover;
+				background-repeat: no-repeat;
+				/* background-position: right center; */
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 头部导航 -->
+		<header class="container-fluid bg-header">
+			<div class="row">
+				<div class="col-lg-2 header-logo">
+					<a href="../../view/index.html">
+						<img src="../img/logo.png">
+					</a>
+				</div>
+				<nav class="col-lg-9 header-menu">
+					<ul>
+						<li>
+							<a href="../../view/index.html">首页</a>
+						</li>
+						<li>
+							<a href="aviator.html">私人订制</a>
+						</li>
+						<li>
+							<a href="javascript:void()">太阳镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li>女式系列：</li>
+									<li><a href="../../view/modern-lady.html">摩登女郎</a></li>
+									<li><a href="pure-lady.html">清新淑女</a></li>
+									<li><a href="indolent-goddess.html">慵懒女神</a></li>
+								</ul>
+								<ul>
+									<li>男式系列：</li>
+									<li><a href="city-man.html">都市雅痞</a></li>
+									<li><a href="fashion-man.html">时尚先生</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">光学镜</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="manjd.html">男式经典</a></li>
+									<li><a href="ladyjd.html">女式经典</a></li>
+								</ul>
+
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">专属服务</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="aftersales.html">售后服务</a></li>
+									<li><a href="infomation.html">时尚资讯</a></li>
+								</ul>
+							</div>
+						</li>
+						<li>
+							<a href="javascript:void()">走进迷洛</a>
+							<div class="sub-menu">
+								<ul>
+									<li><a href="progress.html">品牌故事</a></li>
+									<li><a href="about.html">关于我们</a></li>
+									<li><a href="design.html">设计概念</a></li>
+									<li><a href="technology.html">生产工艺</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<ul class="col-lg-1 header-user">
+					<li>
+						<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>登录</a>
+					</li>
+					<li>
+						<a href="../../view/shoppingcart.html">
+							<i class="fa fa-shopping-cart"></i>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</header>
+		<!-- 使用bootstrap 的模态框 -->
+		<div class="modal" tabindex="-1" role="dialog" id="loginModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content" id="loginContent">
+					<div class="modal-header login-modal-header">
+						<h5 class="modal-title">登录Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript:void(0)" class="float-left"   onclick="_toggleModal('registerContent')">没有帐号</a>
+								<a href="javascript:void(0)" class="float-right"   onclick="_toggleModal('forgetPwdContent')">忘记密码</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"  data-dismiss="modal">登录</button>
+					</div>
+				</div>
+				<div class="modal-content" id="registerContent" style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">加入Mirror!</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn"   onclick="_toggleModal('loginContent')">注册</button>
+					</div>
+				</div>
+				<div class="modal-content" id="forgetPwdContent"  style="display: none;">
+					<div class="modal-header login-modal-header" style="height: 200px;">
+						<h5 class="modal-title font-weight-bold" style="margin-top: 150px;">重置密码</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="login-form">
+							<div class="login-input-item">
+								<div>账号：</div>
+								<div><input type="text" placeholder="请输入手机号"></div>
+							</div>
+							<div class="login-input-item">
+								<div>密码：</div>
+								<div><input type="password" placeholder="请输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>重复密码：</div>
+								<div><input type="password" placeholder="请再输入密码"></div>
+							</div>
+							<div class="login-input-item">
+								<div>验证码：</div>
+								<div>
+									<input class="col-8 float-left" type="password" placeholder="请输入手机验证密码">
+									<button type="button" class="col-4 btn btn-info btn-sm">发送验证码</button>
+								</div>
+							</div>
+							<div>
+								<!-- bootstrap的左、右浮动 -->
+								<a href="javascript: void(0)" class="float-left fa fa-backward"  onclick="_toggleModal('loginContent')">返回</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer login-modal-footer mt-3">
+						<button type="button" class="login-modal-footer-btn" onclick="_toggleModal('loginContent')">提交</button>
+					</div>
+				</div>
+		
+			</div>
+		</div>
+		
+		<div class="container-fluid mt-100 pb-100 bg-img">
+			<div class="row">
+				<div class="col-lg-5 offset-1">
+					<h2 class="mb-3">关于我们</h2>
+					<p class="h4">迷洛光学有限公司<p>
+					<p class="text-secondary about-size">迷洛光学有限公司成立于2009年，总部位于四川成都，旗下拥有亚洲品牌500强、国内第一太阳眼镜品牌
+								“BOLON”暴龙眼镜，潮流品牌“MOLSION”迷洛，专业品牌“PROSUN保圣”,快时尚品牌“QINA亓那”，是一家集眼镜及零配件开发设计、生产加工、推广销售为一体的大型中法合资光学企业，公司拥有总部机构及六家分、子公司，在职员工1000多人。</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-6 offset-1">
+					<h2 class="mb-3">联系我们</h2>
+					<p class="h4">迷洛眼镜营销中心<p>
+					<address class="about-size">
+						<strong>地址：</strong>成都市高新区中山西路1065号SOHO 中山广场 B 座1201室
+						<br>
+						<strong>电话：</strong>400-874-6988
+						<br>
+						<strong>网址：</strong>www.mirror.com.cn
+					</address>
+				</div>
+			</div>
+		</div>
+		<!-- 关于我们 -->
+
+		<!-- 联系我们 -->
+
+		<!-- 底部页脚 -->
+		<footer class="container-fluid index-footer">
+			<div class="row">
+				<div class="col-lg-4">
+					Copyright &copy; Mirror.All Rights Reserved | ICP-12393423
+				</div>
+				<div class="col-lg-5">
+					<ul>
+						<li><a href="about.html"><i class="fa fa-hand-peace-o"></i>关于我们</a></li>
+						<li><a href="privacy.html"><i class="fa fa-user-secret"></i>隐私政策</a></li>
+						<li><a href="store.html"><i class="fa fa-map"></i>店铺分布</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3">
+					<ul>
+						<li><a href=""><i class="fa fa-github"></i></a></li>
+						<li><a href=""><i class="fa fa-weibo"></i></a></li>
+						<li><a href=""><i class="fa fa-weixin"></i></a></li>
+						<li><a href=""><i class="fa fa-qq"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+
+		<script src="../js/jquery.js"></script>
+		<script src="../comm/bootstrap-4.4.1-dist/js/bootstrap.js"></script>
+		<script src="../js/header.js" type="text/javascript"></script>
+	</body>
+</html>

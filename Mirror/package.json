@@ -1,0 +1,22 @@
+{
+  "name": "prostage3",
+  "version": "1.0.0",
+  "description": "一个电商网站，目前是纯静态页面",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "ejs": "^3.1.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
