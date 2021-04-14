@@ -1,0 +1,201 @@
+<!--index.wxml-->
+<!-- <script src="./iconfont.js"></script> -->
+<!-- 头部 -->
+<view>
+  <!-- 头部信息 -->
+  <view id='header'>
+    <view class="shequshop">
+      <image src="https://www.helloimg.com/images/2021/04/09/BDURaK.png"></image>
+    </view>
+    <view class="headInfo">
+      <ul>
+        <li>
+          <view>成都XX小区店</view>
+          <view>取货地址3栋108快乐惠超市</view>
+        </li>
+        <li>
+          <view>1032</view>
+          <view class="cen">粉丝数</view>
+        </li>
+        <li>
+          <view>16.9万</view>
+          <view class="cen">购买指数</view>
+        </li>
+      </ul>
+    </view>
+  </view>
+  <!-- 头部搜索框 -->
+  <view class='page_row' bindtap="search">
+    <view class="search">
+      <view class="df search_arr">
+        <icon class="searchcion" size='16' type='search'></icon>
+        <input class="sousuo" disabled placeholder="搜索" bindtap='search'/>
+      </view>
+    </view>
+  </view>
+</view>
+<!-- 轮播导航 -->
+<view id="nav">
+  <swiper indicator-dots="true" indicator-color='rgb(228,228,228)' indicator-active-color="rgb(255,255,255)" autoplay="true" interval="500000" duration="500" circular='true'>
+    <swiper-item>
+        <view class="menu" >
+          <view class="item" wx:for="{{partList}}" wx:key='key'>
+            <navigator url='./category/category'>
+              <view>
+                <image src="{{item.part_img}}"></image>
+              </view>
+              <text>{{item.part_name}}</text>
+            </navigator>
+          </view>
+        </view>
+    </swiper-item>
+    <swiper-item >
+        <view class="menu">
+          <view class="item" >
+            <navigator url='/pages/index/type'>
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>餐食料理</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>水产馆</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>蛋蛋馆</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>豆腐管</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>生鲜批发</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>数码家电</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>绿植花芬</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>其他</text>
+            </navigator>
+          </view>
+        </view>
+    </swiper-item>
+    <swiper-item >
+        <view class="menu">
+          <view class="item" >
+            <navigator url='/pages/index/type'>
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>其他</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>其他</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>其他</text>
+            </navigator>
+          </view>
+           <view class="item" >
+            <navigator url="/pages/index/type">
+              <view>
+                <image src="https://www.helloimg.com/images/2021/04/09/BDUB9T.png"></image>
+              </view>
+              <text>其他</text>
+            </navigator>
+          </view>
+        </view>
+    </swiper-item>
+  </swiper>
+</view>
+<!-- 产品详情 -->
+<view class="dtl_goods" wx:for="{{goodList}}" wx:key='index'>
+  <view class="provide">
+    本商品由{{item.provide}}提供
+  </view>
+  <view bindtap='godetail' data-id="{{index+1}}">
+    <!-- 图片 -->
+    <view class="goodimg">
+      <image src="{{item.good_img}}"></image>
+      <view class="anno">精准扶贫</view>
+    </view>
+    <!-- 信息 -->
+    <view class="goodinfo">
+      <ul>
+        <li>
+          <view class="juzhong">{{item.good_name}}</view>
+          <view style="text-align:center" class="smfont">
+            <view class="redcolor">{{item.attention_num}}</view>
+            <view>关注人数</view>
+          </view>
+        </li>
+        <li class="smfont">
+          <view class="redcolor">
+            <view>预售时间：{{item.pay_time}}</view>
+            <view>提货时间：{{item.get_time}}</view>
+          </view>
+          <view>
+            <view>今日已售<text class="redcolor">{{item.have_seld}}份</text></view>
+            <view class="redcolor" style="text-align:right">限量15200份</view>
+          </view>
+        </li>
+        <li>
+          <view class="juzhong">
+            <text class="redcolor bigfont">￥{{item.now_price}}</text>
+            <text class="msmfont">原价 ￥{{item.used_price}}</text>
+          </view>
+          <view class="shopCart juzhong">
+            加入购物车
+          </view>
+        </li>
+      </ul>
+    </view>
+  </view>
+</view>

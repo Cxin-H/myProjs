@@ -1,0 +1,134 @@
+<!--pages/detail/detail.wxml-->
+<!-- tab选项 -->
+<script src="../../style/font/iconfont.js"></script>
+<view class="toptab">
+  <view data-id="1" bindtap='tabclk' class="tabBtn {{tabId==1?'active':''}}">基本信息</view>
+  <view data-id="2" bindtap="tabclk" class="tabBtn {{tabId==2?'active':''}}">购买记录</view>
+</view>
+<!-- 内容 -->
+<view>
+  <!-- 基本信息 -->
+  <view wx:if="{{tabId==1}}" wx:for="{{detailList}}" wx:key='key'>
+    <!-- 图片轮播 -->
+    <swiper indicator-dots="true" indicator-color='rgb(228,228,228)' indicator-active-color="rgb(255,255,255)" duration="500" circular='true'>
+      <swiper-item class="simgs">
+        <image src="{{item.good_img1}}"></image>
+      </swiper-item>
+      <swiper-item class="simgs">
+        <image src="{{item.good_img2}}"></image>
+      </swiper-item>
+      <swiper-item class="simgs">
+        <image src="{{item.good_img3}}"></image>
+      </swiper-item>
+      <swiper-item class="simgs">
+        <image src="{{item.good_img4}}"></image>
+      </swiper-item>
+      <swiper-item class="simgs">
+        <image src="{{item.good_img5}}"></image>
+      </swiper-item>
+    </swiper>
+<!-- 商品信息 -->
+    <view class="dtl_goods">
+      <view>
+        <view class="goodinfo">
+          <ul>
+            <li>
+              <view class="juzhong2">
+                <text class="redcolor bigfont">￥{{item.now_price}}</text>
+                <text class="greycolor smfont">原价 ￥{{item.used_price}}</text>
+              </view>
+              
+              <view class="juzhong">
+                <view class="msmfont">
+                距离本商品结束剩余
+                </view>
+                <text class="time" space="nbsp">{{djs.hour}}</text>
+                <text class="time_text">:</text>
+                <text class="time" space="nbsp">{{djs.min}}</text>
+                <text class="time_text">:</text>
+                <text class="time" space="nbsp">{{djs.sec}}</text>
+              </view>
+            </li>
+            <li>
+              <view class="juzhong">{{item.good_name}}</view>
+              <view style="text-align:center" class="smfont">
+                <view class="redcolor">{{item.attention_num}}</view>
+                <view>关注人数</view>
+              </view>
+            </li>
+            <li class="smfont">
+              <view class="redcolor">
+                <view>预售时间：{{item.get_time}}</view>
+                <view>提货时间：{{item.pay_time}}</view>
+              </view>
+              <view>
+                <view>今日已售<text class="redcolor">{{item.have_seld}}份</text></view>
+                <view class="redcolor" style="text-align:right">限量{{item.limited}}份</view>
+              </view>
+            </li>
+          </ul>
+        </view>
+      </view>
+    </view>
+<!-- 商品详情 -->
+  <view class="g_detail">
+    <view class="this_detail">商品详情</view>
+    <view class="table">
+      <view class="tbody">
+        <tr>
+          <view>
+            <view class="borchange1">
+              <td>供应商：{{item.provide}}</td>
+            </view>
+            <view class="borchange2">
+              <td>规格：{{item.guige}}</td>
+            </view>
+            
+          </view>
+        </tr>
+        <tr>
+          <view>
+            <view style="border-right:none"><td>产地：{{item.chandi}}</td></view>
+            <view><td class="borchange4">aaa</td></view> 
+          </view>
+          
+        </tr> 
+      </view>
+
+    </view>
+  </view>
+<!-- 图文详情 -->
+  <view class="g_detail">
+    <view class="this_detail">
+      图文详情
+    </view>
+    <view>
+      <image class="detailimg" src="{{item.detail_img1}}"></image>
+    </view>
+  </view>
+  </view>
+  <!-- 购买记录 -->
+  <view wx:if="{{tabId==2}}">
+    bbb
+  </view>
+  <!-- 防止底部遮挡 -->
+  <view class="fangdang">
+  </view>
+  <!-- 底部操作 -->
+  <view class="botton">
+    <view class="left">
+      <view class="iconfont icon-shouye boticon"></view>
+      <view class="smrfont">
+        首页
+      </view>
+    </view> 
+    <view class="right" bindtap="goCart">
+      <view class="iconfont icon-gwc boticon"></view>
+      <view class="smrfont">
+        购物车
+      </view> 
+    </view>
+      <view class="btnA" bindtap="addGood">加入购物车</view>
+      <view class="btnB">立即购买</view>
+  </view>
+</view>

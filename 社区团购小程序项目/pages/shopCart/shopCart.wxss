@@ -1,0 +1,182 @@
+/* pages/shopCart/shopCart.wxss */
+.title{
+  font-size: 32rpx;
+  text-align: center;
+}
+.ctil{
+  margin-left: -120rpx;
+}
+.bianji{
+  float: left;
+  padding-left: 20rpx;
+  color: rgb(26,188,156);
+}
+/* 购物篮子 */
+.Cartbox{
+  /* border: black 1rpx solid; */
+  margin-top: 160rpx;
+  overflow:hidden
+}
+.content{
+  height: 220rpx;
+  background: white;
+  /* border: 1px solid pink; */
+  display: block;
+  position: relative;
+  margin-bottom: 23rpx;
+}
+.inner{
+  position: absolute;
+  height: 190rpx;
+  top: 0px;
+  bottom:0px;
+  left: 0px;
+  right: 0px;
+  margin: auto 0;
+}
+/* 复选按钮 */
+.cbox{
+  width: 100rpx;
+  float: left;
+  text-align: center;
+}
+.content checkbox{
+  line-height: 190rpx;
+}
+/*checkbox 选项框大小  */
+checkbox .wx-checkbox-input {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+}
+/*checkbox选中后样式  */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+  background: #1ABC9C;
+}
+/*checkbox选中后图标样式  */
+checkbox .wx-checkbox-input.wx-checkbox-input-checked::before {
+  width: 28rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #fff;
+  background: transparent;
+  transform: translate(-50%, -50%) scale(1);
+  -webkit-transform: translate(-50%, -50%) scale(1);
+}
+
+/* 商品信息操作 */
+.thisgood{
+  float: left;
+}
+image{
+  width: 190rpx;
+  height: 190rpx;
+  border: 1rpx solid rgb(231,231,231);
+}
+.goodinfo,.goodimg{
+  float: left;
+}
+.goodinfo>view{
+  padding: 12rpx 0 12rpx 15rpx ;
+}
+.goodinfo{
+  width: 160px;
+  text-overflow: hidden;
+}
+.goodinfo>view:first-child{
+  font-size: 35rpx;
+  height: 41rpx;
+  overflow: hidden;
+}
+.goodinfo>view:nth-child(2){
+  font-size: 28rpx;
+  color:rgb(198,204,203)
+}
+.goodinfo>view:last-child{
+  font-size: 35rpx;
+  color:rgb(240,72,68)
+}
+.jishu text:nth-child(2){
+  font-size: 30rpx;
+  color: rgb(150, 150, 150);
+}
+.jishu{
+  font-size: 40rpx;
+  position: absolute;
+  bottom: 30rpx;
+  right: 35rpx;
+  color:rgb(198,204,203)
+}
+.jishu>text{
+  padding: 0 20rpx;
+}
+
+
+
+
+
+
+/* 结算栏 */
+.jiesuan{
+  position: fixed;
+  background:white;
+  height: 100rpx;
+  border-top: 1rpx solid rgb(231, 231, 231);
+  bottom: 0;
+  width: 100%;
+}
+.jiesuan>view:first-child{
+  width: 150rpx;
+  text-align: center;
+}
+.jiesuan>view>view{
+  display: inline;
+  font-size: 30rpx;
+  color: rgb(150, 150, 150);
+}
+.jiesuan>view{
+  float: left;
+  line-height: 100rpx;
+}
+.gojiesuan{
+  width: 260rpx;
+  color: white;
+  text-align: center;
+  background: rgb(26,188,156);
+}
+.he{
+  font-size: 35rpx;
+  color:rgb(196, 196, 196);
+  padding-left: 30rpx;
+}
+.hejinum{
+  padding-left: 60rpx;
+  font-size: 43rpx;
+  color:rgb(240,72,68)
+}
+.del>view{
+  size: 30rpx;
+  position: absolute;
+  height: 70rpx;
+  width: 160rpx;
+  top: 0px;
+  bottom:0px;
+  left: 200px;
+  right: 0px;
+  margin: auto;
+  border: 1rpx solid rgb(240,72,68);
+  border-radius: 5%;
+}
+.del>view>view{
+  color: rgb(240,72,68);
+  text-align: center;
+  line-height: 70rpx;
+}
+.active{
+  display: none;
+}
+.fangdang{
+  height: 100rpx;
+}

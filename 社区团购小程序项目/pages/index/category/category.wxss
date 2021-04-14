@@ -1,0 +1,9 @@
+/* pages/index/category/category.wxss */
+.nav_left{
+  height: 100%;
+  width: 40rpx;
+  background:#F9F9F9;
+}
+.active{
+  
+}

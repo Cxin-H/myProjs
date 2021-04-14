@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/fenlei/fenlei",
+    "pages/live/live",
+    "pages/shopCart/shopCart",
+    "pages/user/user",
+    "pages/search/search",
+    "pages/index/category/category",
+    "pages/detail/detail",
+    "pages/icon/index",
+    "components/navigation/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "style/imgs/icon/shouye.png",
+        "selectedIconPath": "style/imgs/icon/shouye2.png"
+      },
+      {
+        "pagePath": "pages/fenlei/fenlei",
+        "text": "分类",
+        "iconPath": "style/imgs/icon/fenleibeifen.png",
+        "selectedIconPath": "style/imgs/icon/fenleibeifen2.png"
+      },
+      {
+        "pagePath": "pages/live/live",
+        "text": "带货直播",
+        "iconPath": "style/imgs/icon/ai23.png",
+        "selectedIconPath": "style/imgs/icon/ai232.png"
+      },
+      {
+        "pagePath": "pages/shopCart/shopCart",
+        "text": "购物车",
+        "iconPath": "style/imgs/icon/gwc.png",
+        "selectedIconPath": "style/imgs/icon/gwc2.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "style/imgs/icon/wode.png",
+        "selectedIconPath": "style/imgs/icon/wode2.png"
+      }
+    ],
+    "color": "#000000",
+    "selectedColor": "#F04844",
+    "backgroundColor": "#F8F8F8"
+  }
+}

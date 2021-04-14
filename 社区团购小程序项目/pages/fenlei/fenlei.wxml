@@ -1,0 +1,32 @@
+<!-- pages/detail/detail.wxml
+<script src="./iconfont.js"></script>
+<!--pages/index/category/category.wxml-->
+<!--主盒子-->
+<view class="containers">
+  <!--左侧栏-->
+  <block class="nav_left">
+    <view wx:for="{{cateItems}}" wx:key="">
+      <view class="nav_left_items {{curNav == item.cate_id ? 'active' : ''}}" bindtap="switchRightTab" data-index="{{index}}" data-id="{{item.cate_id}}">{{item.cate_name}}</view>
+    </block>
+  </view>
+  <!--右侧栏-->
+  <view class="nav_right">
+    <!--如果有数据，才遍历项-->
+    <view wx:if="{{cateItems[curIndex].ishaveChild}}">
+      <block wx:for="{{cateItems[curIndex].children}}" wx:key="">
+        <view class="nav_right_items">
+          <!--界面跳转 -->
+          <navigator url="">
+            <image src="{{item.image}}"></image>
+            <text>{{item.name}}</text>
+          </navigator>
+        </view>
+      </block>
+    </view>
+    <!--如果无数据，则显示数据-->
+    <view class="nodata_text" wx:else>该分类暂无数据</view>
+  </view>
+</view>       -->
+
+
+

@@ -1,0 +1,63 @@
+<!--pages/shopCart/shopCart.wxml-->
+<!-- 自定义导航 -->
+<navigation class="nav">
+  <text class="bianji" bindtap="bianji">{{changeDo}}</text>
+  <view class="title">
+    <text class="ctil">购物车</text>
+  </view>
+</navigation>
+<!-- 购物篮 -->
+<view class="Cartbox">
+  <checkbox-group bindchange="checkboxChange">
+    <view class="content" wx:for="{{cartList}}" wx:key='index'>
+      <view class="inner">
+        <view class="cbox">
+            <checkbox value="{{index}}" checked="{{thisCheck}}">
+            </checkbox>
+        </view>
+        <view class="thisgood">
+          <view class="goodimg">
+            <image src="{{item.good_img}}"></image>
+          </view>
+          <view class="goodinfo">
+            <view bindtap="goDetail">
+              {{item.good_name}}
+            </view>
+            <view>
+              {{item.guige}}
+            </view>
+            <view>{{item.now_price*item.good_num}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="jishu">
+        <text bindtap="jian" data-id="{{index}}">-</text>
+        <text>{{item.good_num}}</text>
+        <text bindtap="jia" data-id="{{index}}">+</text>
+      </view>
+    </view>
+  </checkbox-group>
+  <!-- 防止底部遮挡 -->
+  <view class="fangdang">
+  </view>
+</view>
+
+<!-- 结算栏 -->
+<view class="jiesuan">
+  <view>
+    <checkbox checked="{{checkAll}}" bindtap="handleAllChecked"></checkbox>
+    <view>全选</view>
+  </view>
+  <view class="he">合计:<text class="hejinum">¥{{totalMoney}}</text></view>
+  <view class="gojiesuan {{changeDo=='完成'?'active':''}}" style="float: right;">
+    去结算
+  </view>
+  <view class="del {{changeDo=='编辑'?'active':''}}" bindtap="del">
+    <view>
+      <view>
+        删除
+      </view>
+    </view>
+  </view>
+</view>
+

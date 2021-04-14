@@ -1,0 +1,15 @@
+/* pages/detail/detail.wxss */
+.containers{
+  border-top: 1rpx solid rgb(231, 231, 231);
+}
+.nav_left{
+  height: 100%;
+  width: 180rpx;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background:rgb(249,249,249);
+}
+.nav_left_items{
+  background: white;
+}

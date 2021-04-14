@@ -1,0 +1,195 @@
+/* pages/detail/detail.wxss */
+/* 头部tab */
+.toptab{
+  display: flex;
+  justify-content: space-around;
+  border-top:1rpx solid rgb(231, 231, 231)
+}
+.tabBtn{
+  text-align: center;
+  color: rgb(134, 134, 134);
+  font-size: 30rpx;
+  width: 50%;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+swiper{
+  height: 620rpx;
+}
+.active{
+  color:rgb(26,188,156);
+  border-bottom:8rpx solid rgb(26,188,156)
+}
+/* 图片轮播 */
+.simgs image{
+  width: 100%;
+  height: 620rpx;
+}
+/* 商品信息 */
+.dtl_goods{
+  /* border: 1px saddlebrown solid; */
+  background: white;
+  height: 390rpx;
+  display: block;
+  margin-bottom: 20rpx;
+}
+.provide{
+  text-align: center;
+  color:rgb(134, 134, 134)
+}
+.goodinfo ul li{
+  height: 103rpx;
+  padding: 20rpx;
+}
+.goodinfo ul li:first-child{
+  border: 1rpx solid rgb(231, 231, 231);
+}
+.goodinfo ul li:last-child{
+  padding: 0 20rpx 20rpx 20rpx;
+  border-bottom: 1rpx solid rgb(231, 231, 231);
+}
+.goodinfo ul li>view:nth-child(1){
+  float: left;
+}
+.goodinfo ul li>view:nth-child(2){
+  float: right;
+}
+.goodinfo ul li{
+  display: block;
+}
+.juzhong{
+  line-height:51rpx
+}
+.juzhong2{
+  line-height:103rpx
+}
+.redcolor{
+  color:red
+}
+.greycolor{
+  color: rgb(204, 204, 204);
+}
+.smfont{
+  font-size: 35rpx;
+}
+.msmfont{
+  font-size: 25rpx;
+  color:rgb(134, 134, 134);
+}
+.bigfont{
+  font-size: 60rpx;
+  margin-left: -20rpx;
+}
+
+/* <!-- 商品详情 --> */
+.g_detail{
+  text-align: center;
+  background: white;
+}
+.this_detail{
+  padding: 50rpx 0;
+}
+.table{
+  width: 100%;
+}
+.tbody{
+  margin: 0 auto;
+  width: 700rpx;
+  text-align: center;
+}
+td{
+  /* border:2rpx solid rgb(204, 204, 204); */
+  line-height: 100rpx;
+}
+tr>view{
+  height: 100rpx;
+  width: 700rpx;
+  /* border: 1px solid black; */
+}
+tr>view>view{
+  display: inline-block;
+  width: 346rpx;
+  height: 100rpx;
+  border:1px solid rgb(204, 204, 204);
+  font-size: 30rpx;
+}
+.borchange1{
+  border-right: none;
+  border-bottom: none;
+}
+.borchange2{
+  border-bottom: none;
+}
+.borchange4{
+  opacity: 0;
+}
+/* 倒计时 */
+.time{
+  font-size: 30rpx;
+  color:#fff;
+  background:black;
+  padding: 6rpx 12rpx;
+  border-radius: 20%;
+  text-align:center;
+}
+.time_text{
+  color:rgb(189, 189, 189);
+  padding:0 15rpx 0 5rpx;
+}
+
+
+
+
+
+
+/* 底部fixed */
+.botton{
+  position: fixed;
+  height: 100rpx;
+  width: 100%;
+  background-color: white;
+  bottom: 0;
+  border-top: rgb(231, 231, 231) 1rpx solid;
+}
+.left,.right{
+  text-align: center;
+  float: left;
+  width: 15%;
+  height: 100%;
+  padding-top: 7rpx;
+}
+.botton>view{
+  display: inline-block;
+}
+.smrfont{
+  font-size: 30rpx;
+  color: rgb(134, 134, 134);
+}
+.boticon{
+  color:rgb(153,153,153);
+  font-size:50rpx
+}
+
+
+.btnA,.btnB{
+  font-size: 38rpx;
+  color: white;
+  height: 100%;
+  width: 35%;
+  line-height: 100rpx;
+  text-align: center;
+}
+.btnA{
+  background: rgb(26,188,156);
+}
+.btnB{
+  background:rgb(255,168,71)
+}
+
+.fangdang{
+  height: 90rpx;
+}
+.detailimg{
+  width: 100%;
+  height: 8000rpx;
+}
