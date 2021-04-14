@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            padding-top: 30px;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        #box{
+            width: 320px;
+            height: 568px;
+            position: relative;
+            background-image: url("imgs/1.png");
+            background-size: 320px;
+            margin: auto;
+        }
+        #total{
+            padding: 5px 0 0 10px;
+            display: none;
+        }
+        #startBox{
+            position: absolute;
+            height: 100px;
+            width: 200px;
+/*            border: 1px solid black;*/
+            top : 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto auto;
+            text-align: center;
+        }
+        #start{
+            background-image: url("imgs/2.png");
+            background-repeat: no-repeat;
+            width: 160px;
+            height: 49px;
+            margin-top: 10px;
+        }
+        #overBox{
+            position: absolute;
+            height: 100px;
+            width: 209px;
+            /*            border: 1px solid black;*/
+            top : 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto auto;
+            text-align: center;
+            display: none;
+            z-index: 99;
+        }
+        h1{
+            color: salmon;
+            margin-bottom: 10px;
+            font-size: 35px;
+        }
+        #restart{
+            color: rgb(232,59,94);
+            font-size: 25px;
+            width: 160px;
+            height: 49px;
+            margin-top: 10px;
+            text-align: center;
+            background: rgb(208,234,249);
+        }
+        #score2{
+            padding: 10px 0;
+        }
+        #total p:nth-child(3){
+            margin-top: 495px;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <div id="total">
+            <p>杀敌数：<span id="kill">0</span></p>
+            <p>分数：<span id="score">0</span></p>
+            <p>血量：<span id="blood">3</span></p>
+        </div>
+        <div id="startBox">
+            <h1>飞机大战</h1>
+            <button id="start"></button>
+        </div>
+        <div id="overBox">
+            <h1>Game Over!</h1>
+            <p>得分是：<span id="score2"></span></p>
+            <button id="restart">RESTART</button>
+        </div>
+    </div>
+<script src="碰撞检测.js"></script>
+<script>
+    var startBox = document.getElementById('startBox');
+    var totalBox = document.getElementById('total');
+    var startBtn = document.getElementById('start');
+    var box = document.getElementById('box');
+    var killCount = document.getElementById('kill');
+    var Score = document.getElementById('score');
+    var Blood = document.getElementById('blood');
+    var myPlane;
+    var bleft =  false;
+    var bright = false;
+    var btop = false;
+    var bbottom = false;
+    var bulletsArr = [];
+    var enemyArr = [];
+    var bujiArr = [];
+    var enbulArr = [];
+    var timer1,timer1_2,timer2,timer3,timer4,timer5,timer6,timer7,timer8,timer9,timer10;
+    var overBox = document.getElementById('overBox');
+    var score2 = document.getElementById('score2');
+    var restart = document.getElementById('restart');
+    var k_count = 0;
+    var killScore = 0;
+    var myblood = 5;
+    var bulnum = 1;
+//    设置btn
+    startBtn.onclick = start;
+    function start() {
+        startBox.style.display = 'none';
+        totalBox.style.display = 'block';
+        k_count = 0;
+        killCount.innerText = k_count;
+        killScore = 0;
+        Score.innerText = killScore;
+        myblood = 5;
+        Blood.innerText = myblood;
+        overBox.style.display = 'none';
+        bulnum = 1;
+//    创建敌机
+        timer1 = setInterval(function () {
+            enemyArr.push(new EnemyPlanes('./imgs/enemy1_fly_1.png',getRad(0,(320-34)),0,5,100));
+        },1000)
+        timer1_2 = setInterval(function () {
+            enemyArr.push(new EnemyPlanes('./imgs/enemy3_fly_1.png',getRad(0,(320-34)),0,5,200));
+        },1500)
+
+//    创建补给
+        timer7 = setInterval(function () {
+            bujiArr.push(new BuJi('./imgs/buji.png',getRad(0,(320-34)),0,5));
+        },5000)
+
+//    创建主机
+       /* myPlane = myPlane? '' : new MainPlane('./imgs/myplane.gif',127,0,8);*/
+        if(!myPlane){
+            myPlane =  new MainPlane('./imgs/myplane.gif',127,0,8);
+        }
+//    主机飞行
+        timer2 = setInterval(playerMove,50);
+//    子弹飞行
+        timer3 = setInterval(bulletsMove,50);
+//    敌机飞行
+        timer4 = setInterval(enemyMove,50);
+//    碰撞检测
+        timer5 = setInterval(crash,50)
+//    主机与敌机碰撞检测
+        timer6 = setInterval(crash2,800)
+//    补给飞行
+        timer7 = setInterval(giftMove,50);
+//    主机与补给碰撞检测
+        timer8 = setInterval(crash3,50)
+//    敌方子弹飞行
+//         timer9 = setInterval(enbulMove,50);
+//    敌方子弹发射
+        timer10 = setInterval(enbulMove,300);
+        /*enshoot();*/
+
+//    主机与敌方子弹碰撞检测
+    }
+/*
+    @method 获取n到m的整数，n<m
+    @param n number 较小值
+    @param m number 较大值
+    @return number n到m的随机数
+    */
+    function getRad(n,m) {
+        return Math.floor(Math.random()*(m-n+1)+n);
+    }
+//    敌机的构造函数
+    function EnemyPlanes(src,x,y,speed,score) {
+        this.node = document.createElement('img');
+        this.src = src;
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+        this.k_score = score;
+        this.isDead = false;
+        this.init(); //初始化
+        this.deadTime = 8;
+    }
+    EnemyPlanes.prototype.init = function () {
+        this.node.src = this.src;
+        this.node.style.position = 'absolute';
+        this.node.style.left = this.x + 'px';
+        this.node.style.top = this.y + 'px';
+        box.appendChild(this.node);
+    }
+    EnemyPlanes.prototype.move = function() {
+        this.node.style.top = parseInt(this.node.style.top) + this.speed + 'px';
+    }
+    EnemyPlanes.prototype.move2 =function () {
+        enbulArr.push(new EnBullets('./imgs/bullet2.png',enemyArr[i].node.offsetLeft+(enemyArr[i].
+            node.clientWidth/2 - 3),enemyArr[i].node.offsetTop+enemyArr[i].node.clientHeight,12));
+    }
+    EnemyPlanes.prototype.move2 = function() {
+        this.node.style.top = parseInt(this.node.style.top) - this.speed + 'px';
+    }
+
+//    补给的构造函数
+    function BuJi(src,x,y,speed) {
+        this.node = document.createElement('img');
+        this.src = src;
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+        this.init(); //初始化
+        this.deadTime = 1;
+    }
+    BuJi.prototype.init = function () {
+        this.node.src = this.src;
+        this.node.style.position = 'absolute';
+        this.node.style.left = this.x + 'px';
+        this.node.style.top = this.y + 'px';
+        box.appendChild(this.node);
+    }
+    BuJi.prototype.move = function() {
+        this.node.style.top = parseInt(this.node.style.top) + this.speed + 'px';
+    }
+
+//    主机的构造函数
+    function MainPlane(src,x,y,speed) {
+        this.node = document.createElement('img');
+        this.src = src;
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+        this.init();
+    }
+    MainPlane.prototype.init = function () {
+        this.node.src = this.src;
+        this.node.style.position = 'absolute';
+        this.node.style.left = this.x + 'px';
+        this.node.style.bottom = this.y + 'px';
+        box.appendChild(this.node);
+    }
+    MainPlane.prototype.toTop = function () {
+        if (this.node.offsetTop >0){
+            this.node.style.bottom = parseInt(this.node.style.bottom) + this.speed + 'px';
+        }else {
+            this.node.style.bottom = box.clientHeight - this.node.clientHeight;
+        }
+    }
+    MainPlane.prototype.toBottom = function () {
+        if (parseInt(this.node.style.bottom)>0 ){
+            this.node.style.bottom = parseInt(this.node.style.bottom) - this.speed + 'px';
+        }else {
+            this.node.style.bottom = 0;
+        }
+    }
+    MainPlane.prototype.toLeft = function (){
+        if (this.node.offsetLeft >0){
+            this.node.style.left = this.node.offsetLeft - this.speed + 'px';
+        }else {
+            this.node.style.left = 0;
+        }
+    }
+    MainPlane.prototype.toRight = function () {
+        if (this.node.offsetLeft < box.clientWidth - 66){
+            this.node.style.left = this.node.offsetLeft +this.speed + 'px';
+        }else{
+            this.node.style.left = box.clientWidth - this.node.clientWidth + 'px';
+        }
+    }
+    MainPlane.prototype.shoot = function () {
+        switch (bulnum) {
+            case 1:
+                bulletsArr.push(new Bullets('./imgs/bullet3.png',myPlane.node.offsetLeft+(myPlane.node.clientWidth/2 - 3),myPlane.node.offsetTop-14,12));
+                break;
+            case 2:
+                bulletsArr.push(new Bullets('./imgs/bullet3.png',myPlane.node.offsetLeft+(myPlane.node.clientWidth/2 - 27),myPlane.node.offsetTop-6,12));
+                bulletsArr.push(new Bullets('./imgs/bullet3.png',myPlane.node.offsetLeft+(myPlane.node.clientWidth/2 + 21),myPlane.node.offsetTop-6,12));
+                break;
+            case 3:
+                bulletsArr.push(new Bullets('./imgs/bullet3.png',myPlane.node.offsetLeft+(myPlane.node.clientWidth/2 - 3),myPlane.node.offsetTop-14,12));
+                bulletsArr.push(new Bullets('./imgs/bullet3.png',myPlane.node.offsetLeft+(myPlane.node.clientWidth/2 + 21),myPlane.node.offsetTop-6,12));
+                bulletsArr.push(new Bullets('./imgs/bullet3.png',myPlane.node.offsetLeft+(myPlane.node.clientWidth/2 - 27),myPlane.node.offsetTop-6,12));
+                break;
+        }
+    }
+
+/*
+    var enshoot = function(){
+        for (var i = 0 ; i<enemyArr[i] ; i++){
+            enbulArr.push(new EnBullets('./imgs/bullet2.png',enemyArr[i].node.offsetLeft+(enemyArr[i].node.clientWidth/2 - 3),enemyArr[i].node.offsetTop+enemyArr[i].node.clientHeight,12));
+        }
+    }
+*/
+
+
+    //射击功能
+    //子弹的构造函数****************************************************
+    function Bullets(src,x,y,speed){
+        this.node = document.createElement('img');
+        this.src = src;
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+
+        this.node.src = this.src;
+        this.node.style.position = 'absolute';
+        this.node.style.left = this.x + 'px';
+        this.node.style.top = this.y + 'px';
+        box.appendChild(this.node);
+    }
+    Bullets.prototype.move = function(){
+        this.node.style.top = this.node.offsetTop - this.speed + 'px';
+    }
+
+    //敌方子弹的构造函数*************************************************
+    function EnBullets(src,x,y,speed){
+        this.node = document.createElement('img');
+        this.src = src;
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+
+        this.node.src = this.src;
+        this.node.style.position = 'absolute';
+        this.node.style.left = this.x + 'px';
+        this.node.style.top = this.y + 'px';
+        box.appendChild(this.node);
+    }
+/*    EnBullets.prototype.move = function(){
+        this.node.style.top = this.node.offsetTop + EnemyPlanes.clientHeight + this.speed + 'px';
+    }*/
+
+    //方向控制
+    document.onkeydown = function () {
+        var e = window.event || arguments[0];
+        var keyCode = e.keyCode || e.charCode();
+        console.log(keyCode);
+        switch (keyCode) {
+            case 65:    //a
+                bleft = true;
+                // myPlane.toLeft();
+                break;
+            case 87:    //w
+                btop = true;
+                // myPlane.toTop();
+                break;
+            case 68:    //d
+                bright = true;
+                // myPlane.toRight();
+                break;
+            case 83:    //s
+                bbottom = true;
+                // myPlane.toBottom();
+                break;
+        }
+    }
+    document.onkeyup = function () {
+        var e = window.event || arguments[0];
+        var keyCode = e.keyCode || e.charCode();
+        console.log(keyCode);
+        switch (keyCode) {
+            case 65:
+                bleft = false;
+                // myPlane.toLeft();
+                break;
+            case 87:
+                btop = false;
+                // myPlane.toTop();
+                break;
+            case 68:
+                bright = false;
+                // myPlane.toRight();
+                break;
+            case 83:
+                bbottom = false;
+                break;
+            case 32:
+                //发射子弹
+                myPlane.shoot();
+                break;
+        }
+    }
+
+
+
+    function enbulMove() {
+        for (var i = 0 ; i<enbulArr.length ; i++){
+            if (enbulArr[i].node.offsetTop < box.clientHeight){
+                enbulArr[i].move2();
+            }else {
+                box.removeChild(enbulArr[i].node);
+                enbulArr.splice(i , 1);
+            }
+        }
+    }
+
+    function playerMove() {
+        if (bleft == true)
+            myPlane.toLeft();
+        if (bright == true)
+            myPlane.toRight();
+        if (btop == true)
+            myPlane.toTop();
+        if (bbottom == true)
+            myPlane.toBottom();
+    }
+    function bulletsMove() {
+        for (var i = 0 ; i<bulletsArr.length ; i++){
+            if (bulletsArr[i].node.offsetTop+14 >0){
+                bulletsArr[i].move();
+            }else {
+                box.removeChild(bulletsArr[i].node);
+                bulletsArr.splice(i , 1);
+            }
+        }
+    }
+    function enemyMove() {
+        for (var i = 0 ; i < enemyArr.length ; i++){
+            if(enemyArr[i].node.offsetTop < box.clientHeight /*+ 14 - this.node.clientHeight*/){
+                if (!enemyArr[i].isDead){
+                    enemyArr[i].move();
+                }else {
+                    enemyArr[i].deadTime--;
+                    if (enemyArr[i].deadTime == 0){
+                        box.removeChild(enemyArr[i].node);
+                        enemyArr.splice(i , 1);
+                    }
+                }
+            }else {
+                box.removeChild(enemyArr[i].node);
+                enemyArr.splice(i , 1);
+            }
+        }
+    }
+
+    function giftMove() {
+        for (var i = 0 ; i < bujiArr.length; i++){
+            if(bujiArr[i].node.offsetTop < box.clientHeight){
+                bujiArr[i].move();
+            }else {
+                box.removeChild(bujiArr[i].node);
+                bujiArr.splice(i , 1);
+            }
+        }
+    }
+
+//    碰撞事件
+//     敌机与子弹碰撞的事件
+    function crash() {
+        for (var i = 0 ; i<enemyArr.length ; i++){      //敌机循环在外层，如果敌机循环在内层，子弹和飞机碰撞后，子弹马上删除，被删除的子弹还可能继续和其他敌机比较碰撞，会出错
+            for (var j = 0 ; j<bulletsArr.length ; j++){
+                if (testCollision(enemyArr[i].node,bulletsArr[j].node)){
+                    enemyArr[i].node.src = './imgs/boom.png';
+                    box.removeChild(bulletsArr[j].node);
+                    bulletsArr.splice(j,1);
+                    if (!enemyArr[i].isDead){
+                        k_count++;
+                        killCount.innerText = k_count;
+                        killScore = killScore + enemyArr[i].k_score;
+                        Score.innerText = killScore;
+                    }
+                    enemyArr[i].isDead = true;
+                }
+            }
+        }
+    }
+
+    // 主机与敌机碰撞的事件
+    function crash2() {
+        for (var i = 0 ; i<enemyArr.length ; i++){
+            if (testCollision(myPlane.node,enemyArr[i].node) ) {
+                enemyArr[i].node.src = './imgs/boom.png';
+                enemyArr[i].isDead = true;
+                myblood--;
+                Blood.innerText = myblood;
+                bulnum = 1;
+                if (myblood <= 0){
+                    myPlane.node.src = './imgs/本方飞机爆炸.gif';
+                    gameover();
+                }
+            }
+        }
+    }
+
+    // 主机与补给碰撞的事件
+    function crash3() {
+        for (var i = 0 ; i<bujiArr.length ; i++){
+            if (testCollision(bujiArr[i].node,myPlane.node)){
+                box.removeChild(bujiArr[i].node);
+                bujiArr.splice(i,1);
+                if(bulnum>0 && bulnum<3){
+                    bulnum++;
+                }
+/*                console.log(bulnum);*/
+            }
+        }
+    }
+
+
+
+    function gameover() {
+        clearInterval(timer1);
+        clearInterval(timer1_2);
+        clearInterval(timer2);
+        clearInterval(timer3);
+        clearInterval(timer4);
+        clearInterval(timer5);
+        clearInterval(timer6);
+        clearInterval(timer7);
+        overBox.style.display = 'block'
+        score2.innerText = killScore;
+        setTimeout(function () {
+            var imgs = document.getElementsByTagName('img');
+/*            for (var i = imgs.length-1 ; i >= 0 ; i--){
+                box.removeChild(imgs[i]);
+            }*/
+            while (imgs[0]){
+                box.removeChild(imgs[0]);
+            }
+            enemyArr = [];
+            bulletsArr = [];
+            myPlane = '';
+        },1000)
+    }
+    restart.onclick = start;
+</script>
+</body>
+</html>
