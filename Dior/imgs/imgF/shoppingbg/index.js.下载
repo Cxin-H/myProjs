@@ -1,0 +1,47 @@
+var app_div = document.createElement('div');
+app_div.id = 'app';
+document.getElementsByTagName("body")[0].appendChild(app_div);
+
+var protocolStr = document.location.protocol;
+
+window.livechatUrl = (protocolStr == "http:") ? 'http://livechat.dior.cn:19092/livechat/' : 'https://livechat.dior.cn:19093/livechat/'; 
+
+if (/beauty\/zh_cn\/store/g.test(window.location.href)) {
+	var static_location = (protocolStr == "http:") ? 'h' : 'hs'; 
+	// import style
+	var link_livchat = document.createElement('link');
+	link_livchat.type = 'text/css';
+	link_livchat.rel = 'stylesheet';
+	link_livchat.href = livechatUrl +'chatapp/dist/'+static_location+'/static/css/app.d965b2b1a52aa587f41af0725d63fb95.css';
+	document.getElementsByTagName("head")[0].appendChild(link_livchat);
+	// import script
+	loadScript(livechatUrl + 'chatapp/dist/'+static_location+'/static/js/manifest.0c7f52a516a8e62576ae.js', function() {
+		loadScript(livechatUrl + 'chatapp/dist/'+static_location+'/static/js/vendor.1f68df86add4917d018f.js', function() {
+			loadScript(livechatUrl + 'chatapp/dist/'+static_location+'/static/js/app.40bf3421c33e3cc7bcf3.js', function() {
+				
+			});
+		});
+	});
+}
+
+
+function loadScript(url, callback){
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    if(script.readyState){ // IE
+        script.onreadystatechange = function() {
+            if(script.readyState == "loaded" || script.readyState == "complete") {
+                script.onreadystatechange = null;
+                callback();
+            }
+        };
+    }else{ // Firefox, Chrome, Opera, ...
+        script.onload = function(){
+            callback();
+        };
+    }
+    script.src = url;
+    document.getElementsByTagName("head")[0].appendChild(script);
+}
+
+

@@ -1,0 +1,893 @@
+(function (pcis) {
+
+    pcis.cookies = {
+        CartItemsCount : {
+            jsUpdate : false
+        }
+
+    }
+
+    pcis.GET_CART = {
+        contentType : 'application/json',
+        AjaxFormat : {
+             Request: function (data) {
+             },
+             Response: function (responseWs) {
+
+                //Response : CHINE
+                //_obj: CENTRAL
+
+                //Cas d'erreur
+                if (responseWs.status != 1) {
+                    var _obj = new Object();
+                    _obj.status = false;
+                    return JSON.stringify(_obj);
+                }
+
+                var _obj = new Object();
+                var basket = new Object();
+                var wording = new Object();
+                wording.quantity = core.Static.quantity;
+
+                basket.products = new Array();
+                for (var i = 0; i < responseWs.response.items.length; i++) {
+                    var productChine = responseWs.response.items[i];
+
+                    var desc = productChine.description;
+                    var free = productChine.free;
+                    var name = productChine.name;
+                    var packshot = productChine.packshot;
+                    var priceWithCurrency = productChine.priceWithCurrency;
+                    var quantity = productChine.quantity;
+                    var sku = productChine.sku;
+                    var title = productChine.title;
+                    if (title == null) {
+                        title = "";
+                    }
+                    var product = new Object();
+
+                    if (name == null) {
+                        name = "";
+                    }
+                    product.name = name;
+
+                    if (desc == null) {
+                        desc = "";
+                    }
+                    product.description = desc;
+
+                    product.sku = sku;
+
+                    if (title == null) {
+                        title = "";
+                    }
+                    product.title = title;
+
+                    product.free = free;
+                    product.quantity = quantity;
+                    product.unitPriceWithCurrency = priceWithCurrency;
+                    product.subTotalWithCurrency = priceWithCurrency;
+                    product.packshot = packshot;
+                    product.removeTrackObject = null;
+                    basket.products.push(product);
+                }
+
+                basket.totalWithCurrency = responseWs.response.totalWithCurrency;
+                basket.taxeWithCurrency = responseWs.response.taxWithCurrency;
+                basket.shippingWithCurrency = responseWs.response.shippingWithCurrency;
+                basket.productsQuantity = responseWs.response.cartSize;
+                basket.subTotalWithCurrency = responseWs.response.cartSubTotalWithCurrency;
+
+                _obj.wording = wording;
+                _obj.basket = basket;
+                _obj.conditions = "";
+                _obj.status = true;
+
+                return JSON.stringify(_obj);
+
+            }
+        }
+    },
+
+    pcis.REMOVE_ITEM = {
+        contentType : 'application/json',
+        AjaxFormat : {
+            Request: function (data) {
+                // parse to China format
+                data = data.replace(/sku=/g, '{ "sku":"');
+                data = data.replace(/=/g, ':');
+                data += '"}';
+                return data;
+            },
+            Response: function (response) {
+                //Cas d'erreur
+                if (response.status != 1) {
+                    var _obj = new Object();
+                    _obj.status = false;
+                    return JSON.stringify(_obj);
+                }
+                response.status = true;
+                response.isServerHandleCookie = true;
+
+
+                var data = $j.ajax({
+                     url: diorV7.config.webservices.CART['PCD'].GET.url,
+                     type: diorV7.config.webservices.CART['PCD'].GET.method,
+                     async: false,
+                     // DEFINE A FORMATTER OBJECT FOR THE CALL
+                     // must have a Request method that format the settings data object directly
+                     // must have a Response method that format the data, and return a stringified object
+                     // @see diorV7.config.js
+                     // @seealso pcis.AjaxFormat.js (http://www.dior.cn/medias/version-6.9.1488558669739/pcis/js/custom_cn.js)
+                     formatter: diorV7.config.webservices.CART['PCD'].GET.formatter,
+                     contentType: diorV7.config.webservices.CART['PCD'].GET.contentType,
+
+                     success: function success(data) {
+                         return data;
+                    },
+                     error: function error(data) {
+                          var _obj = new Object();
+                          _obj.status = false;
+                          return _obj;
+                    }
+                });
+
+                return JSON.stringify(data.responseJSON);
+            }
+        }
+    },
+
+    pcis.ADD_TO_CART = {
+        contentType : 'application/json',
+        AjaxFormat : {
+            // @param [String] data
+            // @return [String]
+            Request: function (data) {
+
+                // Pour le MULTIPLE_ADD_TO_CART le contenu est passe encode...
+                data=decodeURIComponent(data);
+
+                //Pour AOG on supprime le giftmessage de l'url
+                var indexGift = data.indexOf('&giftMessage=');
+                var tabGiftMessage = new Array();
+                if (indexGift != -1) {
+                    var valueGift = data.substring(indexGift, data.length).replace('&giftMessage=', '');
+                    var tabGift = valueGift.split('::');
+
+                    //Convertir en tableau de giftmessage
+                    for (var i = 0; i < tabGift.length; i++) {
+                        var obj = new Object();
+                        obj.message = tabGift[i];
+                        tabGiftMessage.push(obj);
+                    }
+                    data = data.substring(0, indexGift);
+                }
+                // multiple
+                var _multiple = false;
+                if (data.indexOf('skus=') != -1) {
+                    _multiple = true;
+                    data = data.replace('skus=', '[{');
+                    data = data.replace(/,/g, '},{');
+                    data = data.replace(/:/g, '",');
+                    data = data.replace(/sku=/g, '"sku":"');
+                } else {
+                    data = data.replace(/sku=/g, '{"sku":"');
+                }
+
+                // all
+                data = data.replace(/&/g, '",');
+                data = data.replace(/quantity/g, '"quantity"');
+                data = data.replace(/=/g, ':');
+                data += "}";
+
+                if (_multiple) {
+                    data += ']';
+                }
+
+                data = JSON.parse(data);
+
+                var _data = {
+                    items: [],
+                    giftMessage: tabGiftMessage
+                };
+                if (data.length) {
+                    _data.items = data;
+                } else {
+                    _data.items.push(data);
+                }
+
+                return JSON.stringify(_data);
+            },
+            // @param [String] response
+            // @return [String]
+            Response: function (response) {
+
+                var product = new Object();
+                product.skus = new Array();
+                product['message'] = response.message;
+                //pour AOG
+                product['status'] = response.status == 1 ? 'ok' : "nok";
+
+                //On V7 $j.cookie is null...
+                var ccokieCartItemsCount = 0;
+                if($j.cookie != null){
+                    ccokieCartItemsCount = $j.cookie("CartItemsCount")
+                }else{
+                    ccokieCartItemsCount = Cookies.get("CartItemsCount")
+                }
+
+                var _obj = {
+                    status: response.status == 1 ? "ok" : "nok",
+                    message: response.message,
+                    errorMessages: response.message,
+                    product: product,
+                    basketsize: ccokieCartItemsCount
+                };
+                return JSON.stringify(_obj);
+            }
+        }
+    },
+
+    pcis.STOCK_ALERT = {
+        contentType : 'application/json',
+        AjaxFormat : {
+            // @param [String] data
+            // @return [String]
+            Request: function (data) {
+                data = QueryStringToJson(data);
+
+                var _subscription = new Object();
+                _subscription.type = "email";
+                _subscription.value = data.mail;
+
+                var _data = {
+                    sku: data.skuCode,
+                    subscriptions: []
+                };
+                _data.subscriptions.push(_subscription);
+
+                return JSON.stringify(_data);
+            },
+            Response: function (response) {
+                var _response = {
+                    status: response.status == 1 ? "ok" : "nok",
+                    message: response.message,
+                    errorMessages: response.message,
+                    subscribeNewsletter: true
+                };
+
+                return JSON.stringify(_response);
+            }
+        }
+
+    },
+
+    pcis.STOCK_ALERT_NEWSLETTER = {
+        contentType : 'application/json',
+        AjaxFormat : {
+            // @param [String] data
+            // @return [String]
+            Request: function (data) {
+
+               data = QueryStringToJson(data);
+
+               var _data = {
+                      email: data.mail,
+                      "optinsBean.beautyNl": data.isSubscribeBeauty
+               };
+
+                return $j.param(_data);
+            },
+            Response: function (response) {
+                return JSON.stringify(response);
+            }
+        }
+    },
+
+    pcis.STOCK_STATUS = {
+        method : 'POST',
+        contentType : 'application/json',
+        AjaxFormat : {
+            Request: function (data) {
+                return data;
+            },
+            Response: function (response) {
+                var responseFormatted = {
+                	'data' : {}
+                };
+
+                var responseWs = response.response
+
+                Object.keys(responseWs).map(function(key, index) {
+                    var stock = parseInt(responseWs[key].stock);
+                    var status = 'OUTOFSTOCK';
+                    if(stock > 0){
+                   		status = 'AVAILABLE'
+                    }
+
+                	 responseFormatted.data[key] = {
+                        'status' : status,
+                        'price' : responseWs[key].price
+                    }
+                })
+
+                return JSON.stringify(responseFormatted);
+            }
+        }
+    },
+
+
+    pcis.Product = {
+        GetInfo: function (async) {
+            if (async === undefined) {
+                async = true;
+            }
+
+            //Si realtime stock a false on quitte
+            if ($j('#realTimeStock').val() != 'true') {
+                return;
+            }
+
+            // Variables sélecteur
+            var classSkuForRoutine = '.essential-list .push-button a';
+            var classSuggestions = '.suggestions-content .push-buttons .js-addtocart';
+            var classSkuForGamme = '.push-legend .push-button a';
+            var classSkuForFragrance = '.quickbuy-order .js-products-selector .js-dropdown-items li';
+            var classSkuForMakeUp = '.quickbuy-swatches .swatches-list li';
+            var classSkuUnique = '#addItemToCart';
+            var classSkuAxe = '.js-addtocart';
+            var classSkuPopinVideo = '.app-products-content .js-addtocart';
+            var classSkuQuickbuy = '#quickbuySkus';
+
+            // current page
+            var isPageMakeUp = $j('#currentPage').val() == 'makeup';
+            var isPageParfum = $j('#currentPage').val() == 'fragrance';
+            var isPageGamme = $j('#currentPage').val() == 'gamme';
+            var isPageAxe = $j('#currentPage').val() == 'axe';
+            var isPagePopinVideo = $j('#popinVideoPage').val() == 'popin_video';
+            var isQuickbuyMakeUp = $j('#quickbuyPage').val() == 'quickbuy-makeup';
+            var isQuickbuyFragrance = $j('#quickbuyPage').val() == 'quickbuy-fragrance';
+            var skuUnique = "";
+
+            // class pour setter prix
+            var fragrancePriceValue = '.quickbuy-details .js-dropdown-activeValue';
+            var makeupPriceValue = '.quickbuy-details .js-dropdown-activeValue';
+            var routineSkuSelector = '.essential-buy-all a';
+            var routinePriceValue = '.essential-buy-all .firstPriceValueEssentials';
+
+            // Si popin video ecraser axe (car popin)
+            if (isPagePopinVideo) {
+                isPageAxe = false;
+            }
+
+            var itemRequestList = [];
+            var strListe = "";
+
+            //Fiche produit
+            if (isPageMakeUp) {
+                strListe = $j(classSkuForMakeUp);
+            }
+            else if (isPageParfum) {
+                strListe = $j(classSkuForFragrance);
+            }
+            if ((isPageMakeUp || isPageParfum)) {
+                //Suggestions
+                $j.each($j(classSuggestions), function () {
+                    itemRequestList.push(getSkuForGamme($j(this)));
+                });
+                //Sku unique
+                if (!strListe.length) {
+                    itemRequestList = itemRequestList.concat(getUniqueSku());
+                    skuUnique = itemRequestList[0].sku;
+                }
+                else {
+                    //Sku multiple
+                    itemRequestList = itemRequestList.concat(getMultipleSkus());
+                }
+            }
+            // Page gamme, quickbuy, axe, popin_video
+            else {
+                itemRequestList = itemRequestList.concat(getRequestSkus());
+            }
+
+            //Preparing call
+            var requestBody = new Object();
+            requestBody.items = itemRequestList;
+            var data = JSON.stringify(requestBody);
+
+            var ajaxGetStockMethod = diorV7.config.webservices.PRODUCT.STOCK_STATUS.method;
+            var ajaxGetStockUrl = diorV7.config.webservices.PRODUCT.STOCK_STATUS.url;
+            var ajaxGetStockTimeout = diorV7.config.webservices.PRODUCT.STOCK_STATUS.timeout;
+
+            /**
+             * Get skus in DOM for quickBuy, Gamme, axe, popin video pages
+             * @returns {Array}
+             */
+            function getRequestSkus() {
+                var itemRequestList = [];
+                if (isQuickbuyMakeUp || isQuickbuyFragrance) {
+                    itemRequestList = getQuickBuySkus();
+                    return itemRequestList;
+                }
+                if (isPageGamme) {
+                    $j.each($j(classSkuForGamme), function () {
+                        itemRequestList.push(getSkuForGamme($j(this)));
+                    });
+                    $j.each($j(classSkuForRoutine), function () {
+                        itemRequestList.push(getSkuForGamme($j(this)));
+                    });
+                    return itemRequestList;
+                }
+                if (isPageAxe) {
+                    $j.each($j(classSkuAxe), function () {
+                        itemRequestList.push(getSkuForGamme($j(this)));
+                    });
+                    return itemRequestList;
+                }
+                if (isPagePopinVideo) {
+                    classSkuUnique = classSkuPopinVideo;
+                    itemRequestList = getUniqueSku();
+                    return itemRequestList;
+                }
+            }
+
+            /**
+             * Get Skus in DOM for product page (multi-skus)
+             * @returns {Array}
+             */
+            function getMultipleSkus() {
+                var itemRequestList = [];
+                $j.each(strListe, function () {
+                    var currentSku = $j(this).children().attr('data-sku');
+                    if (currentSku != undefined) {
+                        var itemRequest = {
+                            sku: currentSku
+                        };
+                        itemRequestList.push(itemRequest);
+                    }
+                });
+                return itemRequestList;
+            }
+
+            /**
+             * Get Skus in DOM for product page (mono-skus)
+             * @returns {Array}
+             */
+            function getUniqueSku() {
+                var itemRequestList = [];
+                var currentSku = $j(classSkuUnique).attr('data-sku');
+                var itemRequest = {
+                    sku: currentSku
+                };
+                itemRequestList.push(itemRequest);
+                return itemRequestList;
+            }
+
+            /**
+             * Get sku in DOM for gamme, axe, suggestions
+             * @returns {{sku: *}}
+             */
+            function getSkuForGamme(element) {
+                var itemRequest;
+                if (element.attr('data-sku') != undefined) {
+                    itemRequest = {
+                        sku: element.attr('data-sku')
+                    };
+                }
+                else if (element.attr('data-productskusqb') != undefined) {
+                    //Prendre le sku par defaut
+                    if (element.attr('default-sku') != undefined) {
+                        itemRequest = {
+                            sku: element.attr('default-sku')
+                        };
+                    }
+                }
+                return itemRequest;
+            }
+
+            /**
+             * get skus in DOM for quickBuy popin
+             * @returns {Array}
+             */
+            function getQuickBuySkus() {
+                var itemRequestList = [];
+                var strListeQuickbuy = $j(classSkuQuickbuy).val().split(',');
+                for (var i = 0; i < strListeQuickbuy.length; i++) {
+                    var itemRequest = {
+                        sku: strListeQuickbuy[i]
+                    };
+                    itemRequestList.push(itemRequest);
+                }
+                return itemRequestList;
+            }
+
+            //Calling remote get stock and price
+            jQuery.ajax({
+                contentType: 'application/json',
+                async: async,
+                data: data,
+                type: ajaxGetStockMethod,
+                url: ajaxGetStockUrl,
+                timeout: ajaxGetStockTimeout,
+                success: function (responseWs) {
+
+                    var metaPrices = "";
+
+                    // Fiche produit : makeup ou quickbuy makeup
+                    if (isPageMakeUp || isQuickbuyMakeUp) {
+                        updateProductPageMakeup();
+                    }
+
+                    // Fiche produit : parfum ou quickbuy parfum
+                    else if (isPageParfum || isQuickbuyFragrance) {
+                        updatProductPageFragrance();
+                    }
+
+                    // Page gamme
+                    else if (isPageGamme) {
+                        updateRoutineSection();
+                        $j.each($j(classSkuForGamme), function () {
+                            setStockAndPriceForGammeOrRoutine($j(this));
+                        });
+                        //reafficher zone ecommerce
+                        displayPriceAndButtonForGamme();
+                    }
+
+                    // Page Axe
+                    else if (isPageAxe) {
+                        $j.each($j(classSkuAxe), function () {
+                            setStockAndPriceForGammeOrRoutine($j(this));
+                        });
+                        //reafficher zone ecommerce
+                        displayPriceAndButtonForGamme();
+                    }
+
+                    // Popin Video
+                    else if (isPagePopinVideo) {
+                        updatePopinvideoPage();
+                    }
+
+                    //Set meta prices
+                    $j("meta[name='gsa-prices']").attr("content", metaPrices.substring(0, metaPrices.length - 1));
+
+                    /**
+                     * update product page : fragrance
+                     */
+                    function updatProductPageFragrance() {
+                        //Sku unique
+                        if (skuUnique != "") {
+                            var skuCode = $j(classSkuUnique).attr('data-sku');
+                            setPriceForUniqueSku(skuCode);
+                        }
+                        //Sku multiple
+                        $j.each($j(classSkuForFragrance), function () {
+                            var skuCode = $j(this).children().attr('data-sku');
+                            var skuObject = responseWs.response[skuCode];
+                            if (skuCode == undefined || !checkSkuExist(skuObject, skuCode)) {
+                                return true;
+                            }
+
+                            var prix = skuObject.price;
+                            var stock = parseInt(skuObject.stock);
+
+                            if (prix != null) {
+                                if ($j(this).children().children(".js-dropdown-value").length == 0) {
+                                    $j(this).children().append("<span class='break'></span>")
+                                    $j(this).children().append("<span class='value js-dropdown-value' data-value=''></span>")
+                                }
+                                $j(this).children().children(".js-dropdown-value").attr('data-value', prix);
+                                $j(this).children().children(".js-dropdown-value").text(prix);
+                                metaPrices = metaPrices + prix + '|';
+                            }
+
+                            if (stock > 0) {
+                                $j(this).children().attr('data-availability', 'available');
+                                if (skuCode == $j('#defaultSku').val()) {
+                                    $j(".quickbuy-order .order-details").attr('class', 'order-details order-details--available js-order-details');
+                                    $j(fragrancePriceValue).text(prix);
+                                }
+                            }
+                            else {
+                                $j(this).children().attr('data-availability', 'nostock');
+                            }
+                        });
+
+                        displaySuggestions();
+                        //reafficher zone ecommerce
+                        $j('.quickbuy-order .order-details').removeAttr('style');
+                    }
+
+                    /**
+                     * Update product page : makeup
+                     */
+                    function updateProductPageMakeup() {
+                        //Sku unique
+                        var skuCode;
+                        if (skuUnique != "") {
+                            skuCode = $j(classSkuUnique).attr('data-sku');
+                            setPriceForUniqueSku(skuCode);
+                        }
+                        //Sku multiple
+                        $j.each($j(classSkuForMakeUp), function () {
+                            skuCode = $j(this).children().attr('data-sku');
+                            var skuObject = responseWs.response[skuCode];
+                            if (!checkSkuExist(skuObject, skuCode)) {
+                                return true;
+                            }
+                            var prix = skuObject.price;
+                            var stock = parseInt(skuObject.stock);
+
+                            if (prix != null) {
+                                $j(this).children().attr('data-value', prix);
+                                metaPrices = metaPrices + prix + '|';
+                            }
+
+                            if (stock > 0) {
+                                $j(this).children().attr('data-availability', 'available');
+                                if (skuCode == $j('#defaultSku').val()) {
+                                    $j(".quickbuy-order .order-details").attr('class', 'order-details order-details--available js-order-details');
+                                    $j(makeupPriceValue).text(prix);
+                                }
+                            }
+                            else {
+                                $j(this).children().attr('data-availability', 'nostock');
+                            }
+                        });
+
+                        displaySuggestions();
+                        //reafficher zone ecommerce
+                        $j('.quickbuy-order .order-details').removeAttr('style');
+                    }
+
+                    /**
+                     * Gamme page : update routine section
+                     */
+                    function updateRoutineSection() {
+                        var essentialSkus = "";
+                        var essentialQuantities = "";
+                        var totalPrice = 0;
+                        var displayButton = true;
+
+                        $j.each($j(classSkuForRoutine), function () {
+                            setStockAndPriceForGammeOrRoutine($j(this));
+                            var skuCode;
+                            if ($j(this).attr('data-sku') != undefined) {
+                                skuCode = $j(this).attr('data-sku');
+                            }
+                            else {
+                                skuCode = $j(this).attr('default-sku');
+                            }
+                            var skuObject = responseWs.response[skuCode];
+                            var price;
+                            if (!checkSkuExist(skuObject, skuCode) || !skuObject.price) {
+                                // Prendre prix par défaut
+                                price = parseFloat($j(this).parent().parent().find(".legend-price .firstPriceValue").text().replace("￥", ""));
+                            }
+                            else{
+                                price = parseFloat(skuObject.price.replace("￥", ""));
+                            }
+
+                            totalPrice = totalPrice + price;
+                            essentialSkus = essentialSkus + skuCode + ",";
+                            if(!skuObject || parseInt(skuObject.stock) <= 0) {
+                                displayButton = false;
+                            }
+                            essentialQuantities = essentialQuantities + "1,";
+                        });
+
+                        essentialSkus = essentialSkus.substring(0, essentialSkus.length - 1);
+                        essentialQuantities = essentialQuantities.substring(0, essentialQuantities.length - 1);
+                        $j(routineSkuSelector).attr('data-skus', essentialSkus);
+                        $j(routineSkuSelector).attr('data-quantities', essentialQuantities);
+                        $j(routinePriceValue).text("￥ " + totalPrice + " ");
+
+                        $j('.push-text .legend-eco-price').removeAttr('style');
+
+                        if (!displayButton) {
+                            $j('.essential-buy-all a').hide();
+                        }
+                    }
+
+                    /**
+                     * Product page : Update price for unique sku
+                     */
+                    function setPriceForUniqueSku(skuCode) {
+                        var skuObject = responseWs.response[skuCode];
+                        if (!checkSkuExist(skuObject, skuCode)) {
+                            return;
+                        }
+                        var prix = skuObject.price;
+                        var stock = parseInt(skuObject.stock);
+                        if (isPageMakeUp) {
+                            $j(makeupPriceValue).text(prix);
+                        }
+                        else if (isPageParfum) {
+                            $j(fragrancePriceValue).text(prix);
+                        }
+
+                        /* Set availability behavior */
+                        if (stock > 0) {
+                            $j(".quickbuy-order .order-details").attr('class', 'order-details order-details--available js-order-details');
+                        }
+                        else {
+                            $j(this).children().attr('data-availability', 'nostock');
+                        }
+                        $j(this).parent().find('js-order-value').text(prix);
+
+                        if (skuObject.price != null) {
+                            metaPrices = metaPrices + skuObject.price;
+                        }
+                    }
+
+                    /**
+                     * Set stock and price in the DOM with remote values from API (Gamme, Axe and routine pages)
+                     * @param element
+                     */
+                    function setStockAndPriceForGammeOrRoutine(element) {
+                        //Pour page de gamme deux selecteurs differents pour le prix
+                        var priceClass = '.legend-price .firstPriceValue';
+                        var priceClassMakeUp = '.legend-eco-price .firstPriceValue';
+                        var skuObject, skuCode, prix;
+
+                        var elementPrix = element.parent().parent().find(priceClass);
+                        if (!elementPrix.length) {
+                            elementPrix = element.parent().parent().find(priceClassMakeUp);
+                        }
+
+                        //sku unique
+                        if (element.attr('data-sku') != undefined) {
+                            skuCode = element.attr('data-sku');
+                            skuObject = responseWs.response[skuCode];
+                            if (!checkSkuExist(skuObject, skuCode)) {
+                                return;
+                            }
+                            var stock = parseInt(skuObject.stock);
+                            prix = skuObject.price;
+                            if (prix != null) {
+                                elementPrix.text(prix);
+                            }
+                            if (isNaN(stock) || stock <= 0) {
+                                //Display product unavailable
+                                element.parent().append('<p>' + core.Static.product_unavailable + '</p>');
+                                element.remove();
+                            }
+                        }
+                        // sku multiple
+                        else if (element.attr('data-productskusqb') != undefined) {
+                            skuCode = element.attr('default-sku');
+                            skuObject = responseWs.response[skuCode];
+                            if (!checkSkuExist(skuObject, skuCode)) {
+                                return;
+                            }
+                            prix = skuObject.price;
+                            if (prix != null) {
+                                elementPrix.text(prix);
+                            }
+                        }
+                    }
+
+                    /**
+                     * Display price and button add to cart after Ajax call for gamme/routine
+                     */
+                    function displayPriceAndButtonForGamme() {
+                        $j('.push-text .legend-eco-price').removeAttr('style');
+                        $j('.push-text .legend-price').removeAttr('style');
+                        $j('.push-button a').removeAttr('style');
+                    }
+
+                    /**
+                     * product page : display suggestions
+                     */
+                    function displaySuggestions() {
+                        $j.each($j(classSuggestions), function () {
+                            setStockAndPriceForGammeOrRoutine($j(this));
+                        });
+                        $j('.legend-eco-price').removeAttr('style');
+                    }
+
+                    /**
+                     * update popin video page
+                     */
+                    function updatePopinvideoPage() {
+                        var skuCode  = $j(classSkuPopinVideo).attr('data-sku');
+                        var skuObject = responseWs.response[skuCode];
+                        if (skuCode == undefined || !checkSkuExist(skuObject, skuCode)) {
+                            return;
+                        }
+                        var prix = skuObject.price;
+                        var stock = parseInt(skuObject.stock);
+                        //Setter prix
+                        if (prix != null) {
+                            $j('.product-packshot .legend-price').text(prix);
+                        }
+                        //Afficher achat express?
+                        if (isNaN(stock) || stock <= 0) {
+                            $j(classSkuPopinVideo).remove();
+                        }
+                        //reafficher zone ecommerce
+                        $j('.app-products-content a').removeAttr('style');
+                    }
+
+                    /**
+                     * Check if SKU has been found on China system
+                     * @param skuObject
+                     * @returns {boolean}
+                     */
+                    function checkSkuExist(skuObject, skuCode) {
+                        if (!skuObject) {
+                            if (window.console) {
+                                window.console.log("Sku not found : " + skuCode);
+                            }
+                            return false;
+                        }
+                        return true;
+                    }
+                },
+                error: function (results, statut, erreur) {
+                    if (window.console) {
+                        window.console.log("Error when calling GetStockAndPrice: " + erreur);
+                    }
+                    //On re-affiche les informations par défaut
+                    if (isPageMakeUp) {
+                        $j('.quickbuy-order .order-details').removeAttr('style');
+                    }
+                    if (isPageParfum) {
+                        $j('.quickbuy-order .order-details').removeAttr('style');
+                    }
+                    if (isPageGamme) {
+                        displayPriceAndButtonForGamme();
+                    }
+                    if (isPagePopinVideo) {
+                        $j('.app-products-content a').removeAttr('style');
+                    }
+
+                    /**
+                     * Display price and button add to cart after Ajax call for gamme/routine
+                     */
+                    function displayPriceAndButtonForGamme() {
+                        $j('.push-text .legend-eco-price').removeAttr('style');
+                        $j('.push-text .legend-price').removeAttr('style');
+                        $j('.push-button a').removeAttr('style');
+                    }
+                }
+            });
+        },
+
+        /**
+         * Resize Order Form multiline or one line
+         * @return {[type]} [description]
+         */
+        resizeOrderForm: function (scope) {
+            if (!core.ie6) {
+                var formW = scope.$orderForm.width();
+                var valueW = scope.$orderValue.outerWidth(true);
+                var quantityW = scope.$orderQuantity.outerWidth(true);
+                var btnW = scope.$orderForm.find('.js-order-btn').outerWidth(true);
+
+                if (scope.$orderQuantity.length >= 0 && (!scope.$orderForm.hasClass('order-form--multilines') ||
+                    (scope.$orderForm.hasClass('order-form--multilines') && (formW > valueW + quantityW)))) { // resize if first time and force to multiline
+                    if (formW < valueW + quantityW + btnW + 1) { // 1 fix outerWidth rounding
+                        valueW = formW - quantityW - parseInt(scope.$orderValue.css('padding-left')) - parseInt(scope.$orderValue.css('padding-right')) - 1; // 1 fix outerWidth rounding
+                        scope.$orderValue.width(valueW);
+                        if (core.ie6) scope.$orderValue.find('.js-dropup-items').width(valueW);
+                        scope.$orderForm.addClass('order-form--multilines');
+                    }
+                }
+            }
+        }
+
+    };
+
+    pcis.ContentType = 'application/json';
+})(window.pcis = window.pcis || {});
+
+function QueryStringToJson(data) {
+    var pairs = data.slice(1).split('&');
+    var result = {};
+    pairs.forEach(function (pair) {
+        pair = pair.split('=');
+        result[pair[0]] = decodeURIComponent(pair[1] || '');
+    });
+    return JSON.parse(JSON.stringify(result));
+}
+

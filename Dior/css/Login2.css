@@ -1,0 +1,266 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.head{
+    height: 130px;
+    width: 1346px;
+    border-top:1px solid #ccc;
+    border-bottom:1px solid #ccc ;
+    color:#000;
+    position: relative;
+}
+body{
+    width: 1346px;
+    margin: 0 auto;
+}
+.head ul{
+    height: 130px;
+    line-height: 130px;
+    width: 1346px;
+}
+.head div{
+    left: 200px;
+    float: left;
+    position: absolute;
+    font-size: 34px;
+}
+.head h1{
+    float: left;
+    width: 200px;
+    left:0;
+    right:0;
+    margin: auto;
+    position: absolute;
+}
+#span1{
+    font-size: 34px;
+    right: 280px;
+    float: left;
+    position: absolute;
+}
+#span2{
+    font-size: 34px;
+    right: 240px;
+    float: left;
+    position: absolute;
+}
+#span3{
+    font-size: 34px;
+    right: 200px;
+    float: left;
+    position: absolute;
+}
+.body{
+    width: 1346px;
+    height: 500px;
+}
+.body h1{
+    right: 0;
+    left: 0;
+    width:500px ;
+    margin: auto;
+}
+table{
+    right: 0;
+    left: 0;
+    height: 400px;
+    width: 600px;
+    border: 1px solid #ccc;
+    margin: auto;
+}
+input{
+    height: 30px;
+    background: rgba(192,192,192,0.3);
+    border-radius: 7%;
+    border: none;
+}
+#input1{
+    height: 14px;
+}
+#input2{
+    height: 14px;
+}
+.button1{
+    height:30px;
+    width: 240px;
+    outline:none;
+    background: #fff;
+    color: #000;
+    border-radius: 30px;
+}
+.button2{
+    height: 30px;
+    width: 60px;
+    outline:none;
+    background: #000;
+    color: #fff;
+    border-radius: 30px;
+}
+.body p{
+    right:0;
+    left: 0;
+    width:500px ;
+    margin: auto;
+}
+/**/
+footer div:first-child p{
+    font-size: 60px;
+    width: 180px;
+    margin: 20px auto;
+}
+footer div:nth-of-type(1){
+    width: 1344px;
+    height: 160px;
+}
+footer input{
+    border-radius: 80px;
+    width: 220px;
+    height: 40px;
+    outline: none;
+    padding-left: 20px;
+    border: 2px solid;
+}
+footer div:nth-of-type(1) div{
+    position: relative;
+    width: 240px;
+    height: 40px;
+    margin: auto;
+}
+#souSuo2{
+    display: inline-block;
+    font-size: 24px;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 8px;
+    right: 0;
+}
+/*���ڱ���*/
+footer div:nth-of-type(2){
+    background: #000;
+    color: white;
+    width: 1344px;
+    height: 260px;
+}
+footer div:nth-of-type(2) p{
+    font-size: 40px;
+    width: 550px;
+    margin: 20px auto;
+    padding-top: 30px;
+}
+footer div:nth-of-type(2) ul{
+    width: 900px;
+    height: 150px;
+    margin: auto;
+    text-align: center;
+}
+footer div:nth-of-type(2) li{
+    float: left;
+    width: 260px;
+    height: 150px;
+    margin: 10px;
+}
+#peiSong{
+    font-size: 40px;
+}
+#tuiHuo{
+    font-size: 40px;
+}
+#baoZhuang{
+    font-size: 40px;
+}
+/*ҳ��*/
+footer div:first-child{
+    background: url("../img/tupian34.jpg");
+}
+footer div:nth-of-type(3){
+    width: 1346px;
+    height: 330px;
+    margin: 50px 0;
+}
+footer div:nth-of-type(3)>ul{
+    height: 330px;
+    width: 1200px;
+    margin: auto;
+    text-align: center;
+}
+footer div:nth-of-type(3)>ul>li{
+    height: 330px;
+    width: 300px;
+    float: left;
+    margin: 0 40px;
+}
+#firstLi ul>li:first-child{
+    margin-top: 60px;
+}
+#firstLi ul>li:nth-child(2){
+    font-size: small;
+    color: rgba(0,0,0,0.6);
+}
+#firstLi ul>li{
+    margin: 10px;
+}
+#firstLi>ul li:nth-child(3){
+    position: relative;
+}
+#OK{
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 10px;
+    margin: auto;
+    padding: 0 10px;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    outline: none;
+    border: 2px solid;
+    border-left: 0;
+
+}
+#secondLi ul:first-child li{
+    text-decoration: underline;
+    padding: 3px;
+}
+#secondLi>ul{
+    margin: 15px 0;
+}
+#secondLi ul:nth-of-type(2){
+    text-align: left;
+    font-size: small;
+    color: rgba(0,0,0,0.6);
+}
+#xian{
+    width: 100px;
+    height: 0;
+    border: 1px solid #ccc;
+    margin: auto;
+}
+#thirdLi ul>li:first-child{
+    margin-top: 60px;
+}
+#thirdLi ul>li{
+    margin: 10px;
+}
+#thirdLi select{
+    padding: 15px 50px;
+    border: 0;
+    outline: none;
+}
+#weibo{
+    font-size: 40px;
+}
+#weibo{
+    font-size: 40px;
+}
+#weixin1{
+    font-size: 40px;
+}
+#background{
+    width: 260px;
+    height: 50px;
+    background: white;
+    border-radius: 25px;
+    border: 2px solid;
+}

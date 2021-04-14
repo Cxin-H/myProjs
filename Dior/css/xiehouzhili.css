@@ -1,0 +1,112 @@
+body{
+    width: 1346px;
+    margin: auto;
+}
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+header{
+    width: 1346px;
+    height: 100px;
+}
+body{
+    width: 1346px;
+    margin: auto;
+}
+header{
+    width: 1346px;
+    height: 100px;
+}
+#head{
+    width: 1346px;
+    margin: auto;
+    height: 80px;
+    padding-top: 20px;
+}
+#head a{
+    position: absolute;
+    top: 30px;
+    color: black;
+}
+#head img{
+    width: 310px;
+    display: block;
+    margin: 20px auto;
+    position: relative;
+}
+header hr{
+    margin-bottom: 30px;
+}
+#daohang{
+    width: 500px;
+    margin: auto;
+    height: 50px;
+    padding-top: 20px;
+}
+#daohang a{
+    color: black;
+    text-decoration: none;
+}
+#daohang a:hover{
+    text-decoration: underline;
+}
+#daohang li{
+    float: left;
+    width: 100px;
+    text-align: center;
+}
+#body{
+    height: 1700px;
+    width: 1346px;
+    margin: auto;
+}
+#body li{
+    float: left;
+    margin-bottom: 10px;
+}
+#timu{
+    background-color: black;
+    height: 500px;
+    width: 440px;
+    color: white;
+    border: 2px solid white;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+#body video{
+    width: 850px;
+    height: 500px;
+    margin-left: 30px;
+}
+#body img{
+    width: 440px;
+    height: 350px;
+    margin-right: 5px;
+}
+#body h5{
+    margin-bottom: 20px;
+}
+footer hr{
+    margin-top: 100px;
+}
+#foot{
+    padding-top: 100px;
+    width: 400px;
+    margin: auto;
+    height: 400px;
+    font-size: 20px;
+    text-align: center;
+}
+#country{
+    width: 400px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 18px;
+    margin-bottom:30px;
+}
+#foot p{
+    margin-bottom: 20px;
+}

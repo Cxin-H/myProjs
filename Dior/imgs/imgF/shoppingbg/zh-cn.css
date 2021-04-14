@@ -1,0 +1,11 @@
+.cn #header.diorcom-header .newsletter-roll .roll-buttons {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+}
+.cn #header.diorcom-header .cart-roll .roll-container .cart-submit .cart-command-button {
+  margin: 0 0 0 15px;
+}
+.cn .suggestions-content .js-addtocart {
+  display: none;
+}

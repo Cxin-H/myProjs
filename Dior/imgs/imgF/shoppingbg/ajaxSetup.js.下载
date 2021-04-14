@@ -1,0 +1,16 @@
+// AJAX INTERCEPTOR
+$j.ajaxSetup({
+    beforeSend: function (xhr, settings) {
+        if (settings.formatter && settings.formatter.Request) {
+            settings.data = settings.formatter.Request(settings.data);
+        }
+    },
+    // FORMAT RESPONSE
+    dataFilter: function (data, type) {
+        if (this.formatter && this.formatter.Response) {
+            return this.formatter.Response(JSON.parse(data));
+        } else {
+            return data;
+        }
+    }
+});

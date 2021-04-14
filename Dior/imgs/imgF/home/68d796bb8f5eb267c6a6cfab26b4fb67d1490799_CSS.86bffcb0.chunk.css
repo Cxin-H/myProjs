@@ -1,0 +1,1578 @@
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.grid-view-separator {
+  border-top: 0.0625rem solid #e5e5e5; }
+
+.grid-view-title {
+  text-align: center;
+  margin: 1.25rem 0;
+  box-sizing: border-box;
+  padding: 0 1.25rem; }
+
+.grid-view .grid-view-element {
+  display: flex; }
+  .grid-view .grid-view-element > .product + .lazyload-placeholder {
+    margin-right: -100%; }
+  .grid-view .grid-view-element .push-edito,
+  .grid-view .grid-view-element .push-edito-content,
+  .grid-view .grid-view-element .product,
+  .grid-view .grid-view-element .push-edito-image,
+  .grid-view .grid-view-element .push-edito-video,
+  .grid-view .grid-view-element .product-video {
+    width: 100%; }
+
+.grid-view-content {
+  margin-bottom: -2rem; }
+  .grid-view-content--small .product--mcd .product-legend .product-title {
+    font-size: 0.9375rem; }
+  .grid-view-content--small .product--mcd .product-legend .product-citation {
+    display: none; }
+
+@media screen and (min-width: 50rem) {
+  .grid-view-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; }
+    .grid-view-content--normal .grid-view-element {
+      margin-bottom: 2rem; }
+    .grid-view-content--normal .grid-view-element.one-column {
+      width: 31.5%; }
+    .grid-view-content--normal .grid-view-element.two-columns {
+      width: 65.75%; }
+    .grid-view-content--normal .grid-view-element.three-columns {
+      width: 100%;
+      max-width: 90rem; }
+      .grid-view-content--normal .grid-view-element.three-columns a {
+        width: 100%;
+        max-width: 90rem; }
+    .grid-view-content--normal .grid-view-element.push-centered {
+      height: 100%;
+      margin: auto 0; }
+    .grid-view-content--normal .grid-view-placeholder {
+      width: 31.5%; }
+    .grid-view-content--small .product-legend {
+      width: 100%; }
+    .grid-view-content--small .grid-view-element.one-column {
+      width: 16%;
+      margin-bottom: 2rem; }
+    .grid-view-content--small .grid-view-placeholder {
+      width: 16%; } }
+
+@media screen and (max-width: 49.9375rem) {
+  .grid-view-content {
+    display: flex;
+    margin-bottom: 1.875rem; }
+    .grid-view-content .push-edito {
+      margin-bottom: 1.25rem; }
+    .grid-view-content--normal {
+      flex-direction: column; }
+      .grid-view-content--normal .grid-view-element {
+        display: flex;
+        padding: 0 1.25rem;
+        margin-bottom: 1.25rem; }
+      .grid-view-content--normal .grid-view-element.is-product.legend-bottom {
+        width: 100%;
+        max-width: 27.5rem;
+        margin: 0 auto 1.25rem auto;
+        box-sizing: border-box; }
+      .grid-view-content--normal .grid-view-element.is-video {
+        width: 100%;
+        padding-left: 0 !important;
+        padding-right: 0 !important; }
+    .grid-view-content--small {
+      flex-wrap: wrap;
+      justify-content: space-between; }
+      .grid-view-content--small .grid-view-element {
+        width: 48%;
+        margin-bottom: 1.25rem; }
+      .grid-view-content--small .grid-view-element.legend-right {
+        width: 100% !important;
+        margin-bottom: 0.9375rem !important;
+        margin-top: 0.9375rem; }
+      .grid-view-content--small .grid-view-element.is-edito {
+        width: 100%;
+        margin-bottom: 1.25rem; }
+      .grid-view-content--small .push-edito {
+        width: 100%; }
+      .grid-view-content--small .push-edito-content {
+        width: 95% !important;
+        margin: auto; }
+      .grid-view-content--small .grid-view-placeholder {
+        width: 48%; } }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.product {
+  display: flex;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+  box-sizing: border-box;
+  position: relative;
+  /*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+  /*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+  /*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+  /*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */ }
+  .product-title.title-with-level {
+    line-height: 1.5rem;
+    display: block; }
+  .product .toggle-wishlist {
+    position: absolute;
+    top: 0.9375rem; }
+  .product-legend-bottom {
+    flex-direction: column; }
+    .product-legend-bottom .product-link {
+      display: flex;
+      flex-direction: column; }
+      .product-legend-bottom .product-link .product-rating-resume {
+        margin: 0 0.3125rem;
+        padding-top: 1.25rem;
+        line-height: initial; }
+        @media screen and (max-width: 49.9375rem) {
+          .product-legend-bottom .product-link .product-rating-resume {
+            justify-content: flex-start; } }
+        @media screen and (min-width: 50rem) and (max-width: 65.625rem) {
+          .product-legend-bottom .product-link .product-rating-resume {
+            display: block;
+            text-align: left; }
+            .product-legend-bottom .product-link .product-rating-resume__total-reviews {
+              margin-left: none; } }
+        .product-legend-bottom .product-link .product-rating-resume .product-rating {
+          display: flex;
+          align-items: center; }
+          .product-legend-bottom .product-link .product-rating-resume .product-rating__star {
+            height: 0.875rem;
+            width: 1rem; }
+          .product-legend-bottom .product-link .product-rating-resume .product-rating .product-rating__star + .product-rating__star {
+            margin-left: 0.3125rem; }
+        .product-legend-bottom .product-link .product-rating-resume__total-reviews {
+          display: inline; }
+          .product-legend-bottom .product-link .product-rating-resume__total-reviews > span {
+            vertical-align: middle;
+            text-decoration: none; }
+    .product-legend-bottom .product-legend {
+      margin-top: 0.875rem;
+      margin-left: 0.3125rem;
+      width: 70%; }
+    .product-legend-bottom .toggle-wishlist {
+      right: 0.9375rem; }
+  .product-legend-right .product-link {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: stretch; }
+  .product-legend-right .product-image {
+    width: 50%; }
+  .product-legend-right .product-legend {
+    width: 55%;
+    padding: 0 1.125rem;
+    justify-content: center; }
+  .product-legend-right .toggle-wishlist {
+    right: calc(52% + 0.9375rem); }
+  .product--mcd .product-title {
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    order: 0;
+    display: block; }
+  .product--mcd .price-line {
+    font-size: 0.8125rem;
+    font-weight: normal;
+    text-transform: uppercase;
+    order: 1; }
+  .product--mcd .intensity {
+    order: 2; }
+  .product--mcd .product-citation {
+    order: 3; }
+  .product--mcd.product-legend-bottom .product-legend {
+    width: 100%;
+    padding: 0 0.625rem;
+    text-align: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto; }
+    .product--mcd.product-legend-bottom .product-legend > * {
+      justify-content: center; }
+  .product--mcd.product-legend-bottom .intensity {
+    justify-content: center; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.product-legend {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; }
+  .product-legend > * {
+    width: 100%; }
+  .product-legend-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0.125rem; }
+    .product-legend-tags .tag {
+      font-size: 0.8125rem;
+      line-height: 1.125rem;
+      margin-right: 0.4375rem; }
+  .product-legend .intensity {
+    margin-top: 0.25rem; }
+  .product-legend .price-line {
+    font-family: "Century Gothic Std Bold", "Noto Sans JP", "Noto Sans SC", "Noto Sans TC", "Noto Sans KR";
+    margin-top: 0.75rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.intensity {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  width: 100%; }
+  .intensity .bullet-points {
+    margin: 0 0.5rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.bullet-points {
+  display: flex;
+  flex-wrap: nowrap; }
+  .bullet-points .bullet-points-circle {
+    height: 0.5rem;
+    width: 0.5rem;
+    display: inline-block;
+    border-radius: 50%;
+    margin: 0 0.25rem; }
+    .bullet-points .bullet-points-circle:first-child {
+      margin-left: 0; }
+    .bullet-points .bullet-points-circle:last-child {
+      margin-right: 0; }
+    .bullet-points .bullet-points-circle.half:after {
+      content: '';
+      width: 50%;
+      height: 100%;
+      display: block;
+      border-radius: 0.25rem 0 0 0.25rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.tag {
+  font-size: 0.9375rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.product-rating-resume {
+  display: flex; }
+  .product-rating-resume .product-rating {
+    display: block; }
+    .product-rating-resume .product-rating__star {
+      height: 1.125rem;
+      width: 1rem; }
+  .product-rating-resume__total-reviews {
+    display: inline;
+    margin-left: 0.5rem;
+    font-size: 0.9375rem; }
+    .product-rating-resume__total-reviews span {
+      text-decoration: underline; }
+  @media screen and (max-width: 49.9375rem) {
+    .product-rating-resume {
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%; } }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.product-rating {
+  display: inline-flex; }
+  .product-rating__star {
+    width: 1.375rem;
+    height: 1.25rem; }
+  .product-rating__star + .product-rating__star {
+    margin-left: 0.5rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.toggle-wishlist {
+  background: transparent;
+  border: 0;
+  z-index: 1; }
+  .toggle-wishlist .icon {
+    display: flex; }
+  .toggle-wishlist svg {
+    height: 1.25rem;
+    width: 1.25rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.product-video {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 0.0625rem solid #e5e5e5;
+  padding-top: 1.25rem; }
+  .product-video-title {
+    text-align: center;
+    margin-bottom: 0.9375rem; }
+  .product-video-video {
+    width: 80%; }
+  .product-video-subtitle {
+    margin-top: 1.875rem;
+    width: 60%;
+    text-align: center;
+    line-height: 1.5rem; }
+  .product-video-link {
+    margin-top: 1.875rem;
+    text-align: center; }
+  @media screen and (max-width: 49.9375rem) {
+    .product-video-video {
+      width: 100%; }
+    .product-video-subtitle {
+      width: 80%; } }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.player {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  display: block;
+  z-index: 0; }
+  .player .focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 0.125rem #3b99fc; }
+  .player video {
+    position: absolute;
+    display: block;
+    width: 100%; }
+  .player .player-controls {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow-y: hidden;
+    height: 2.9375rem;
+    transition: height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    padding-top: 0.1875rem;
+    background-color: black;
+    z-index: 2; }
+    .player .player-controls--hidden {
+      height: 0;
+      opacity: 0; }
+    .player .player-controls button.button-subtitles,
+    .player .player-controls button.button-fullscreen,
+    .player .player-controls a.transcript {
+      height: 100%;
+      padding: 0 0.625rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 1.5625rem;
+      box-sizing: content-box; }
+      .player .player-controls button.button-subtitles svg,
+      .player .player-controls button.button-fullscreen svg,
+      .player .player-controls a.transcript svg {
+        display: block;
+        width: 1.5625rem; }
+    .player .player-controls .button-subtitles {
+      position: relative; }
+  .player .button-link .icon {
+    margin: 0; }
+  .player button {
+    background-color: transparent;
+    border: 0;
+    color: white;
+    cursor: pointer;
+    border-radius: 0; }
+  .player .volume + * {
+    margin-left: auto; }
+  .player .button-mute {
+    box-sizing: border-box;
+    height: 100%;
+    width: 2.1875rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0.9375rem 0 0.9375rem; }
+    .player .button-mute svg {
+      display: block;
+      width: 1.375rem; }
+  .player.full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 100;
+    padding-bottom: 0;
+    display: flex;
+    width: 100%;
+    background-color: black;
+    margin: 0 !important; }
+    .player.full-screen .overlay {
+      z-index: 1;
+      background: none; }
+    .player.full-screen video {
+      position: relative;
+      justify-content: center;
+      width: 100%;
+      height: auto; }
+    .player.full-screen .player-controls {
+      width: 61.25rem;
+      left: 50%;
+      transform: translateX(-50%); }
+
+@media screen and (max-width: 49.9375rem) {
+  .popin__wrapper .player {
+    flex-direction: column; } }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.player .button-exit-fullscreen {
+  position: absolute;
+  right: 1.875rem;
+  top: 1.875rem;
+  border: 0.0625rem solid white;
+  padding: 0.625rem;
+  z-index: 2;
+  height: 2.4375rem;
+  opacity: 1;
+  transition: opacity 0.2s linear; }
+  .player .button-exit-fullscreen .svg-icon {
+    display: block; }
+  .player .button-exit-fullscreen svg {
+    display: block;
+    width: 0.9375rem;
+    height: 0.9375rem; }
+  .player .button-exit-fullscreen--hidden {
+    opacity: 0; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.player .button-play {
+  width: 3.125rem;
+  height: 100%;
+  border-right: 0.0625rem solid white;
+  border-radius: 0; }
+  .player .button-play .button-link-content .icon {
+    margin: 0; }
+  .player .button-play svg {
+    width: 0.625rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.seek-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  margin: 0; }
+  .seek-bar .completed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0.1875rem;
+    background-color: white;
+    pointer-events: none; }
+  .seek-bar input {
+    display: block;
+    width: 100%;
+    height: 0.1875rem;
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer; }
+    .seek-bar input:focus.focus-visible {
+      outline: 0.125rem auto #3b99fc; }
+    .seek-bar input::-ms-track {
+      width: 100%;
+      height: 0.1875rem;
+      border: 0;
+      background: grey; }
+    .seek-bar input::-ms-thumb, .seek-bar input::-ms-fill-lower, .seek-bar input::-ms-fill-upper, .seek-bar input::-ms-tooltip {
+      display: none; }
+    .seek-bar input::-moz-range-track {
+      width: 100%;
+      height: 0.1875rem;
+      border: 0;
+      background: grey; }
+    .seek-bar input::-moz-range-progress, .seek-bar input::-moz-range-thumb {
+      opacity: 0; }
+    .seek-bar input::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 0.1875rem;
+      border: 0;
+      background: grey; }
+    .seek-bar input::-webkit-slider-thumb {
+      opacity: 0; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.player-storyboard {
+  position: absolute;
+  top: 0;
+  left: 5rem;
+  width: calc(100% - 10rem); }
+  .player-storyboard .storyboard-img-wrapper {
+    position: absolute;
+    bottom: 100%;
+    width: 10rem;
+    height: 5.625rem;
+    margin-left: -5rem;
+    overflow: hidden; }
+  .player-storyboard img {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: auto; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.time {
+  padding: 0 1.25rem;
+  font-size: 0.75rem;
+  color: white;
+  justify-content: center; }
+  .time .duration {
+    color: #777; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.transcript {
+  position: relative;
+  width: 1.5625rem;
+  height: 1.125rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .transcript {
+      display: flex;
+      position: absolute;
+      z-index: 1;
+      bottom: 0.9375rem;
+      right: 0.9375rem;
+      color: black;
+      background-color: white;
+      opacity: 0.8;
+      padding: 0.625rem;
+      border-radius: 1.5625rem;
+      height: 1.5625rem; }
+      .transcript .icon {
+        fill: black !important;
+        display: flex;
+        align-items: center; }
+        .transcript .icon svg {
+          width: 1.5625rem;
+          height: 1.125rem; } }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.volume {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 3.125rem;
+  position: relative; }
+  .volume input {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 0.1875rem;
+    padding: 0;
+    top: 0.0625rem;
+    background: #757575;
+    cursor: pointer; }
+    .volume input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 0;
+      height: 0;
+      padding: 0.3125rem;
+      border: 0;
+      border-radius: 50%;
+      background-color: #ffffff; }
+    .volume input::-ms-track {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: transparent; }
+    .volume input::-ms-thumb, .volume input::-ms-fill-lower, .volume input::-ms-fill-upper, .volume input::-ms-tooltip {
+      display: none; }
+    .volume input::-ms-fill-lower {
+      background: #ffffff; }
+    .volume input::-moz-range-track {
+      background: transparent; }
+    .volume input::-moz-range-thumb {
+      -moz-appearance: none;
+      width: 0;
+      height: 0;
+      padding: 0.3125rem;
+      border: 0;
+      border-radius: 50%;
+      background: #ffffff; }
+
+.volume-1 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 10%, #757575 10%, #757575 100%); }
+
+.volume-2 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 20%, #757575 20%, #757575 100%); }
+
+.volume-3 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 30%, #757575 30%, #757575 100%); }
+
+.volume-4 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 40%, #757575 40%, #757575 100%); }
+
+.volume-5 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 50%, #757575 50%, #757575 100%); }
+
+.volume-6 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 60%, #757575 60%, #757575 100%); }
+
+.volume-7 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 70%, #757575 70%, #757575 100%); }
+
+.volume-8 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 80%, #757575 80%, #757575 100%); }
+
+.volume-9 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 90%, #757575 90%, #757575 100%); }
+
+.volume-10 input {
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 100%, #757575 100%, #757575 100%); }
+
+.volume input.focus-visible {
+  box-shadow: inset 0 0 0 0.125rem #3b99fc;
+  outline: none; }
+  .volume input.focus-visible::-webkit-slider-thumb {
+    box-shadow: inset 0 0 0 0.125rem #3b99fc; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.player .poster {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .player .poster:focus.focus-visible {
+    border: 0.125rem solid #3b99fc; }
+  .player .poster.has-error {
+    cursor: default !important; }
+  .player .poster.has-overlay {
+    background-color: rgba(0, 0, 0, 0.3); }
+  .player .poster .button {
+    width: 100%;
+    position: absolute;
+    display: flex;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 3.125rem;
+    height: 3.125rem;
+    padding: 1.25rem;
+    justify-content: center;
+    align-items: center; }
+    .player .poster .button svg {
+      width: 4.375rem;
+      height: 4.375rem; }
+
+.player.is-fixed .poster {
+  display: none; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.player-subtitle {
+  position: absolute;
+  left: 50%;
+  bottom: 5.625rem;
+  max-width: 80%;
+  transform: translateX(-50%);
+  padding: 0.125rem 0.3125rem;
+  background: rgba(0, 0, 0, 0.502);
+  text-align: center;
+  color: #fff; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.bold.expandable-text__text {
+  font-family: "Century Gothic Std Bold", "Noto Sans JP", "Noto Sans SC", "Noto Sans TC", "Noto Sans KR"; }
+
+.font-din.expandable-text__text {
+  font-family: "DinCondensedBold", "Noto Sans JP", "Noto Sans TC", "Noto Sans KR", "Century Gothic Std", Arial, sans-serif; }
+
+.font-pathway.expandable-text__text {
+  font-family: "Pathway Gothic One", Arial, sans-serif; }
+  .font-pathway.bold.expandable-text__text {
+    font-weight: bold; }
+
+.size-xxl.expandable-text__text {
+  font-size: 5rem;
+  line-height: 5.125rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-xxl.expandable-text__text {
+      font-size: 3.125rem;
+      line-height: 1; } }
+
+.size-xl.expandable-text__text {
+  font-size: 3.25rem;
+  line-height: 3.25rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-xl.expandable-text__text {
+      font-size: 2.875rem;
+      line-height: 1; } }
+
+.size-l.expandable-text__text {
+  font-size: 2rem;
+  line-height: 2.375rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-l.expandable-text__text {
+      font-size: 1.3125rem;
+      line-height: 1.6875rem; } }
+
+.size-m.expandable-text__text {
+  font-size: 1.625rem;
+  line-height: 2rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-m.expandable-text__text {
+      font-size: 1.125rem;
+      line-height: 1.5rem; } }
+
+.size-s.expandable-text__text {
+  font-size: 0.9375rem;
+  line-height: 1.25rem; }
+
+.size-xs.expandable-text__text {
+  font-size: 0.8125rem; }
+
+.align-left.expandable-text__text {
+  text-align: left; }
+
+.align-center.expandable-text__text {
+  text-align: center; }
+
+.align-right.expandable-text__text {
+  text-align: right; }
+
+.align-justify.expandable-text__text {
+  text-align: justify; }
+
+@media screen and (max-width: 49.9375rem) {
+  .m-align-left.expandable-text__text {
+    text-align: left; }
+  .m-align-center.expandable-text__text {
+    text-align: center; }
+  .m-align-right.expandable-text__text {
+    text-align: right; }
+  .m-align-justify.expandable-text__text {
+    text-align: justify; } }
+
+.expandable-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+  text-align: left;
+  width: 100%; }
+  .expandable-text__text {
+    width: 100%; }
+    .expandable-text__text p + p {
+      margin-top: 0.75rem; }
+  .expandable-text__button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 2.5rem;
+    border: 0.0625rem solid black;
+    display: flex;
+    align-items: center;
+    margin-top: 1.5625rem; }
+  .expandable-text__icon,
+  .expandable-text svg {
+    margin: 0 auto; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.edito-text {
+  width: 100%; }
+  .edito-text .expandable-text {
+    margin: 0.9375rem 0; }
+  @media screen and (max-width: 49.9375rem) {
+    .edito-text {
+      text-align: center; }
+      .edito-text .title-with-level {
+        display: block;
+        text-align: center; } }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.push-edito-content {
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: auto; }
+  .push-edito-content--is-full-height {
+    height: 100%; }
+  .push-edito-content-image {
+    width: 100%; }
+  .push-edito-content-description {
+    width: 100%; }
+  .push-edito-content-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    padding: 2.25rem 0;
+    flex-grow: 1;
+    font-size: 0.9375rem;
+    line-height: 1.5rem;
+    max-width: 85%;
+    margin: 0 auto; }
+    .push-edito-content-text .image {
+      margin-bottom: 0.625rem;
+      max-width: 50%;
+      width: 100%; }
+  .push-edito-content-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border: 0.0625rem solid #cecece; }
+  .push-edito-content-button {
+    margin-top: 0.625rem; }
+  @media screen and (min-width: 50rem) {
+    .push-edito-content {
+      padding-bottom: 1.25rem; }
+      .push-edito-content-description {
+        margin: 0.75rem; } }
+  @media screen and (max-width: 49.9375rem) {
+    .push-edito-content {
+      width: 100%; }
+      .push-edito-content-description {
+        margin-top: 0.25rem; }
+      .push-edito-content-text {
+        padding: 1.5625rem 0; } }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.push-edito-image {
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column; }
+  .push-edito-image img {
+    width: 100%; }
+  .push-edito-image__description {
+    margin-top: 0.625rem; }
+  .push-edito-image__link {
+    width: 100%;
+    margin: auto; }
+  .push-edito-image__container {
+    position: relative; }
+  .push-edito-image__legend {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 1rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.bold.legend {
+  font-family: "Century Gothic Std Bold", "Noto Sans JP", "Noto Sans SC", "Noto Sans TC", "Noto Sans KR"; }
+
+.font-din.legend {
+  font-family: "DinCondensedBold", "Noto Sans JP", "Noto Sans TC", "Noto Sans KR", "Century Gothic Std", Arial, sans-serif; }
+
+.font-pathway.legend {
+  font-family: "Pathway Gothic One", Arial, sans-serif; }
+  .font-pathway.bold.legend {
+    font-weight: bold; }
+
+.size-xxl.legend {
+  font-size: 5rem;
+  line-height: 5.125rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-xxl.legend {
+      font-size: 3.125rem;
+      line-height: 1; } }
+
+.size-xl.legend {
+  font-size: 3.25rem;
+  line-height: 3.25rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-xl.legend {
+      font-size: 2.875rem;
+      line-height: 1; } }
+
+.size-l.legend {
+  font-size: 2rem;
+  line-height: 2.375rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-l.legend {
+      font-size: 1.3125rem;
+      line-height: 1.6875rem; } }
+
+.size-m.legend {
+  font-size: 1.625rem;
+  line-height: 2rem; }
+  @media screen and (max-width: 49.9375rem) {
+    .size-m.legend {
+      font-size: 1.125rem;
+      line-height: 1.5rem; } }
+
+.size-s.legend {
+  font-size: 0.9375rem;
+  line-height: 1.25rem; }
+
+.size-xs.legend {
+  font-size: 0.8125rem; }
+
+.align-left.legend {
+  text-align: left; }
+
+.align-center.legend {
+  text-align: center; }
+
+.align-right.legend {
+  text-align: right; }
+
+.align-justify.legend {
+  text-align: justify; }
+
+@media screen and (max-width: 49.9375rem) {
+  .m-align-left.legend {
+    text-align: left; }
+  .m-align-center.legend {
+    text-align: center; }
+  .m-align-right.legend {
+    text-align: right; }
+  .m-align-justify.legend {
+    text-align: justify; } }
+
+.legend {
+  font-size: 1.625rem; }
+  .legend.uppercase {
+    text-transform: uppercase; }
+  .legend--white {
+    color: #ffffff; }
+  .legend--black {
+    color: #000000; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.push-edito-link-list-wrapper {
+  box-sizing: border-box;
+  padding-top: 108%;
+  width: 100%;
+  position: relative;
+  height: 0; }
+
+.push-edito-link-list {
+  box-sizing: border-box;
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  border: 0.0625rem solid #cecece; }
+  .push-edito-link-list .link-list {
+    margin-top: 0.9375rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.link-list {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  font-size: 0.9375rem;
+  line-height: 2.67;
+  text-align: center;
+  text-decoration: underline; }
+  .link-list-item:hover {
+    font-weight: bold; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.push-edito-video {
+  position: relative;
+  display: flex;
+  flex-direction: column; }
+  .push-edito-video-description {
+    margin-top: 0.625rem; }
+
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.rich-edito-text-title {
+  font-size: 3.25rem;
+  margin-bottom: 0.875rem; }
+
+@media screen and (max-width: 49.9375rem) {
+  .rich-edito-text-title {
+    font-size: 2rem; } }
+

@@ -1,0 +1,35 @@
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+/*
+ * Return the rem of a pixel's value
+ *
+ * Sample: pxToRem(50)
+ * Result: 3.125rem
+ */
+/*
+ * Return the percent ratio from width and height
+ *
+ * Sample: ratio(16, 9)
+ * Result: 56.25%
+ */
+.link-list {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  font-size: 0.9375rem;
+  line-height: 2.67;
+  text-align: center;
+  text-decoration: underline; }
+  .link-list-item:hover {
+    font-weight: bold; }
+

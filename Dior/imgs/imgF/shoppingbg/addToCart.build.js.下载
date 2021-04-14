@@ -1,0 +1,3821 @@
+/*! tinyscrollbar - v2.4.2 - 2015-04-03
+ * http://www.baijs.com/tinyscrollbar
+ *
+ * Copyright (c) 2015 Maarten Baijs <wieringen@gmail.com>;
+ * Licensed under the MIT license */
+
+/* Custom by HE:
+ * - specific Defile case: no touch on viewport, but touch on scrollbars
+ */
+
+;(function(factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    }
+    else if (typeof exports === 'object') {
+        module.exports = factory(require("jquery"));
+    }
+    else {
+        factory(jQuery);
+    }
+}
+(function($j) {
+    "use strict";
+
+    var pluginName = "tinyscrollbar"
+        ,   defaults = {
+            axis : 'y'
+            ,   wheel : true
+            ,   wheelSpeed : 40
+            ,   wheelLock : true
+            ,   touchLock : true
+            ,   trackSize : false
+            ,   thumbSize : false
+            ,   thumbSizeMin : 20
+            ,   touch        : true   // Set to false to disable touch on viewport, & limit touch to scrollbar
+        }
+        ;
+
+    function Plugin($container, options) {
+        /**
+         * The options of the carousel extend with the defaults.
+         *
+         * @property options
+         * @type Object
+         */
+        this.options = $j.extend({}, defaults, options);
+
+        /**
+         * @property _defaults
+         * @type Object
+         * @private
+         * @default defaults
+         */
+        this._defaults = defaults;
+
+        /**
+         * @property _name
+         * @type String
+         * @private
+         * @final
+         * @default 'tinyscrollbar'
+         */
+        this._name = pluginName;
+
+        var self = this
+            ,   $viewport = $container.find(".viewport")
+            ,   $overview = $container.find(".overview")
+            ,   $scrollbar = $container.find(".scrollbar")
+            ,   $track = $scrollbar.find(".track")
+            ,   $thumb = $scrollbar.find(".thumb")
+
+            ,   hasTouchEvents = ("ontouchstart" in document.documentElement)
+            ,   wheelEvent = "onwheel" in document.createElement("div") ? "wheel" : // Modern browsers support "wheel"
+                document.onmousewheel !== undefined ? "mousewheel" : // Webkit and IE support at least "mousewheel"
+                    "DOMMouseScroll" // let's assume that remaining browsers are older Firefox
+            ,   isHorizontal = this.options.axis === 'x'
+            ,   sizeLabel = isHorizontal ? "width" : "height"
+            ,   posiLabel = isHorizontal ? "left" : "top"
+
+            ,   mousePosition = 0
+            ;
+
+        /**
+         * The position of the content relative to the viewport.
+         *
+         * @property contentPosition
+         * @type Number
+         */
+        this.contentPosition = 0;
+
+        /**
+         * The height or width of the viewport.
+         *
+         * @property viewportSize
+         * @type Number
+         */
+        this.viewportSize = 0;
+
+        /**
+         * The height or width of the content.
+         *
+         * @property contentSize
+         * @type Number
+         */
+        this.contentSize = 0;
+
+        /**
+         * The ratio of the content size relative to the viewport size.
+         *
+         * @property contentRatio
+         * @type Number
+         */
+        this.contentRatio = 0;
+
+        /**
+         * The height or width of the content.
+         *
+         * @property trackSize
+         * @type Number
+         */
+        this.trackSize = 0;
+
+        /**
+         * The size of the track relative to the size of the content.
+         *
+         * @property trackRatio
+         * @type Number
+         */
+        this.trackRatio = 0;
+
+        /**
+         * The height or width of the thumb.
+         *
+         * @property thumbSize
+         * @type Number
+         */
+        this.thumbSize = 0;
+
+        /**
+         * The position of the thumb relative to the track.
+         *
+         * @property thumbPosition
+         * @type Number
+         */
+        this.thumbPosition = 0;
+
+        /**
+         * Will be true if there is content to scroll.
+         *
+         * @property hasContentToSroll
+         * @type Boolean
+         */
+        this.hasContentToSroll = false;
+
+        /**
+         * @method _initialize
+         * @private
+         */
+        function _initialize() {
+            self.update();
+            _setEvents();
+
+            return self;
+        }
+
+        /**
+         * You can use the update method to adjust the scrollbar to new content or to move the scrollbar to a certain point.
+         *
+         * @method update
+         * @chainable
+         * @param {Number|String} [scrollTo] Number in pixels or the values "relative" or "bottom". If you dont specify a parameter it will default to top
+         */
+        this.update = function(scrollTo) {
+            var sizeLabelCap = sizeLabel.charAt(0).toUpperCase() + sizeLabel.slice(1).toLowerCase();
+            this.viewportSize = $viewport[0]['offset'+ sizeLabelCap];
+            this.contentSize = $overview[0]['scroll'+ sizeLabelCap];
+            this.contentRatio = this.viewportSize / this.contentSize;
+            this.trackSize = this.options.trackSize || this.viewportSize;
+            this.thumbSize = Math.min(this.trackSize, Math.max(this.options.thumbSizeMin, (this.options.thumbSize || (this.trackSize * this.contentRatio))));
+            this.trackRatio = (this.contentSize - this.viewportSize) / (this.trackSize - this.thumbSize);
+            this.hasContentToSroll = this.contentRatio < 1;
+
+            $scrollbar.toggleClass("disable", !this.hasContentToSroll);
+
+            switch (scrollTo) {
+                case "bottom":
+                    this.contentPosition = Math.max(this.contentSize - this.viewportSize, 0);
+                    break;
+
+                case "relative":
+                    this.contentPosition = Math.min(Math.max(this.contentSize - this.viewportSize, 0), Math.max(0, this.contentPosition));
+                    break;
+
+                default:
+                    this.contentPosition = parseInt(scrollTo, 10) || 0;
+            }
+
+            this.thumbPosition = this.contentPosition / this.trackRatio;
+
+            _setCss();
+
+            return self;
+        };
+
+        /**
+         * @method _setCss
+         * @private
+         */
+        function _setCss() {
+            $thumb.css(posiLabel, self.thumbPosition);
+            $overview.css(posiLabel, -self.contentPosition);
+            $scrollbar.css(sizeLabel, self.trackSize);
+            $track.css(sizeLabel, self.trackSize);
+            $thumb.css(sizeLabel, self.thumbSize);
+        }
+
+        /**
+         * @method _setEvents
+         * @private
+         */
+        function _setEvents() {
+            if(hasTouchEvents) {
+
+                var _$el;
+                if (self.options.touch) {
+                    _$el = $viewport[0];
+                } else {
+                    _$el = $scrollbar[0];
+                }
+                _$el.ontouchstart = function(event) {
+                    if(1 === event.touches.length) {
+                        event.stopPropagation();
+
+                        _start(event.touches[0]);
+                    }
+                };
+            }
+            else {
+                $thumb.bind("mousedown", function(event){
+                    event.stopPropagation();
+                    _start(event);
+                });
+                $track.bind("mousedown", function(event){
+                    _start(event, true);
+                });
+            }
+
+            $j(window).resize(function() {
+                self.update("relative");
+            });
+
+            if(self.options.wheel && window.addEventListener) {
+                $container[0].addEventListener(wheelEvent, _wheel, false);
+            }
+            else if(self.options.wheel) {
+                $container[0].onmousewheel = _wheel;
+            }
+        }
+
+        /**
+         * @method _isAtBegin
+         * @private
+         */
+        function _isAtBegin() {
+            return self.contentPosition > 0;
+        }
+
+        /**
+         * @method _isAtEnd
+         * @private
+         */
+        function _isAtEnd() {
+            return self.contentPosition <= (self.contentSize - self.viewportSize) - 5;
+        }
+
+        /**
+         * @method _start
+         * @private
+         */
+        function _start(event, gotoMouse) {
+            if(self.hasContentToSroll) {
+                $j("body").addClass("noSelect");
+
+                mousePosition = gotoMouse ? $thumb.offset()[posiLabel] : (isHorizontal ? event.pageX : event.pageY);
+
+                if(hasTouchEvents) {
+                    document.ontouchmove = function(event) {
+                        if(self.options.touchLock || _isAtBegin() && _isAtEnd()) {
+                            event.preventDefault();
+                        }
+                        _drag(event.touches[0]);
+                    };
+                    document.ontouchend = _end;
+                }
+                else {
+                    $j(document).bind("mousemove", _drag);
+                    $j(document).bind("mouseup", _end);
+                    $thumb.bind("mouseup", _end);
+                    $track.bind("mouseup", _end);
+                }
+
+                _drag(event);
+            }
+        }
+
+        /**
+         * @method _wheel
+         * @private
+         */
+        function _wheel(event) {
+            if(self.hasContentToSroll) {
+                // Trying to make sense of all the different wheel event implementations..
+                //
+                var evntObj = event || window.event
+                    ,   wheelDelta = -(evntObj.deltaY || evntObj.detail || (-1 / 3 * evntObj.wheelDelta)) / 40
+                    ,   multiply = (evntObj.deltaMode === 1) ? self.options.wheelSpeed : 1
+                    ;
+
+                self.contentPosition -= wheelDelta * multiply * self.options.wheelSpeed;
+                self.contentPosition = Math.min((self.contentSize - self.viewportSize), Math.max(0, self.contentPosition));
+                self.thumbPosition = self.contentPosition / self.trackRatio;
+
+                /**
+                 * The move event will trigger when the carousel slides to a new slide.
+                 *
+                 * @event move
+                 */
+                $container.trigger("move");
+
+                $thumb.css(posiLabel, self.thumbPosition);
+                $overview.css(posiLabel, -self.contentPosition);
+
+                if(self.options.wheelLock || _isAtBegin() && _isAtEnd()) {
+                    evntObj = $j.event.fix(evntObj);
+                    evntObj.preventDefault();
+                }
+            }
+        }
+
+        /**
+         * @method _drag
+         * @private
+         */
+        function _drag(event) {
+            if(self.hasContentToSroll) {
+                var mousePositionNew = isHorizontal ? event.pageX : event.pageY
+                    ,   thumbPositionDelta = hasTouchEvents ? (mousePosition - mousePositionNew) : (mousePositionNew - mousePosition)
+                    ,   thumbPositionNew = Math.min((self.trackSize - self.thumbSize), Math.max(0, self.thumbPosition + thumbPositionDelta))
+                    ;
+
+                self.contentPosition = thumbPositionNew * self.trackRatio;
+
+                $container.trigger("move");
+
+                $thumb.css(posiLabel, thumbPositionNew);
+                $overview.css(posiLabel, -self.contentPosition);
+            }
+        }
+
+        /**
+         * @method _end
+         * @private
+         */
+        function _end() {
+            self.thumbPosition = parseInt($thumb.css(posiLabel), 10) || 0;
+
+            $j("body").removeClass("noSelect");
+            $j(document).unbind("mousemove", _drag);
+            $j(document).unbind("mouseup", _end);
+            $thumb.unbind("mouseup", _end);
+            $track.unbind("mouseup", _end);
+            document.ontouchmove = document.ontouchend = null;
+        }
+
+        return _initialize();
+    }
+
+    /**
+     * @class tinyscrollbar
+     * @constructor
+     * @param {Object} options
+     @param {String} [options.axis='y'] Vertical or horizontal scroller? ( x || y ).
+     @param {Boolean} [options.wheel=true] Enable or disable the mousewheel.
+     @param {Boolean} [options.wheelSpeed=40] How many pixels must the mouswheel scroll at a time.
+     @param {Boolean} [options.wheelLock=true] Lock default window wheel scrolling when there is no more content to scroll.
+     @param {Number} [options.touchLock=true] Lock default window touch scrolling when there is no more content to scroll.
+     @param {Boolean|Number} [options.trackSize=false] Set the size of the scrollbar to auto(false) or a fixed number.
+     @param {Boolean|Number} [options.thumbSize=false] Set the size of the thumb to auto(false) or a fixed number
+     @param {Boolean} [options.thumbSizeMin=20] Minimum thumb size.
+     */
+    $j.fn[pluginName] = function(options) {
+        return this.each(function() {
+            if(!$j.data(this, "plugin_" + pluginName)) {
+                $j.data(this, "plugin_" + pluginName, new Plugin($j(this), options));
+            }
+        });
+    };
+}));
+/*
+
+ JS Signals <http://millermedeiros.github.com/js-signals/>
+ Released under the MIT license
+ Author: Miller Medeiros
+ Version: 1.0.0 - Build: 268 (2012/11/29 05:48 PM)
+ */
+(function(i){function h(a,b,c,d,e){this._listener=b;this._isOnce=c;this.context=d;this._signal=a;this._priority=e||0}function g(a,b){if(typeof a!=="function")throw Error("listener is a required param of {fn}() and should be a Function.".replace("{fn}",b));}function e(){this._bindings=[];this._prevParams=null;var a=this;this.dispatch=function(){e.prototype.dispatch.apply(a,arguments)}}h.prototype={active:!0,params:null,execute:function(a){var b;this.active&&this._listener&&(a=this.params?this.params.concat(a):
+    a,b=this._listener.apply(this.context,a),this._isOnce&&this.detach());return b},detach:function(){return this.isBound()?this._signal.remove(this._listener,this.context):null},isBound:function(){return!!this._signal&&!!this._listener},isOnce:function(){return this._isOnce},getListener:function(){return this._listener},getSignal:function(){return this._signal},_destroy:function(){delete this._signal;delete this._listener;delete this.context},toString:function(){return"[SignalBinding isOnce:"+this._isOnce+
+    ", isBound:"+this.isBound()+", active:"+this.active+"]"}};e.prototype={VERSION:"1.0.0",memorize:!1,_shouldPropagate:!0,active:!0,_registerListener:function(a,b,c,d){var e=this._indexOfListener(a,c);if(e!==-1){if(a=this._bindings[e],a.isOnce()!==b)throw Error("You cannot add"+(b?"":"Once")+"() then add"+(!b?"":"Once")+"() the same listener without removing the relationship first.");}else a=new h(this,a,b,c,d),this._addBinding(a);this.memorize&&this._prevParams&&a.execute(this._prevParams);return a},
+    _addBinding:function(a){var b=this._bindings.length;do--b;while(this._bindings[b]&&a._priority<=this._bindings[b]._priority);this._bindings.splice(b+1,0,a)},_indexOfListener:function(a,b){for(var c=this._bindings.length,d;c--;)if(d=this._bindings[c],d._listener===a&&d.context===b)return c;return-1},has:function(a,b){return this._indexOfListener(a,b)!==-1},add:function(a,b,c){g(a,"add");return this._registerListener(a,!1,b,c)},addOnce:function(a,b,c){g(a,"addOnce");return this._registerListener(a,
+        !0,b,c)},remove:function(a,b){g(a,"remove");var c=this._indexOfListener(a,b);c!==-1&&(this._bindings[c]._destroy(),this._bindings.splice(c,1));return a},removeAll:function(){for(var a=this._bindings.length;a--;)this._bindings[a]._destroy();this._bindings.length=0},getNumListeners:function(){return this._bindings.length},halt:function(){this._shouldPropagate=!1},dispatch:function(a){if(this.active){var b=Array.prototype.slice.call(arguments),c=this._bindings.length,d;if(this.memorize)this._prevParams=
+        b;if(c){d=this._bindings.slice();this._shouldPropagate=!0;do c--;while(d[c]&&this._shouldPropagate&&d[c].execute(b)!==!1)}}},forget:function(){this._prevParams=null},dispose:function(){this.removeAll();delete this._bindings;delete this._prevParams},toString:function(){return"[Signal active:"+this.active+" numListeners:"+this.getNumListeners()+"]"}};var f=e;f.Signal=e;typeof define==="function"&&define.amd?define(function(){return f}):typeof module!=="undefined"&&module.exports?module.exports=f:i.signals=
+            f})(this);
+
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+Handlebars.registerHelper("foreach",function(arr,options) {
+    if(options.inverse && !arr.length)
+        return options.inverse(this);
+
+    return $j.map(arr,function(item,index) {
+        item.$index = index;
+        item.$first = index === 0;
+        item.$last  = index === arr.length-1;
+        return options.fn(item);
+    }).join('');
+});
+
+},{}],2:[function(require,module,exports){
+Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        case '!==':
+            return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+});
+
+},{}],3:[function(require,module,exports){
+Handlebars.registerHelper('stringify', function(context) {
+    if (context) {
+        return JSON.stringify(context).replace(/(['])/g, '&apos;');
+    }
+    return;
+});
+
+},{}],4:[function(require,module,exports){
+Handlebars.registerHelper ('truncate', function (str, len) {
+    if (str.length > len && str.length > 0) {
+        var new_str = str + " ";
+        new_str = str.substr (0, len);
+        new_str = str.substr (0, new_str.lastIndexOf(" "));
+        new_str = (new_str.length > 0) ? new_str : str.substr (0, len);
+
+        return new Handlebars.SafeString ( new_str +'...' );
+    }
+    return str;
+});
+},{}],5:[function(require,module,exports){
+modules.AddToCart =
+{
+
+    Interval : null,
+    IntervalOut : 250,
+    ItemHeight: 100,
+    Timer : null,
+    TimeOut : 3000,
+    Popin:          require('../modules/popins/Popin.js'),
+    QuickBuyPopin:  require('../modules/popins/PopinQuickbuy.js'),
+    qbPopin: null,
+    confirmPopin: null,
+    PopinData : null,
+    elementIsClicked : null,
+    positionY       : null,
+    verticalCenter  : require("../modules/verticalCenter.js"),
+    noAction: false, // No action fired on addToCart completion
+
+
+    waiting: false,
+
+    $currentButton: null,
+
+    init : function()
+    {
+        // MINISITES / POPIN RICHE: don't double listener
+        // !WARNING!: jQuery data events is undocumented, and subject to change (works w/ v.1.10.2)
+        var _events = $j._data($j('body')[0], 'events');
+        if (_events && _events.click) {
+            for (var i=0; i<_events.click.length; ++i) {
+                if ( _events.click[i].selector == ".js-addtocart") {
+                    return;
+                }
+            }
+        }
+        $j('body').on('click','.js-addtocart',modules.AddToCart.createPopin);
+    },
+
+    /**
+     * Create QBPopin or Buy and create confirmPopin
+     */
+    createPopin: function(e) {
+        e.preventDefault();
+        modules.AddToCart.$currentButton  = $j(this);
+        var productCode     = modules.AddToCart.$currentButton.attr('data-productqb') ? modules.AddToCart.$currentButton.attr('data-productqb') : -1;
+        var sku             = modules.AddToCart.$currentButton.attr('data-sku') || modules.AddToCart.$currentButton.attr('data-skus') || modules.AddToCart.$currentButton.attr('data-sku') === "" ? modules.AddToCart.$currentButton.attr('data-sku') : -1;
+
+        if (sku === -1) {
+               	modules.AddToCart.qbPopin = new modules.AddToCart.QuickBuyPopin({
+                $popin:         $j('.js-popin-quickbuy'),
+                $triggerButton: modules.AddToCart.$currentButton
+            });
+
+        } else if ( e!== undefined ){
+            if ( modules.AddToCart.$currentButton.attr('data-sku') && modules.AddToCart.$currentButton.attr('data-sku') !== "" ) {
+                modules.AddToCart.Add(e);
+            }
+            else if(  modules.AddToCart.$currentButton.attr('data-skus') !== "" && typeof modules.AddToCart.$currentButton.attr('data-skus') !== "undefined"  ) {
+                modules.AddToCart.AddMultiple(e);
+            } else {
+                var _btn = $j('#gocart-trigger > a');
+                modules.header.rolls.toggle( $j('.js-error-roll'), _btn);
+                modules.header.rolls.timerOut = window.setTimeout(function() {
+                    modules.header.rolls.close();
+                }, 2500);
+            }
+        }
+    },
+
+    Add :function( e )
+    {
+        if (!modules.AddToCart.waiting)
+        {
+            var $buyBtn =  $j(e.currentTarget);
+            modules.AddToCart.Feedback.Clean();
+            window.clearTimeout( modules.AddToCart.Timer );
+
+            modules.AddToCart.waiting = true;
+            modules.AddToCart.PopinData = null;
+
+
+            var origin = $buyBtn.attr('data-origin');
+            if (origin === undefined) {
+                origin = $j('body').data('origin');
+                if (origin === undefined) {
+                    console.warn('[Cart]: missing origin on body, and nothing set in trigger data-origin.');
+                    return;
+                }
+            }
+
+            $j.ajax({
+                url: diorV7.config.webservices.CART[origin].ADD.url,
+                type: diorV7.config.webservices.CART[origin].ADD.method,
+                data : 'sku='+ $buyBtn.attr('data-sku') +'&quantity='+ $buyBtn.attr('data-quantity'),
+
+                // DEFINE A FORMATTER OBJECT FOR THE CALL
+                // must have a Request method that format the settings data object directly
+                // must have a Response method that format the data, and return a stringified object
+                // @see core.AjaxFormat.js
+                contentType: (window.pcis ? pcis.ContentType : null),
+                formatter: diorV7.config.webservices.CART[origin].ADD.formatter,
+
+                success : function(data)
+                {
+                    // save data
+                    modules.AddToCart.PopinData = data;
+
+                    if(data.status == 'ok' || data.success) {
+                        modules.AddToCart.Confirm( data.basketsize, $buyBtn, origin );
+                    } else {
+                        modules.AddToCart.AddFail();
+                    }
+                    modules.AddToCart.waiting = false;
+                }
+            });
+        }
+    },
+
+	AddMultiple :function(e)
+	{
+        if (!modules.AddToCart.waiting)
+        {
+            var $buyBtn       = $j(e.currentTarget);
+            var quantities  = $buyBtn.attr('data-quantities').split(','),
+                skus        = $buyBtn.attr('data-skus').split(','),
+                messages    = $buyBtn.attr('data-messages'),
+                _l          = quantities.length;
+
+            if(_l>0 && parseInt(quantities[0],10)>0)
+            {
+                modules.AddToCart.Feedback.Clean();
+                window.clearTimeout( modules.AddToCart.Timer );
+
+                modules.AddToCart.waiting = true;
+                modules.AddToCart.PopinData = null;
+
+                var tmpStack = [];
+                for (var i=0; i<_l; ++i) {
+                    tmpStack.push('sku='+skus[i]+':quantity='+quantities[i]);
+                }
+                var _preparedSku = tmpStack.join(',');
+
+                $j.ajax({
+                    type: core.AjaxConfig.Product.MULTIPLE_ADD_TO_CART.method,
+                    url: core.AjaxConfig.Product.MULTIPLE_ADD_TO_CART.url,
+                    dataType: 'json',
+                    data: {
+                        skus: _preparedSku,
+                        giftMessage: messages
+                    },
+                    success: function (data) {
+                        // !warning: minimal difference in response between single & multiple addToCart
+                        modules.AddToCart.PopinData = data.product;
+                        if(modules.AddToCart.PopinData.status == 'ok' || modules.AddToCart.PopinData.success) {
+                            modules.AddToCart.Confirm( data.basketsize, $buyBtn );
+                        } else {
+                            modules.AddToCart.AddFail();
+                        }
+                        modules.AddToCart.waiting = false;
+                    }
+                });
+            }
+        }
+	},
+
+    Confirm : function( total, $buyBtn, origin, silent ) {
+
+        // Dispatch success event
+        if (core.signals && core.signals.global && !silent) core.signals.global.dispatch('addToCart::success', modules.AddToCart.PopinData, origin);
+
+        // Product Click
+        if ($buyBtn.attr('data-product-track-object')) {
+            core.tracking.trackProductClick( $buyBtn.attr('data-product-track-object') );
+        }
+
+        // Success Tracking
+        if ($buyBtn.attr('data-track-object')) {
+            core.tracking.trackObject($buyBtn.attr('data-track-object'));
+        }
+
+        // Update basketsize
+        // modules.AddToCart.Feedback.Update( total );
+
+        // Update confirm popin message
+        $j('.js-popin-addtocart-confirm').find('.js-addtocart-message').html(modules.AddToCart.PopinData.message);
+
+        // Replace popin by confirm
+        if( modules.AddToCart.qbPopin && modules.AddToCart.qbPopin.$popin.is(':visible')) {
+            modules.AddToCart.qbPopin.$popin.find('.js-popin-content').html($j('.js-popin-addtocart-confirm .js-popin-content').clone());
+            modules.AddToCart.qbPopin.$popin.css('line-height','normal');
+            modules.AddToCart.qbPopin.placeInWindow();
+        }
+        // Direct addToCart from Dior.com
+        // or use of modules.AddToCart.Add by a minisite
+        else if (!modules.AddToCart.$currentButton || modules.AddToCart.$currentButton.data('open-roll')) {
+            // open header roll
+            var _btn = $j('#gocart-trigger > a'),
+                _roll = $j('#'+_btn.data('targetroll'));
+            modules.header.rolls.toggle( _roll, _btn);
+
+            if(_roll.data('auto-close') === undefined || (_roll.data('auto-close') !== undefined && _roll.data('auto-close'))) {
+                modules.header.rolls.timerOut = window.setTimeout(function () {
+                    modules.header.rolls.close();
+                }, 2500);
+            }
+        }
+        else if (modules.AddToCart.PopinData.checkoutShoppingCartHref !== "" && modules.AddToCart.$currentButton.data('redirect') ) { // redirect after addtocart
+            window.location = modules.AddToCart.PopinData.checkoutShoppingCartHref;
+        }
+        else if(!modules.AddToCart.noAction) { // open confirm
+            modules.AddToCart.confirmPopin = new modules.AddToCart.Popin({
+               $popin: $j('.js-popin-addtocart-confirm')
+           });
+           modules.AddToCart.confirmPopin.open();
+        }
+
+        // Listen to confirm popin buttons
+        // but only once!
+        $j('body').off('click', '.js-addtocart-continue')
+            .on('click', '.js-addtocart-continue', function(e) {
+                e.preventDefault();
+                if( modules.AddToCart.qbPopin && modules.AddToCart.qbPopin.$popin.is(':visible')) {
+                    modules.AddToCart.qbPopin.close(e);
+                }
+                else {
+                    modules.AddToCart.confirmPopin.close(e);
+                }
+                if (core.signals && core.signals.global )  core.signals.global.dispatch('addToCart::continue');
+            });
+
+        $j('body').off('click', '.js-addtocart-checkout')
+            .on('click', '.js-addtocart-checkout', function(e) {
+                if (core.signals && core.signals.global )  core.signals.global.dispatch('addToCart::checkout');
+            });
+
+        // reset button
+        modules.AddToCart.$currentButton = null;
+    },
+
+    AddFail : function()
+    {
+        if (typeof modules.AddToCart.PopinData.errorMessages == 'string') {
+            $j('#errorRoll .default-message').html( modules.AddToCart.PopinData.errorMessages );
+        } else {
+            $j('#errorRoll .default-message').html( modules.AddToCart.PopinData.errorMessages.join('<br/>') );
+        }
+		modules.AddToCart.Feedback.Error();
+
+        if ( $j('.js-popin-quickbuy:first').is(":visible") ) {
+            modules.AddToCart.qbPopin.close();
+            PopinManager.close( modules.AddToCart.qbPopin );
+        }
+
+        /*$j(document).on('mousedown', function (e) {
+            if ($j(e.target).closest(".error-roll").length === 0) {
+                if( modules.header ) modules.header.error.close();
+            }
+        });*/
+    },
+
+
+    /*SetInterval : function()
+    {
+        window.clearInterval( modules.AddToCart.Interval );
+        modules.AddToCart.Interval = window.setInterval(modules.AddToCart.CheckResponse, modules.AddToCart.IntervalOut);
+    },*/
+
+    Feedback:
+    {
+        Update: function(_val)
+        {
+            $j('.js-cart-total').html('' + _val + '');
+            if (core.universe == 'PCD') {
+                $j.cookie( core.AjaxConfig.Cart.PCD.COOKIE, +_val, modules.header.cookieOptions);
+            }
+        },
+
+        Hide: function()
+        {
+            window.clearTimeout(modules.AddToCart.Timer);
+            $j( document.getElementById('cart-total-preview') ).removeClass('active');
+            modules.footer.overlay.Hide();
+            $j( document.getElementById('cart-feedback-display') ).animate({'height' : 0}, 'slow');
+        },
+
+        Clean : function()
+        {
+            $j( document.getElementById('cart-feedback-display') ).html( modules.AddToCart.WaitMessage );
+        },
+
+        Show: function()
+        {
+            $j( document.getElementById('cart-total-preview') ).addClass('active');
+            //He.Jewel.Overlay.Show();
+            $j( document.getElementById('cart-feedback-display') ).slideDown();
+        },
+
+        Error: function(){
+            if( modules.header ) {
+                // Rolls can stay open autoClose -> false
+                if (modules.header.rolls.isOpened) {
+                    modules.header.rolls.close();
+                }
+                // need timeout:
+                // - open popin: fix page scroll, header return to normal state
+                // - close popin: header return to fix and a scroll event is fired
+                // -> it will close all header layers & roll
+                // => wait to open after event scroll is fired
+                setTimeout( function() {
+                    modules.header.error.open();
+                }, 500);
+            }
+        }
+    }
+};
+module.exports = modules.AddToCart;
+
+},{"../modules/popins/Popin.js":8,"../modules/popins/PopinQuickbuy.js":9,"../modules/verticalCenter.js":16}],6:[function(require,module,exports){
+function DropDown(options) {
+    this.o =  {
+        $container          : $j('.js-dropdown'),
+        itemSelector        : '.js-dropdown-item',
+        triggerSelector     : '.js-dropdown-trigger',
+        listSelector        : '.js-dropdown-items',
+        rowSelector         : '.js-dropdown-row',
+        maxListHeight       : 124,
+        listAnimationSpeed  : 400,
+        maxElBeforeScroll   : 3
+    }
+    this.o = $j.extend(this.o, options);
+
+    // Init module
+    this.init();
+    return this;
+}
+
+DropDown.prototype = {
+    init: function(options){
+
+        if (options) {
+            this.o = $j.extend(this.o, options);
+        }
+
+        this.$container = this.o.$container;
+        this.$list      = this.$container.find(this.o.listSelector);
+        this.$trigger   = this.$container.find(this.o.triggerSelector);
+        this.signals    = window.signals ? new signals.Signal() : null;
+        this.isOpened   = false;
+
+        this.$trigger.on('click', $j.proxy(this.toggle, this));
+        this.$container.on('click touchstart', this.o.itemSelector, $j.proxy(this.onItemSelected, this));
+        var scope = this;
+
+        // Click outside
+        if (core.signals && core.signals.popinSignal) {
+            core.signals.global.add(function (type, event) {
+                switch (type) {
+                    case 'document::click':
+                        var $trigger = scope.$trigger;
+                        var $list = scope.$list;
+                        var isChildOfDropUp = $j(event.target).parents('.js-dropdown:first').length > 0;
+                        if (!$trigger.is(event.target) && $trigger.has(event.target).length === 0
+                            && !$list.is(event.target) && $list.has(event.target).length === 0
+                            && scope.isOpened && !isChildOfDropUp) {
+                            scope.close();
+                        }
+                        break;
+                }
+            });
+        }
+    },
+    toggle: function(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        if( !this.isOpened )
+            this.open();
+        else
+            this.close();
+    },
+    open : function (e) {
+        this.$container.addClass('mod-dropdown--open');
+
+        var $container;
+        var hList    = this.o.maxListHeight;
+        var nbrEl    = this.$list.find(this.o.itemSelector).length;
+        var nbrLines = this.$list.find(this.o.rowSelector).length;
+        if( core.universe == core.pcd ) {
+            if( nbrEl > this.o.maxElBeforeScroll) {
+                this.createScrollableList();
+                $container = this.$list.parents('.js-dropdown-scroller');
+            } else {
+                hList = nbrEl * this.$list.find(this.o.itemSelector).parent().height();
+                $container = this.$list;
+            }
+        } else {
+            hList = nbrLines * ( this.$list.find(this.o.rowSelector).height() + 1 ); // +1 = table border
+            $container = this.$list;
+        }
+
+        $container.animate( { 'height': hList+'px' }, this.o.listAnimationSpeed );
+        this.isOpened = true;
+    },
+    close : function (){
+        if(this.$list.parents('.js-dropdown-scroller').length <= 0 ) {
+            var _this = this;
+            this.$list.animate({
+                'height': '0'
+            }, { complete: function(){
+                _this.$container.removeClass('mod-dropdown--open');
+            }});
+        }
+        else {
+            var _this = this;
+            this.$list.parents('.js-dropdown-scroller').animate({
+                'height': '0'
+            }, { complete: function(){
+                _this.$container.removeClass('mod-dropdown--open');
+            }});
+        }
+        this.isOpened = false;
+    },
+    onItemSelected: function (e){
+        e.preventDefault(); // event need to be trigger on product selector too
+        e.stopPropagation();
+
+        var $item       = $j(e.currentTarget);
+
+        this.setActiveItem($item, true);
+
+        this.close();
+        if (this.signals) this.signals.dispatch('DropDown::change',$item);
+    },
+
+    setActiveItem: function($item, silently) {
+
+        var $label = this.$container.find('.js-dropdown-activeLabel');
+        var _text = $item.find('.js-dropdown-label').text();
+        this.$trigger.find('.js-dropdown-activeLabel').html(_text);
+        this.$trigger.parents('.js-quickbuy').find('.js-dropdown-activeValue').html($item.find('.js-dropdown-value').data('value'));
+        this.$list.find('.active').removeClass('active');
+        $item.addClass('active');
+        if ($label.attr('data-default')) {
+            $label.toggleClass('select-value-default', _text === $label.attr('data-default'));
+        }
+        if (!silently && this.signals) this.signals.dispatch('DropDown::change',$item);
+    },
+
+    createScrollableList : function(){
+        if(this.$list.parents('.js-dropdown-scroller').length <= 0 ) {
+            var $scroller = $j('<div/>',{
+                'class': 'scroller js-dropdown-scroller'
+            });
+            var $viewport = $j('<div/>',{
+                'class': 'viewport'
+            });
+            var $scrollbar = $j('<div/>',{
+                'class': 'scrollbar',
+                'html': '<div class="track"><div class="thumb"><div class="end"></div></div></div>'
+            });
+            this.$list.height('auto').addClass('overview').detach();
+            $viewport.append(this.$list).height(this.o.maxListHeight);
+            $scroller.append($viewport);
+            $scroller.append($scrollbar);
+            this.$container.append($scroller);
+            $scroller.tinyscrollbar();
+            $scroller.height(0);
+        }
+    }
+};
+
+module.exports = DropDown;
+
+},{}],7:[function(require,module,exports){
+modules.equalHeight = {
+    defaultContainer: '#container',
+    defaultSelector: '.js-equal-height',
+    defaultMainSelector: '.js-equal-height-main',
+    /**
+     * Function to set equal height on all items of a container
+     * @param itemContainer
+     * @param itemSelector
+     */
+    equalize: function(itemContainer, itemSelector, mainSelector, removePadding)
+    {
+        var container = itemContainer ? itemContainer : modules.equalHeight.defaultContainer,
+            selector = itemSelector ? itemSelector : modules.equalHeight.defaultSelector,
+            main = mainSelector ? mainSelector : modules.equalHeight.defaultMainSelector;
+        $j(container).each(function() {
+            var $items = $j(this).find(selector),
+                maxH = $items.find(main).length > 0 ? $items.find(main).outerHeight() : 0;
+
+            if ($items.find(main).length <= 0) { // if no main get max
+                $items.each(function () {
+                    // save old style
+                    var oldStyle = $j(this).attr('style');
+                    $j(this).attr('style', '');
+                    var itemH = parseFloat($j(this).outerHeight()) - parseFloat($j(this).css('padding-top')) - parseFloat($j(this).css('padding-bottom'));
+                    maxH = ( itemH > maxH ) ? itemH : maxH;
+                    // reset style
+                    $j(this).attr('style', oldStyle);
+                });
+            }
+            if (!removePadding) {
+                $items.height(maxH);
+            } else {
+                $items.each(function() {
+                    var $this = $j(this);
+                    $this.height( maxH - parseFloat($j(this).css('padding-top')) - parseFloat($j(this).css('padding-bottom')) );
+                });
+            }
+        });
+    }
+};
+module.exports = modules.equalHeight;
+
+},{}],8:[function(require,module,exports){
+/*
+* Popin is a module that fades in an element over #popin-overlay
+*
+* Args : object {
+*	 $popin, $open, $close, $overlay, $popinWrapper : 					jQuery element
+*	 closeButton :  								    true|false
+*	 onOpen, onOpened, onClose, onClosed, onResize : 	callback function
+*    signals : 											jQuery signals dispatcher,
+*	 offsetTop : 										popin's distance from top if higher than window
+* }
+*
+*/
+function Popin(options, override) {
+
+	this.open = this.defaultOpen;
+	this.close = this.defaultClose;
+	if (!override)
+		this.init(options);
+
+}
+
+Popin.prototype = {
+
+	opened: false,
+
+	init: function(options) {
+
+		var _default = {
+			$popin:      $j(".js-popin"),
+			$open: undefined,
+			
+			closeButton: true,
+			onOpen: function() {},
+			onOpened: function() {},
+			onClose: function() {},
+			onClosed: function() {},
+			onResize: function() {},
+			onInit: function() {},
+			signals: core.signals.global,
+			defaultOffsetTop: 40
+		};
+
+		if (options) $j.extend(_default, options);
+
+		_default.$close = _default.$popin.find(".js-popin-close");
+		$j.extend(this, _default);
+
+		this.buildElements();
+		this.addEventListeners();
+		this.onInit();
+	},
+
+	/*
+	* Builds the close button if necessary
+	*/
+	buildElements: function() {
+
+		if (this.closeButton && !this.$close.length ) {
+			this.$close = $j("<button class='close js-popin-close png-bg'></button>");
+			this.$popin.append(this.$close);
+		}
+
+	},
+
+	/*
+	* Adds listeners for open / close / resize events
+	*/
+	addEventListeners: function() {
+
+		var _this = this;
+		if (this.$open) {
+			this.$open.off("click touchstart");
+
+			this.$open.each(function() {
+				if (!this.tablet) $j(this).on("click", function(e) { $j.proxy(_this.open, _this, e)(); });
+				else $j(this).on( "touchstart", function(e) { $j.proxy(_this.open, _this, e)(); });
+			});
+
+		}
+
+		if (this.$close) {
+			this.$close.off("click touchstart");
+			if (!this.tablet) this.$close.on("click", function(e) { $j.proxy(_this.close, _this, e)(); });
+			else this.$close.on( "touchstart", function(e) { $j.proxy(_this.close, _this, e)(); });
+
+		}
+	},
+
+	defaultOpen: function(e) {
+		
+		if (!this.opened) {
+			PopinManager.open( this );
+			this.onOpen(e);
+
+			this.opened = true;
+			this.placeInWindow();
+
+            var _this = this;
+            this.$popin.fadeIn( function() {
+            	PopinManager.onOpened();
+                _this.onOpened(e);
+            });
+
+			if (e) {
+				var _href = e.currentTarget.getAttribute('href');
+				// warning: prevent single '#' href
+				if (_href && _href.length>1) {
+					var $anchor = this.$popin.find( _href.replace('anchor-','') );
+					if ($anchor.length) {
+						var _this = this;
+						PopinManager.$popinWrapper.scrollTop( $anchor.position().top );
+					}
+				}
+			}
+		}
+	},
+
+	defaultClose: function(e) {
+		
+		if (this.opened) {
+			if (e) PopinManager.close( this );
+			this.onClose(e);
+			this.opened = false;
+
+			this.$popin.fadeOut( $j.proxy(this.internalOnClosed, this) );
+		}
+    },
+
+    internalOnClosed: function(e) {
+        this.$popin.removeAttr("style");
+		
+		PopinManager.onClosed();
+		this.onClosed(e);
+	},
+
+	toggle: function() {
+		if (this.opened) this.close();
+		else this.open();
+	},
+
+	placeInWindow: function() {
+
+		this.width = this.$popin.outerWidth(true);
+		this.height = this.$popin.outerHeight(true);
+
+		var _windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		var _windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+		this.offsetLeft = (_windowWidth- this.width) / 2;
+		if (this.height < _windowHeight) {
+			this.offsetTop = ( _windowHeight - this.height) / 2;
+		} else {
+			this.offsetTop = this.defaultOffsetTop;
+			PopinManager.$overlay.height( this.height + this.offsetTop*2 );
+		}
+
+		this.$popin.css({
+			top: this.offsetTop,
+			left: this.offsetLeft
+		});
+
+		PopinManager.$overlay.css({
+			height: this.$popin +'px'
+		});
+	},
+
+	resize: function() {
+		this.placeInWindow();
+		this.onResize();
+	}
+
+};
+
+module.exports = modules.Popin = Popin;
+
+},{}],9:[function(require,module,exports){
+var Popin 			= require("./Popin");
+var foreachHelp 	= require("../../helpers/foreach.js");
+var ifCondHelp 		= require("../../helpers/ifCond.js");
+var truncateHelp 	= require("../../helpers/truncate.js");
+var stringifyHelp 	= require("../../helpers/stringify.js");
+var templates 		= require("../../templates/quickbuy.js")(Handlebars);
+var QuickBuy    	= require("../quickBuy.js");
+var quickbuy     	= null;
+var equalHeight     = require("../equalHeight.js");
+var verticalCenter  = require("../verticalCenter.js");
+
+PopinQuickbuy.prototype = new Popin({}, true);
+
+function PopinQuickbuy (options) {
+	this.init(options);
+	this.getQuickBuyData();
+}
+
+PopinQuickbuy.prototype.getQuickBuyData = function() {
+	var productCode = this.$triggerButton.attr('data-productqb');
+	var categoryId 	= this.$triggerButton.attr('data-categoryqb');
+	var productSkus = this.$triggerButton.attr('data-productskusqb');
+
+	//FOR TEST SWITCH BETWEEN THE TWO TEMPLATES
+	switch (productCode) {
+		case 'f1':
+		core.AjaxConfig.QuickBuy.url = '../../assets_v6/json/quick_buy_fragrance.json';
+		break;
+		case 'f2':
+		core.AjaxConfig.QuickBuy.url = '../../assets_v6/json/quick_buy_makeup.json';
+		break;
+	}
+	var scope = this;
+	$j.ajax({
+		url     : core.AjaxConfig.QuickBuy.url,
+		type    : core.AjaxConfig.QuickBuy.method,
+		data    : 'productCode=' + productCode + '&categoryGuid=' + categoryId,
+		success : function(data) {
+            // get selected sku
+            var _l = data.product.skus.length;
+            for (var i=0; i<_l; ++i) {
+                var sku = data.product.skus[i];
+                if (sku.selectedSku) {
+                    data.product.selected = sku;
+                    break;
+                }
+            }
+            if (!data.product.selected) data.product.selected = data.product.skus[0];
+			scope.createTemplate(data);
+		},
+		error: function(data)
+		{
+			//console.log(data);
+		}
+	});
+};
+
+PopinQuickbuy.prototype.createTemplate = function(data) {
+	var template, output;
+	template = (data.product.color === 0) ? templates.fragrance : templates.makeup;
+
+    // get selected sku
+    // and add selectedSku to data for Handlebars
+    var _l = data.product.skus.length;
+    for (var i=0; i<_l; ++i) {
+        // WHY ACTIVE & SELECTEDSKU? seems to be exactly and striclty the same thing...
+        if (data.product.skus[i].active || data.product.skus[i].selectedSku==1) data.product.selectedSku = data.product.skus[i].skuCode;
+    }
+
+    output = template( data );
+
+    //#####################################################################
+    // DEBUT PROJET CHINE : NE PAS ECRASER DIFF CI DESSOUS LORS DU MERGE HE
+    //#####################################################################
+    //Injection de la page de provenance pour appel distant
+    if(data.product.color === 0){
+        output = output + '<input type="hidden" id="quickbuyPage" value ="quickbuy-fragrance" />';
+    }
+    else {
+        output = output + '<input type="hidden" id="quickbuyPage" value ="quickbuy-makeup" />';
+    }
+    output = output + '<input type="hidden" id="defaultSku" value ="' + data.product.selectedSku +'" />'
+    var listeSku ="";
+    for (var i=0;i<data.product.skus.length;i++) {
+        listeSku = listeSku + data.product.skus[i].skuCode +',';
+    }
+    output = output + '<input type="hidden" id="quickbuySkus" value ="' + listeSku.substring(0,listeSku.length -1) +'" />'
+    //#####################################################################
+    // FIN PROJET CHINE
+    //#####################################################################
+
+	this.$popin.find('.js-popin-content').html(output);
+
+	this.open();
+	quickbuy = new QuickBuy({
+		containerSelector: '.js-popin-quickbuy'
+	});
+	// ALPHAIMAGELOADER on js-quickbuy-img DOESN'T WORK BECAUSE OF URLS ENCODED WITH %252F
+};
+module.exports = modules.PopinQuickbuy = PopinQuickbuy;
+
+},{"../../helpers/foreach.js":1,"../../helpers/ifCond.js":2,"../../helpers/stringify.js":3,"../../helpers/truncate.js":4,"../../templates/quickbuy.js":17,"../equalHeight.js":7,"../quickBuy.js":12,"../verticalCenter.js":16,"./Popin":8}],10:[function(require,module,exports){
+modules.productFilter = {
+    // product element
+    defaultFilterableSelector       : '.js-filterable',
+    // element (in product) w/ filter attributes
+    itemFilterable                  : '.js-swatch-hover',
+    nonCumulativeGroupData          : 'noncumulative-group',
+
+    equalHeight                     : require('../modules/equalHeight.js'),
+
+    wrapperPagination               : $j(document.getElementById('productListAnchor')),
+
+    $filtersPanel                   : $j('.js-filters-panel'),
+    $filtersCheckboxes              : $j('.js-filters-checkbox'),
+    $filtersClose                   : $j('.js-filters-close'),
+    $filtersReset                   : $j('.js-filters-reset'),
+
+    $filtersItemsCount              : $j('.js-filters-count'),
+    $filtersResultsCount            : $j('.js-filters-result'),
+
+    $filtersSubmit                  : $j('.js-filters-submit'),
+
+    $trigger                        : $j('.js-filters-trigger'),
+
+    $productlist                    : $j('.js-productlist'),
+    isOpen                          : false,
+    slideSpeed                      : 500,
+
+    /* ALL ITEMS */
+    nbrItems            : 0,
+    items               : [],
+    /* CURRENT FILTERED ITEMS */
+    currentTotal        : 0,
+
+    // list all filters in the page
+    // 1. CUMULATIVE FILTERS
+    // - must match all the item in the array
+    filters             : [],
+    // 2. NON-CUMULATIVE FILTERS (by group)
+    // - must match at least one item per group
+    nonCumulativeGroupFilters   : null,
+    selectedNonCumulativeGroupNum: 0,
+
+    // current selection
+    selectedFilters                     : [],
+    selectedNonCumulativeGroupFilters   : {},
+
+    // OPTIONS
+    // disable filters that are unavailable with the current filter selection
+    // - for PCD: it prevent user to make a selection that returns 0 match
+    updateEnabledFilters                : true,
+    // count products or variant?
+    countVariants                       : false,
+
+    // id separator in data-filter-ids
+    dataSeparator       : '-',
+
+    dontMatch: 'dont-match',
+
+    // product per ligne
+    lineNum             : 3,
+    needLines           : false,
+    signals             : window.signals ? new signals.Signal() : null,
+
+    init: function( filterableSelector, filterContainer )
+    {
+        modules.productFilter.filterableSelector = filterableSelector ? filterableSelector : modules.productFilter.defaultFilterableSelector;
+        modules.productFilter.itemFilterable = filterContainer ? filterContainer : modules.productFilter.itemFilterable;
+
+        modules.productFilter.lineNum = ($j('.js-categories').data('products-per-line')) ? $j('.js-categories').data('products-per-line') : modules.productFilter.lineNum;
+        modules.productFilter.needLines = ($j('.js-categories').data('products-line')) ? $j('.js-categories').data('products-line') : false;
+
+        var group, $this, $parent, filter;
+
+        // LIST ALL FILTERS PRESENT IN THE PAGE
+        // if filter belongs to a group:
+        // - check if its a non-cumulative or a cumulative group
+        // (a non-cumulative group contain an id in a data-attribute "data-noncumulative-group")
+        $j('.js-filters-group').each( function() {
+            $this = $j(this);
+            group = $this.data( modules.productFilter.nonCumulativeGroupData );
+
+            if (group && group != "") {
+                if (!modules.productFilter.nonCumulativeGroupFilters) {
+                    modules.productFilter.nonCumulativeGroupFilters = {};
+                    modules.productFilter.selectedNonCumulativeGroupFilters = {};
+                }
+                if (!modules.productFilter.nonCumulativeGroupFilters[group]) {
+                    modules.productFilter.nonCumulativeGroupFilters[group] = [];
+                    modules.productFilter.selectedNonCumulativeGroupFilters[group] = [];
+                }
+
+                $this.find('.js-filters-checkbox').each( function() {
+                        modules.productFilter.nonCumulativeGroupFilters[group].push( $j(this).data("filter") );
+                    }
+                );
+            } else {
+                $this.find('.js-filters-checkbox').each( function() {
+                        modules.productFilter.filters.push( $j(this).data("filter") );
+                    }
+                );
+            }
+        });
+
+        // FILTER ON CHANGE
+        // - doesn't filter display on PDG (only on FP)
+        // - update total and filter available only
+        modules.productFilter.$filtersCheckboxes.find('.js-checkbox').on( 'change', function( event ) {
+
+            $parent = $j( this ).parents('.js-filters-checkbox:first');
+            group = $parent.parents('.js-filters-group:first').data( modules.productFilter.nonCumulativeGroupData );
+
+            // a checkbox could be disabled but checked, we must be able to uncheck
+            if( $parent.hasClass('disabled') && $parent.find('input').is(':checked') ) {
+                event.stopPropagation();
+                event.preventDefault();
+                return;
+            }
+
+            var filter = $parent.attr('data-filter');
+            if ($j(this).is(':checked')) {
+                modules.productFilter.addFilter( filter, group );
+            } else {
+                modules.productFilter.removeFilter( filter, group );
+            }
+
+            // FP filters has no submit button
+            // or if its a direct filter (eco available checkbox)
+            if( modules.productFilter.$filtersSubmit.length <= 0 || $j(this).hasClass('js-force-filter') ) {
+                modules.productFilter.filter();
+            }
+            else {
+                modules.productFilter.checkDispo( false, group );
+            }
+
+        });
+
+        // Events
+        modules.productFilter.$trigger.on( 'click', modules.productFilter.toggle);
+        modules.productFilter.$filtersReset.on( 'click', modules.productFilter.reset);
+        modules.productFilter.$filtersClose.on( 'click', modules.productFilter.close);
+        modules.productFilter.$filtersSubmit.on('click', modules.productFilter.filter);
+
+        modules.productFilter.updateProductFiltersIds();
+        modules.productFilter.checkDispo( true, '', true );
+
+        // Style filter columns
+        modules.productFilter.$filtersPanel.addClass('invisible');
+        modules.productFilter.equalHeight.equalize('.js-filters-columns');
+        modules.productFilter.$filtersPanel.removeClass('invisible');
+
+        // PDG Makeup case
+        // - we count the variant (swatch list inside the filterable)
+        if ($j(modules.productFilter.filterableSelector+':visible .js-swatch-hover:visible').length) {
+            modules.productFilter.countVariants = true;
+            modules.productFilter.nbrItems = $j(modules.productFilter.filterableSelector+':visible .js-swatch-hover:visible').length;
+        } else {
+            modules.productFilter.nbrItems = $j(modules.productFilter.filterableSelector+':visible:not(".js-no-count")').length;
+        }
+        modules.productFilter.total( modules.productFilter.nbrItems );
+    },
+
+    /**
+     * Function to toggle Filters panel
+     */
+    toggle: function(e) {
+        if (e) e.preventDefault();
+        if( modules.productFilter.isOpen ) {
+            modules.productFilter.close();
+        } else {
+            modules.productFilter.open();
+        }
+    },
+
+    /**
+     * Function to open Filters panel
+     */
+    open: function() {
+        modules.productFilter.$filtersPanel.slideDown( modules.productFilter.slideSpeed,function(){
+            if(core.lte7) {
+                setTimeout(function(){
+                    modules.productFilter.$filtersPanel.toggleClass('open');
+                },1000);
+            }
+        });
+        modules.productFilter.isOpen = true;
+        modules.productFilter.$trigger.addClass('open');
+    },
+
+    /**
+     * Function to close Filters panel
+     */
+    close: function(e) {
+        if (e) e.preventDefault();
+        modules.productFilter.$filtersPanel.slideUp( modules.productFilter.slideSpeed,function() {
+            if(core.lte7) {
+                setTimeout(function(){
+                    modules.productFilter.$filtersPanel.toggleClass('open');
+                },1000);
+            }
+        });
+        modules.productFilter.isOpen = false;
+        modules.productFilter.$trigger.removeClass('open');
+    },
+
+    /**
+     * 2 TYPE:
+     * - PDG (RAL): swatch have only one filter (tint), and all the tint must be concatenated into the container
+     * - FP: each swatch is
+     * Swatch product update product filter list
+     * - retro-compatibilty: joint each filter type in the data-filter-ids
+     *
+     * RETRO-COMPATIBILITY FOR FP & PDG Makeup
+     * ---------------------------------------
+     * old data-filter-id & data-cumulative-filter-id
+     * - need to be joined in the common data-filter-ids
+     * (group & logic are now defined in the filter list)
+     * add data-filter-ids to each swatch
+     */
+    updateProductFiltersIds: function() {
+        $j(modules.productFilter.filterableSelector+':visible').each( function() {
+            var $filterable = $j(this);
+
+            // FP Makeup & PDG Makeup
+            if ( $filterable.find('*[data-filter-id]').length > 0) {
+                var filterIds = [];
+                $filterable.find( modules.productFilter.itemFilterable ).each( function() {
+                    var $this = $j(this);
+                    var filter = $this.attr('data-filter-id');
+                    if ($j.inArray(filter,filterIds) < 0) {
+                        filterIds.push(filter);
+                    }
+                    var _nonCumulatives = $this.attr('data-cumulative-filter-id');
+                    if (_nonCumulatives) {
+                        $this.attr('data-filter-ids', ($this.attr('data-filter-id') + '-' + _nonCumulatives) );
+                        if ($j.inArray(_nonCumulatives,filterIds) < 0) {
+                            filterIds.push(_nonCumulatives);
+                        }
+                    } else {
+                        $this.attr('data-filter-ids', $this.attr('data-filter-id') );
+                    }
+                });
+                // add data-filter-ids to each product (faster filter)
+                $filterable.attr('data-filter-ids', filterIds.join(modules.productFilter.dataSeparator));
+            }
+        });
+    },
+    /**
+     * Check which filters are available in the page
+     * @param allProducts
+     * @param currentGroupId
+     * @param remove [Optional]
+     */
+    checkDispo: function( allProducts, currentGroupId, remove ) {
+        var availableFilters = [],
+            availableNonCumulativeGroupFilters = {},
+            $selector = $j(modules.productFilter.filterableSelector),
+            count = 0;
+
+        /* No filters already selected
+         add all product filters as available filters */
+        for (var i = 0, l = $selector.length; i < l; ++i) {
+            var $this = $j($selector[i]);
+
+            var filters = $this.data('filter-ids');
+            if( filters !== undefined ) {
+
+                var _result = modules.productFilter.itemMatch($this, allProducts);
+
+                if (!allProducts) {
+                    if (!_result.match) {
+                        continue;
+                    } else {
+                        // FORMEL: special cas - some element are decoratives
+                        if (!$this.hasClass('js-no-count')) {
+                            count += _result.count;
+                        }
+                    }
+                } else {
+                    if (!$this.hasClass('js-no-count')) {
+                        count += _result.count;
+                    }
+                }
+
+                if (allProducts || modules.productFilter.updateEnabledFilters) {
+                    filters = filters.split(modules.productFilter.dataSeparator);
+                    var filter;
+
+                    // check filters:
+                    // - is the filter a cumulative filter?
+                    for (var key in modules.productFilter.filters) {
+                        filter = modules.productFilter.filters[key];
+                        if ($j.inArray(filter, filters) > -1 && $j.inArray(filter, availableFilters) < 0) {
+                            availableFilters.push(filter);
+                        }
+                    }
+                    // - or it belongs to a non-cumulative group?
+                    for (var group in modules.productFilter.nonCumulativeGroupFilters) {
+                        var currentGroup = modules.productFilter.nonCumulativeGroupFilters[group];
+                        // is the filter in the group?
+                        for (key in currentGroup) {
+                            filter = currentGroup[key];
+                            if ($j.inArray(filter, filters) > -1) {
+                                // first time we have a filter in this cumulative group
+                                if (!availableNonCumulativeGroupFilters[group]) {
+                                    availableNonCumulativeGroupFilters[group] = [];
+                                    availableNonCumulativeGroupFilters[group].push(filter);
+                                } else {
+                                    // is the filter already in the available list?
+                                    if ($j.inArray(filter, availableNonCumulativeGroupFilters[group]) < 0) {
+                                        availableNonCumulativeGroupFilters[group].push(filter);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (allProducts || modules.productFilter.updateEnabledFilters) {
+            // Reset all dispo
+            modules.productFilter.disableFilters(availableFilters, availableNonCumulativeGroupFilters, currentGroupId, remove);
+        }
+
+        // Update total
+        modules.productFilter.currentTotal( count );
+    },
+
+    /**
+     * Add Disable class on filters not available
+     * @param  Array availableFilters
+     */
+    disableFilters: function( availableFilters , availableNonCumulativeGroupFilters, currentGroupId, remove ) {
+        // Reset all dispo
+        modules.productFilter.$filtersCheckboxes.each( function() {
+            var $this = $j(this);
+            var $parent = $this.parent();
+            var groupId = $parent.data( modules.productFilter.nonCumulativeGroupData );
+            var filter = $this.data('filter');
+
+            // belongs to a non-cumulative group?
+            if (groupId) {
+                // first selected group of filters will never be filtered
+                // but only if only one column contains selected filters
+                if ( groupId != currentGroupId) {
+                    if ($j.inArray(filter, availableNonCumulativeGroupFilters[groupId]) < 0) {
+                        if (remove) {
+                            $this.remove();
+                        } else {
+                            $this.addClass('disabled');
+                            if (!$this.find('input').is(':checked')) {
+                                $this.find('input').attr('disabled', 'disabled');
+                            }
+                        }
+                    } else {
+                        $this.removeClass('disabled').find('input').removeAttr('disabled');
+                    }
+                }
+            } else {
+                if ($j.inArray(filter, availableFilters) < 0) {
+                    if (remove) {
+                        $this.remove();
+                    } else {
+                        $this.addClass('disabled');
+                        if (!$this.find('input').is(':checked')) {
+                            $this.find('input').attr('disabled', 'disabled');
+                        }
+                    }
+                } else {
+                    $this.removeClass('disabled').find('input').removeAttr('disabled');
+                }
+            }
+        });
+        modules.productFilter.updateColumnsTitle();
+    },
+
+    /**
+     * Function to check if column title need to be disabled
+     */
+    updateColumnsTitle: function() {
+        // DISABLE TITLE: if a column filter has no active filter
+        $j('.js-filters-columns > .filters-column').each( function() {
+            if ($j(this).find('.js-filters-checkbox:not(.disabled)').length === 0) {
+                $j(this).find('.column-title').addClass('disabled');
+            } else {
+                $j(this).find('.column-title').removeClass('disabled');
+            }
+        });
+
+        $j('.category:visible').removeClass('category--below-filters').first().addClass('category--below-filters');
+    },
+
+    /**
+     * Add Filter to current filter list
+     * @param  string filter id
+     * @param  string group id
+     */
+    addFilter: function( filter, group ) {
+        if (!group) {
+            modules.productFilter.selectedFilters.push( filter );
+        }
+        else {
+            ++modules.productFilter.selectedNonCumulativeGroupNum;
+            modules.productFilter.selectedNonCumulativeGroupFilters[group].push( filter );
+        }
+    },
+
+    /**
+     * Remove Filter to current filter list
+     * @param  string filter id
+     * @param  string group id
+     * IE lte 8 doesn't support indexOf
+     * -> shim in core.js
+     */
+    removeFilter: function( filter, group ) {
+        if (!group) {
+            modules.productFilter.selectedFilters.splice( modules.productFilter.selectedFilters.indexOf(filter), 1 );
+        }
+        else {
+            --modules.productFilter.selectedNonCumulativeGroupNum;
+            modules.productFilter.selectedNonCumulativeGroupFilters[group].splice( modules.productFilter.selectedNonCumulativeGroupFilters[group].indexOf(filter), 1 );
+        }
+    },
+
+    /**
+     * Function to filter Products
+     * Logic:
+     * - a product must match each filters (&&)
+     * - a product must match at least one filter per group (||)
+     * So: a column has 'or' filter, and each column is 'and'
+     *
+     * Exemple: we check 'red' and 'blue' on the 'color' column, with '34' and '35' in 'size' column
+     * -> matching products are those who are ('red' OR 'blue') AND ('34' OR '35')
+     */
+    filter: function( e ) {
+        if (e) e.preventDefault();
+        /* create regexp */
+        if ( modules.productFilter.selectedFilters.length > 0 || modules.productFilter.selectedNonCumulativeGroupNum > 0 ) {
+            $j(modules.productFilter.filterableSelector).each( function() {
+                var $product = $j(this);
+                var _result = modules.productFilter.itemMatch($product, true);
+                if ( _result.match ) {
+                    $product.removeClass( modules.productFilter.dontMatch );
+                    if ($product.hasClass('js-swatch')) {
+                        modules.productFilter.updateSwatches( $product );
+                    }
+                } else {
+                    $product.addClass( modules.productFilter.dontMatch );
+                }
+            });
+
+            if( $j('.js-category').find('.js-parallax').length > 0 ){
+                $j('.js-category').find('.js-parallax').hide();
+                $j('.js-categories').removeClass('categories--covers');
+            }
+        }
+        else {
+            // No Filters activated show all products and all swatches
+            $j(modules.productFilter.filterableSelector).removeClass( modules.productFilter.dontMatch );
+            $j('.js-swatch-hover').parent().show();
+
+            if ( $j('.js-category').find('.js-parallax').length > 0 ) {
+                $j('.js-category').find('.js-parallax').show();
+                $j('.js-categories').addClass('categories--covers');
+            }
+        }
+
+        /* test if group has visible items */
+        $j('.js-category').show();
+        $j('.js-category').each(function(){
+            var $cat = $j(this),
+                $products = $cat.find( modules.productFilter.filterableSelector+':visible' );
+
+            if( $products.length === 0 ) {
+                $cat.hide();
+            }
+            else {
+                if (modules.productFilter.needLines) {
+                    $cat.find('.js-products-line').remove();
+                }
+                var _lineI = 0;
+                $products.each(function(i) {
+                    var $product = $j(this);
+
+                    if(_lineI % modules.productFilter.lineNum === 0){
+                        $product.addClass('column-no-margin');
+                    }
+                    else {
+                        $product.removeClass('column-no-margin');
+                    }
+
+                    if(modules.productFilter.needLines && _lineI % modules.productFilter.lineNum === modules.productFilter.lineNum-1 && _lineI < $products.length-1) {
+                        $product.after($j('<hr class="products-line js-products-line"/>'));
+                    }
+
+                    // ...
+                    if ($product.hasClass('one-third') || $product.hasClass('one-half')) {
+                        ++_lineI;
+                    } else {
+                        _lineI += 2;
+                    }
+                });
+            }
+        });
+
+        /* update total items */
+        modules.productFilter.total( $j(modules.productFilter.filterableSelector+':visible:not(".js-no-count")').length );
+
+        // If swatch
+        if ($j('*[data-filter-id]:visible').length > 0) {
+            modules.productFilter.updateProductFiltersIds();
+        }
+
+        modules.productFilter.checkDispo( false, '' );
+
+        // close
+        modules.productFilter.close();
+        modules.productFilter.signals.dispatch('productFilter::change');
+    },
+
+    /**
+     * Check if the item match the selected filters
+     * @param $product [jquery element]
+     * @param allProducts [bool]
+     * @returns [Object] {match: true|false, count: true|false}
+     * @see modules.productFilter.filter()
+     * @seeAlso modules.productFilter.checkDispo()
+     */
+    itemMatch: function( $product, allProducts ) {
+        var _ids = $product.attr('data-filter-ids');
+        var matchCumulativeFilter = true,
+            result = {match: true, count: 0};
+
+        if (_ids && _ids.length) {
+            var productFilters = _ids.split('-');
+
+            // CUMULATIVES FILTERS
+            // need to match each filter (&&), so return false at first mismatch
+            if (modules.productFilter.selectedFilters.length > 0) {
+                for (var filterKey in modules.productFilter.selectedFilters) {
+                    var filter = modules.productFilter.selectedFilters[filterKey];
+                    if ($j.inArray(filter, productFilters) < 0) {
+                        // no need to have more condition: it doesn't match
+                        result.match = false;
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // NON-CUMULATIVES GROUPS
+        // need to match at least one filter per group (|| inside group, but && for each group)
+        var _hasCumulativeFilters = false;
+        for (var groupId in modules.productFilter.selectedNonCumulativeGroupFilters) {
+
+            var group = modules.productFilter.selectedNonCumulativeGroupFilters[groupId];
+            var groupLength = group.length;
+
+            if (groupLength > 0) {
+                _hasCumulativeFilters = true;
+                matchCumulativeFilter = false;
+
+                for (var i = 0; i < groupLength; ++i) {
+                    var filter = group[i];
+                    if($j.inArray(filter, productFilters) >= 0) {
+                        matchCumulativeFilter = true;
+                        if (modules.productFilter.countVariants) {
+                            result.count += $product.find(".js-swatch-hover[data-filter-id='"+filter+"']").length;
+                        }
+                        continue;
+                    }
+                }
+                // if a group doesn't match, return false ('cause product don't match, even if its match other groups)
+                if (!matchCumulativeFilter) {
+                    result.match = false;
+                    result.count = 0;
+                    return result;
+                }
+            }
+        }
+
+        // -> if no cumulativeFilters are selected
+        if (!_hasCumulativeFilters) {
+            if (!modules.productFilter.countVariants) {
+                if (!$product.hasClass('js-no-count')) result.count = 1;
+            }
+            else {
+                result.count = $product.find(".js-swatch-hover").length;
+            }
+            return result;
+        }
+
+        // if no return append yet, the product match!
+        if (!modules.productFilter.countVariants && !$product.hasClass('js-no-count')) result.count = 1;
+        return result;
+    },
+
+    /** Specific RAL & FP
+     * each product has a list of swatch
+     */
+    updateSwatches: function( $el ) {
+        var _selectedIsHidden = false;
+
+        $el.find('.js-swatch-hover').each( function() {
+            var $this = $j(this);
+            var _result = modules.productFilter.itemMatch( $this, false );
+            if (_result.match) {
+                $this.parent().show();
+            } else {
+                $this.parent().hide();
+
+                if (!_selectedIsHidden) {
+                    _selectedIsHidden = $this.parent().hasClass('selected');
+                    $this.parent().removeClass('selected');
+                }
+            }
+        });
+
+        // if the selected itam is hidden, select the first visible after filtering
+        if (_selectedIsHidden) {
+            $el.find('.js-swatch-hover:visible:first').trigger('click').parent().addClass('selected');
+
+            $j('.js-swatch-name').html($el.find('.selected .js-swatch-hover').data('swatch-name'));
+        }
+    },
+
+    /**
+     * Function to reset all Products
+     */
+    reset: function() {
+        modules.productFilter.$filtersCheckboxes.removeClass('disabled').find('input').each( function() {
+            this.checked = false;
+        } );
+
+        if (core.lte8 && !core.ie6)modules.productFilter.$filtersCheckboxes.find('.js-checkbox-label').removeClass('checked');
+
+        modules.productFilter.selectedNonCumulativeGroupNum = 0;
+        modules.productFilter.selectedFilters = [];
+        for (var _group in modules.productFilter.selectedNonCumulativeGroupFilters) {
+            modules.productFilter.selectedNonCumulativeGroupFilters[_group] = [];
+        }
+
+        modules.productFilter.filter();
+        //modules.productFilter.checkDispo( false, '' );
+    },
+
+    /* PRODUCTS */
+    total: function(count) {
+        if (core.tablet) {
+            modules.productFilter.$filtersResultsCount.hide();
+        }
+        modules.productFilter.$filtersResultsCount.html( count+' / '+modules.productFilter.nbrItems );
+        if (core.tablet) {
+            setTimeout( function() {
+                modules.productFilter.$filtersResultsCount.show();
+            }, 50);
+        }
+    },
+    currentTotal: function(count) {
+        //show count on first check
+        if (!modules.productFilter.$filtersItemsCount.parent().is(':visible')) {
+            modules.productFilter.$filtersItemsCount.parent().show();
+        }
+        modules.productFilter.$filtersItemsCount.html( count );
+    }
+};
+module.exports = modules.productFilter;
+},{"../modules/equalHeight.js":7}],11:[function(require,module,exports){
+/**
+ * PCD only
+ * - select a variant (color list, or capacity select), and update de product packshot (QB) & alt views (FP)
+ * Build a signal to dispatch:
+ * - "productSelector::change"
+ * - "productSelector::mouseOver"
+ * - "productSelector::mouseOut"
+ * Used by modules.QuickBuy.js
+ * @param options
+ * @constructor
+ */
+function ProductSelector(options) {
+    this.o =
+    {
+        containerSelector   : '.js-products-selector',
+        itemSelector        : '.js-product-selector',
+        defaultSelected     : true
+    };
+    this.o = $j.extend(this.o, options);
+
+    // Init module
+    this.init();
+}
+ProductSelector.prototype = {
+    init: function(){
+        this.$container = $j(this.o.containerSelector);
+
+        if (window.signals) this.signals = new signals.Signal();
+
+        if (this.$container.find('.selected').length > 0) {
+            this.$selected = this.$container.find('.selected '+this.o.itemSelector);
+        } else if (this.o.defaultSelected) {
+            this.$selected = this.$container.find(this.o.itemSelector).first();
+        }
+
+        var scope = this;
+        // hover tones
+        // -> should be more logical:
+        //      if (this.$container.attr('data-hover-target') != undefined && this.$container.attr('data-hover-target') != "") {
+        // but still use old test:
+        if (!core.isTactile) {
+            // Clic tones
+            this.$container.on('click',this.o.itemSelector, $j.proxy(this.selectProduct,scope));
+
+            // swatch case (makeup): display an element (the color name or reference) on rollover
+            if (this.$container.find('.js-swatch-hover').length > 0) {
+                this.$container.on('mouseover', this.o.itemSelector, $j.proxy(this.mouseOverProduct, scope));
+                this.$container.on('mouseout', this.o.itemSelector, $j.proxy(this.mouseOutProduct, scope));
+            }
+        } else {
+            // Clic tones
+            this.$container.on('click',this.o.itemSelector, function(e) {
+                scope.mouseOverProduct.call(scope, e);
+                scope.selectProduct.call(scope, e);
+            });
+        }
+
+        //Trigger selected
+        if (this.$selected) {
+            this.$selected.trigger('click');
+            this.$selected.trigger('mouseover');
+        }
+    },
+
+    /**
+     * selectProduct
+     * Select a product by clicking on a shade or by choosing a capacity
+     */
+    selectProduct: function(e) {
+        e.preventDefault();
+
+        var $selector = $j(e.currentTarget);
+        if (core.universe == core.cdc && $selector.hasClass('js-item-not-available')) {
+            e.stopPropagation();
+            return;
+        }
+
+        var $pictureTarget = $j($selector.attr('data-picture-target'));
+        var pictureSrc = $selector.attr('data-picture-src');
+
+        // Update product picture
+        if ($pictureTarget.is('img')) {
+            $pictureTarget.attr('src',pictureSrc);
+        }
+        else if ($pictureTarget.is('div')) {
+            $pictureTarget.css('background-image','url(' + pictureSrc + ')');
+        }
+
+        // FP COVER
+        // - change the list of thumbnails (on cover): data-thumbs-srcs (target default: .js-cover-thumbs)
+        // - update alternatives views of the cover: data-zoom-views (same name as the cover)
+        if ($selector.attr('data-thumbs-target') && $selector.attr('data-thumbs-srcs')) {
+            var $thumbsTarget = $j($selector.attr('data-thumbs-target'));
+            var thumbsSrcs = JSON.parse($selector.attr('data-thumbs-srcs'));
+
+            var _altViews = JSON.parse($selector.attr('data-zoom-views'));
+            // retro compatible Zoom module v1 (before 6.8):
+            // -> object isn't not an array
+            if (_altViews.views) {
+                _altViews = _altViews.views;
+            }
+
+            if ($thumbsTarget.length > 0) {
+                $thumbsTarget.empty();
+                var liStr = "";
+                for (var i = 0; i < thumbsSrcs.length; i++) {
+                    var _zoom = 'data-zoom=\'{"src":"' + _altViews[i].src + '", "thumb": "' + _altViews[i].thumb + '"}\'';
+
+                    if (_altViews[i].title) _zoom.title = _altViews[i].title;
+
+                    if (i === 0) {
+                        liStr += '<li><a href="javascript:void(0);" class="js-zoom-trigger" data-zoom-gallery="fpzoom" data-zoom-id="' + i + '" ' + _zoom + '><img src="' + thumbsSrcs[i] + '" alt=""></a></li><!--';
+                    } else if (i === thumbsSrcs.length - 1) {
+                        liStr += '--><li><a href="javascript:void(0);" class="js-zoom-trigger" data-zoom-gallery="fpzoom" data-zoom-id="' + i + '" ' + _zoom + '><img src="' + thumbsSrcs[i] + '" alt=""></a></li>';
+                    } else {
+                        liStr += '--><li><a href="javascript:void(0);" class="js-zoom-trigger" data-zoom-gallery="fpzoom" data-zoom-id="' + i + '" ' + _zoom + '><img src="' + thumbsSrcs[i] + '" alt=""></a></li><!--';
+                    }
+                }
+                $thumbsTarget.append(liStr);
+            }
+
+            $j('.js-cover-fp > .js-zoom-trigger').attr('data-zoom-views', $selector.attr('data-zoom-views'));
+        }
+
+        // selectProduct
+        if (this.$selected) this.$selected.parent().removeClass('selected');
+        $selector.parent().addClass('selected');
+        this.$selected = $selector;
+
+        // Send signal
+        if (this.signals) {
+            this.signals.dispatch('productSelector::change', $selector);
+        }
+    },
+
+    /**
+     * unSelectProduct
+     * unSelect a product too reset default style
+     */
+    unSelectProduct: function(e) {
+        this.$selected.parent().removeClass('selected');
+        $j(this.$selected.attr('data-picture-target')).attr('style','');
+    },
+    
+    /**
+    * Show shade name on mouseOver
+    * @param  event e  hover event
+    * @return {[type]}   [description]
+    */
+    mouseOverProduct: function(e) {
+        e.preventDefault();
+        var $selector = $j(e.currentTarget);
+        var hoverTarget = this.$container.attr('data-hover-target');
+
+        // PDG: js-push
+        // FP/QB: js-quickbuy
+        // Popin ShadeComparator:
+        var $hoverTarget = this.$container.parents('.js-quickbuy, .js-push, .shadecomparator-productsselector').first().find(hoverTarget);
+
+        // Inject hashtags in swatch name
+        this.displaySwatchName( $selector, $hoverTarget );
+
+        // Send signal
+        if (this.signals) this.signals.dispatch('productSelector::mouseOver');
+    },
+
+    /**
+    * Display swatch name on mouseOut
+    * @param  event e  hover event
+    * @return {[type]}   [description]
+    */
+    displaySwatchName: function( $el, $hoverTarget ) {
+        clearTimeout( this.mouseOut );
+        var _name = '<span>'+$el.attr('data-swatch-name')+'</span>';
+
+        if ($el.data('novelty')) _name += " " + $j('.js-hashtags .js-hashtag--novelty').html();
+        if ($el.data('exclu')) _name += " " + $j('.js-hashtags .js-hashtag--exclu').html();
+
+        $hoverTarget.html( _name );
+    },
+
+
+    /**
+    * Hide shade name on mouseOut
+    * @param  event e  hover event
+    * @return {[type]}   [description]
+    */
+    mouseOutProduct: function(e) {
+        e.preventDefault();
+        clearTimeout(this.mouseOut);
+        this.mouseOut = setTimeout( this.displayDefaultSwatch.bind(this), 250);
+    },
+
+    displayDefaultSwatch: function() {
+        var $selector = this.$container.find('li.selected .js-swatch-hover');
+        var hoverTarget = this.$container.attr('data-hover-target');
+        var $hoverTarget = this.$container.parents('.js-quickbuy, .js-push, .shadecomparator-productsselector').first().find(hoverTarget);
+
+        // Inject hashtags in swatch name
+        this.displaySwatchName( $selector, $hoverTarget );
+        // Send signal
+        if (this.signals) this.signals.dispatch('productSelector::mouseOut');
+    }
+};
+
+module.exports = ProductSelector;
+
+},{}],12:[function(require,module,exports){
+
+function QuickBuy(options) {
+    this.o =
+    {
+        containerSelector   : '.js-quickbuy'
+    };
+    this.o = $j.extend(this.o, options);
+    // Init module
+    this.init();
+}
+QuickBuy.prototype = {
+    init: function() {
+        this.$container         = $j(this.o.containerSelector);
+        this.modProductSelector = require('../modules/productSelector.js');
+        this.productSelector    = null;
+        this.modShadeComparator = require('../modules/shadeComparator.js');
+        this.DropDown           = require('../modules/dropDown.js');
+        this.dropDowns          = [];
+        this.modStockAlert      = require('../modules/stockAlert.js');
+        this.modProductFilter   = require('../modules/productFilter.js');
+        this.modSendByMail      = require('../modules/sendByMail.js');
+        this.$orderDetails      = this.$container.find('.js-order-details');
+        this.$orderForm         = this.$orderDetails.find('.js-order-form');
+        this.$orderValue        = this.$container.find('.js-order-value');
+        this.$orderBtn          = this.$orderForm.find('.js-order-btn');
+        this.signals            = window.signals ? new signals.Signal() : null;
+
+
+        var scope               = this;
+
+        //#####################################################################
+        // DEBUT PROJET CHINE : NE PAS ECRASER DIFF CI DESSOUS LORS DU MERGE HE
+        //#####################################################################
+        //Call WS for China
+        //We need to call in synchronous way in order to let all resize & modstockAlert works properly
+        //Be careful If synschonous is activate then all resize & modStockAlert method should be implemented
+        if (window.pcis && pcis.Product) pcis.Product.GetInfo(false);
+        // FIN PROJET CHINE
+
+        // Dropdowns
+        this.$container.find('.js-dropdown').each(function(i){
+            var $dropdown = $j(this);
+            scope.dropDowns[i] = new scope.DropDown({
+                $container : $dropdown
+            });
+            // Update quantity on dropdown change
+            scope.dropDowns[i].signals.add(function (type, $item) {
+                switch (type) {
+                    case 'dropDown::change':
+                        if ($item.attr('data-quantity')) {
+                            scope.updateOrderQuantity($item);
+                        }
+                        /* Check Availibility is manage by productSelector not dropdown */
+                    break;
+                }
+            });
+        });
+        this.modStockAlert.init();
+        this.modSendByMail.init();
+
+        // shadeComparator PCD
+        if ($j('.js-shade-comparator-trigger').length > 0) {
+            this.modShadeComparator.init();
+            if(this.modShadeComparator.signals) {
+                this.modShadeComparator.signals.add(function (type, index) {
+                    switch (type) {
+                        case 'shadeComparator::change':
+                        scope.productSelector.$container.find(scope.productSelector.o.itemSelector).eq(index).trigger('click');
+                        break;
+                    }
+                });
+            }
+        }
+        // filters PCD
+        if ($j('.js-filterable').length > 0) {
+            this.modProductFilter.init( '.js-filterable', '.js-swatch-hover' );
+        }
+
+        //Product Selector
+        this.productSelector    = new this.modProductSelector({
+    		containerSelector: this.o.containerSelector + ' .js-products-selector',
+            defaultSelected: false
+    	});
+        if (this.productSelector.signals) {
+            this.productSelector.signals.add(function (type, $item) {
+                switch (type) {
+                    case 'productSelector::change':
+                        scope.checkAvailability();
+                        if ( $j('.js-products-selector').length ) scope.checkHashtags();
+                        scope.modSendByMail.selectProduct( type, $item );
+                        break;
+                }
+            });
+        }
+
+        if (this.productSelector.$selected) {
+            this.checkAvailability();
+            if ( $j('.js-products-selector').length ) this.checkHashtags();
+        }
+    },
+    /**
+    * Check Product Availability
+    * @return {[type]} [description]
+    */
+    checkAvailability: function() {
+        var _this = this;
+        var avaibility = this.productSelector.$selected.attr('data-availability');
+
+        // Update order button
+        // -> sku code always updated (used by StockAlert)
+        this.$orderBtn.attr('data-sku',this.productSelector.$selected.attr('data-sku'));
+
+        switch (avaibility) {
+            case 'available':
+                this.$orderDetails.removeClass('order-details--nostock order-details--notonline').addClass('order-details--available');
+                //Update price
+                if(this.productSelector.$selected.attr('data-value')) {
+                    this.$orderValue.html(this.productSelector.$selected.attr('data-value'));
+                }
+                // tracking
+                if(this.productSelector.$selected.attr('data-track-object')) {
+                    this.$orderBtn.attr('data-track-object', this.productSelector.$selected.attr('data-track-object'));
+                }
+                break;
+            case 'nostock':
+                this.$orderDetails.removeClass('order-details--available order-details--notonline').addClass('order-details--nostock');
+                break;
+            case 'notonline':
+                this.$orderDetails.removeClass('order-details--available order-details--nostock').addClass('order-details--notonline');
+                break;
+            default:
+        }
+    },
+    /**
+    * Check Product Hashtags
+    * @return {[type]} [description]
+    */
+    checkHashtags: function() {
+        $j('.js-hashtags').children().addClass('hashtag--hidden');
+        if (this.productSelector.$selected.data('exclu')) {
+            this.$container.find(".js-hashtags .js-hashtag--exclu").removeClass('hashtag--hidden');
+        }
+        if (this.productSelector.$selected.data('novelty')) {
+            this.$container.find(".js-hashtags .js-hashtag--novelty").removeClass('hashtag--hidden');
+        }
+    },
+    /**
+    * Update Order button depending on dropdown selection
+    * @return {[type]} [description]
+    */
+    updateOrderQuantity: function($item){
+        var newQuantity = 0;
+        if ($item.attr('data-quantity')) {
+            newQuantity = parseInt($item.attr('data-quantity'));
+        }
+        if (newQuantity > 0) {
+            this.$orderBtn.attr('data-quantity',newQuantity);
+            // Update buy button data-track-object quantity
+            if (this.$orderBtn.attr('data-track-object')) {
+                var dataTrackObject = $j.parseJSON(this.$orderBtn.attr('data-track-object').replace(/(\&apos\;)/g, '\''));
+                if (!$j.isEmptyObject(dataTrackObject)) {
+                    dataTrackObject.ecommerce.add.products[0].quantity = newQuantity;
+                    this.$orderBtn.attr('data-track-object', JSON.stringify(dataTrackObject).replace(/(['])/g, '&apos;'));
+                }
+            }
+
+            // Update each filter data-track-object quantity
+            if (this.productSelector) {
+                this.productSelector.$container.find(this.productSelector.o.itemSelector).each(function () {
+                    if($j(this).attr('data-track-object')) {
+                        var dataTrackObject = $j.parseJSON($j(this).attr('data-track-object').replace(/(\&apos\;)/g, '\''));
+                        if (!$j.isEmptyObject(dataTrackObject)) {
+                            dataTrackObject.ecommerce.add.products[0].quantity = newQuantity;
+                            $j(this).attr('data-track-object', JSON.stringify(dataTrackObject).replace(/(['])/g, '&apos;'));
+                        }
+                    }
+                });
+            }
+        }
+    }
+};
+module.exports = QuickBuy;
+
+},{"../modules/dropDown.js":6,"../modules/productFilter.js":10,"../modules/productSelector.js":11,"../modules/sendByMail.js":13,"../modules/shadeComparator.js":14,"../modules/stockAlert.js":15}],13:[function(require,module,exports){
+modules.SendByMail =
+{
+    defaultContainer:       '.js-send-by-mail',
+    $container:             null,
+    Popin:                  require('../modules/popins/Popin.js'),
+    currentPopin:           null,
+
+    init: function(itemContainer, callback)
+    {
+        var container = itemContainer ? itemContainer : modules.SendByMail.defaultContainer;
+        modules.SendByMail.$container    = $j(container),
+        modules.SendByMail.$form         = modules.SendByMail.$container.find('.js-send-by-mail-form'),
+        modules.SendByMail.$errorField   = modules.SendByMail.$container.find('.js-error-msg'),
+        modules.SendByMail.$successField = modules.SendByMail.$container.find('.js-send-by-mail-success');
+
+        modules.SendByMail.currentPopin = new modules.SendByMail.Popin({
+            $popin:  modules.SendByMail.$container,
+            $open:   $j('.js-send-by-mail-trigger'),
+            onClosed: function() {
+                modules.SendByMail.$successField.hide();
+                modules.SendByMail.$form.show();
+                modules.SendByMail.$form[0].reset();
+            }
+        });
+
+        modules.SendByMail.$container.on('click','.js-send-by-mail-valid', modules.SendByMail.checkForm);
+    },
+
+    selectProduct: function( event, $item ) {
+        modules.SendByMail.$form.find('.js-send-by-mail-sku').attr('value',$item.data('sku'));
+    },
+
+    checkForm: function(e) {
+        e.preventDefault();
+        if (utils.FormValidator.validForm(modules.SendByMail.$form, modules.SendByMail.$errorField)) {
+            modules.SendByMail.saveForm();
+        }
+    },
+    saveForm: function() {
+        $j.ajax({
+            url     : core.AjaxConfig.Product.SEND_BY_MAIL.url,
+            type    : core.AjaxConfig.Product.SEND_BY_MAIL.method,
+            data    : modules.SendByMail.$form.serialize(),
+            success : function(response) {
+                if (core.isTactile) {
+                    setTimeout( function() {$j('body').stop().animate( {scrollTop: (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop)+1 }, 0, 'linear');}, 100 );
+                }
+
+                if(response.status === 'nok') {
+                    modules.SendByMail.$errorField.show().html(response.message);
+                    modules.SendByMail.currentPopin.placeInWindow();
+                }
+                else {
+                    modules.SendByMail.$form.hide();
+                    modules.SendByMail.$successField.show().html(response.message);
+                    modules.SendByMail.currentPopin.placeInWindow();
+                    setTimeout( function() {
+                        modules.SendByMail.currentPopin.close();
+                    }, 3000);
+                }
+            }
+        });
+        // WAIT FOR KEYBOARD DISAPPEAR
+        if (core.isTactile) {
+            setTimeout( function() {$j('body').stop().animate( {scrollTop: (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop)+1 }, 0, 'linear');}, 500 );
+        }
+    }
+};
+
+module.exports = modules.SendByMail;
+
+},{"../modules/popins/Popin.js":8}],14:[function(require,module,exports){
+modules.ShadeComparator =
+{
+    defaultContainer:       '.js-shadecomparator',
+    $container:             null,
+    mouseMove:              null,
+    Popin:                  require('../modules/popins/Popin.js'),
+    currentPopin:           null,
+    verticalCenter:         require('../modules/verticalCenter.js'),
+    productSelector:        require('../modules/productSelector.js'),
+    productSelectorLeft:    null,
+    productSelectorRight:   null,
+    signals:                window.signals ? new signals.Signal() : null,
+
+
+    init : function( itemContainer)
+    {
+        var container = itemContainer ? itemContainer : modules.ShadeComparator.defaultContainer;
+        modules.ShadeComparator.$container = $j(container);
+
+        modules.ShadeComparator.productSelectorLeft = new modules.ShadeComparator.productSelector({
+            containerSelector   : '.js-products-selector-left'
+        });
+
+        modules.ShadeComparator.productSelectorRight = new modules.ShadeComparator.productSelector({
+            containerSelector   : '.js-products-selector-right'
+        });
+        // No Selected on right productSelector
+        modules.ShadeComparator.productSelectorRight.unSelectProduct();
+
+        modules.ShadeComparator.verticalCenter.centerize('.js-shadecomparator-content');
+
+        if(!core.tablet) {
+            modules.ShadeComparator.$container.on('click','.js-toneslider-trigger', function(e) {
+                e.preventDefault();
+            });
+            modules.ShadeComparator.$container.on('mousedown','.js-toneslider-trigger', function(e) {
+                e.preventDefault();
+                // IE uses srcElement, others use target
+                var _target = e.target !== null ? e.target : e.srcElement;
+                // cancel out any text selections
+                document.body.focus();
+                // prevent text selection in IE
+                document.onselectstart = function () { return false; };
+                // prevent IE from trying to drag an image
+                _target.ondragstart = function() { return false; };
+
+                $j(document).on('mousemove', modules.ShadeComparator.onMouseMove);
+            });
+
+            $j(document).on('mouseup', function() {
+                $j(document).off('mousemove',  modules.ShadeComparator.onMouseMove);
+            });
+
+        } else {
+            modules.ShadeComparator.$container[0].addEventListener("touchmove", modules.ShadeComparator.onMouseMove);
+
+            modules.ShadeComparator.$container.on('touchend', function() {
+                $j(this).off('touchmove',  modules.ShadeComparator.onMouseMove);
+            });
+        }
+
+        // Validate tone selection
+        modules.ShadeComparator.$container.on('click','.js-choose-button', modules.ShadeComparator.validShade);
+
+        // Popin
+        modules.ShadeComparator.currentPopin = new modules.ShadeComparator.Popin({
+            $popin:  modules.ShadeComparator.$container,
+			$open:   $j('.js-shade-comparator-trigger'),
+            onOpened: function() {
+                if(core.lte7) modules.ShadeComparator.verticalCenter.centerize('.js-shadecomparator-content');
+            }
+        });
+
+        if (common.getPopinParam() === 'shade-selector') {
+            modules.ShadeComparator.currentPopin.open();
+        }
+    },
+
+    // Valid your shade choice
+    validShade : function(e) {
+        e.preventDefault();
+        // GET SIDE
+        var swatchIndex = 0;
+        if ($j(this).parents('.productsselector-right').length > 0) {
+            swatchIndex = modules.ShadeComparator.productSelectorRight.$selected.parents('li').index();
+        }
+        else {
+            swatchIndex = modules.ShadeComparator.productSelectorLeft.$selected.parents('li').index();
+        }
+        modules.ShadeComparator.signals.dispatch('shadeComparator::change',swatchIndex);
+        modules.ShadeComparator.currentPopin.close();
+    },
+
+    onMouseMove : function(event) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        } else {
+            event = window.element;
+        }
+        // IE uses srcElement, others use target
+        var _target = event.target !== null ? event.target : event.srcElement;
+
+        // cancel out any text selections
+        document.body.focus();
+        // prevent text selection in IE
+        document.onselectstart = function () { return false; };
+        // prevent IE from trying to drag an image
+        _target.ondragstart = function() { return false; };
+
+        var slider             = modules.ShadeComparator.$container.find('.js-toneslider');
+            sliderPosition     = slider.offset(),
+            sliderX            = sliderPosition.left,
+            sliderWidth        = slider.width(),
+            mouseX             = event.changedTouches ? event.changedTouches[0].pageX : event.pageX,
+            xPosition          = mouseX - sliderX,
+            percent            = 100 - (( xPosition / sliderWidth) * 100);
+
+        if(percent > 100) percent = 100;
+        if(percent < 0) percent = 0;
+
+        modules.ShadeComparator.$container.find('.js-toneslider-halftone').css({'width' : percent + '%'});
+    }
+
+};
+
+module.exports = modules.ShadeComparator;
+
+},{"../modules/popins/Popin.js":8,"../modules/productSelector.js":11,"../modules/verticalCenter.js":16}],15:[function(require,module,exports){
+
+
+modules.StockAlert =
+{
+    defaultContainer:       '.js-stockalert',
+    $container:             null,
+    Popin:                  require('../modules/popins/Popin.js'),
+    currentPopin:           null,
+
+    init: function(itemContainer, callback)
+    {
+
+        var container = itemContainer ? itemContainer : modules.StockAlert.defaultContainer;
+        modules.StockAlert.$container       = $j(container);
+        modules.StockAlert.$form            = modules.StockAlert.$container.find('.js-stockalert-form'),
+        modules.StockAlert.$popinsubtitle   = modules.StockAlert.$container.find('.js-popin-subtitle'),
+        modules.StockAlert.$legalBlock      = modules.StockAlert.$container.find('.js-stockalert-legal'),
+        modules.StockAlert.$succesBlock     = modules.StockAlert.$container.find('.js-stockalert-success'),
+        modules.StockAlert.$errorField      = modules.StockAlert.$container.find('.js-error-msg'),
+        modules.StockAlert.$errorLegalField = modules.StockAlert.$container.find('.js-legal-error-msg'),
+        modules.StockAlert.$checkAccess     = modules.StockAlert.$container.find('.js-stockalert-accessories'),
+        modules.StockAlert.$checkBeauty     = modules.StockAlert.$container.find('.js-stockalert-beauty'),
+        modules.StockAlert.$checkLegal      = modules.StockAlert.$container.find('.js-legal-accept');
+
+        modules.StockAlert.currentPopin = new modules.StockAlert.Popin({
+            $popin:  modules.StockAlert.$container,
+            $open:   $j('.js-stockalert-trigger'),
+            onClosed: function() {
+                modules.StockAlert.$succesBlock.hide();
+                modules.StockAlert.$legalBlock.hide();
+                modules.StockAlert.$checkLegal.prop( "checked", false );
+                modules.StockAlert.$form[0].reset();
+                modules.StockAlert.$form.show();
+                modules.StockAlert.$popinsubtitle.show();
+            }
+        });
+
+        modules.StockAlert.$container.on('click','.js-stockalert-valid', modules.StockAlert.checkForm);
+    },
+
+    checkForm: function(e) {
+        e.preventDefault();
+        if (utils.FormValidator.validForm(modules.StockAlert.$form, modules.StockAlert.$errorField)) {
+            if ( $j(this).hasClass('legal-trigger') ) {
+                if(modules.StockAlert.$legalBlock.is(':visible')) {
+                    if ( modules.StockAlert.$checkLegal.is(':checked') ) {
+                        modules.StockAlert.$errorLegalField.hide();
+                        modules.StockAlert.saveEmail();
+                    } else {
+                        modules.StockAlert.$errorLegalField.show();
+                        return false;
+                    }
+                } else {
+                    modules.StockAlert.$form.hide();
+                    modules.StockAlert.$popinsubtitle.hide();
+                    modules.StockAlert.$legalBlock.show();
+                    modules.StockAlert.$container.find('.js-scroller').tinyscrollbar();
+                }
+            } else {
+                modules.StockAlert.saveEmail();
+            }
+        }
+    },
+
+    saveEmail: function() {
+        var email = modules.StockAlert.$container.find('.js-stockalert-email').val();
+        if (email && email!=='') {
+            var _data = {
+                email: email,
+                isSubscribeBeauty: modules.StockAlert.$checkBeauty.prop('checked'),
+                isSubscribeFashion: modules.StockAlert.$checkAccess.prop('checked'),
+                skuCode: $j('.js-cover-quickbuy .js-addtocart, .js-quickbuy .js-addtocart').data('sku')
+            };
+
+            $j.ajax({
+                url: core.AjaxConfig.Product.STOCK_ALERT.url,
+                type : core.AjaxConfig.Product.STOCK_ALERT.method,
+                data : _data,
+                //#####################################################################
+                // DEBUT PROJET CHINE : NE PAS ECRASER DIFF CI DESSOUS LORS DU MERGE HE
+                //#####################################################################
+                contentType: (window.pcis ? pcis.ContentType : null),
+                formatter:  core.AjaxConfig.Product.STOCK_ALERT.formatter,
+
+                success : function(response) {
+                    if (response.subscribeNewsletter) {
+                        /* Specific China - Newsletter is still managed by brand site*/
+                        $j.ajax({
+                            url: core.AjaxConfig.Product.STOCK_ALERT_NEWSLETTER.url,
+                            type: core.AjaxConfig.Product.STOCK_ALERT_NEWSLETTER.method,
+                            data: _data,
+                            formatter: core.AjaxConfig.Product.STOCK_ALERT_NEWSLETTER.formatter,
+                            success : function(response) {
+                            /* Do not display anaything, purpose of the popin is to subscribe to STOCK_ALERT notification */
+                            if (response.status == 'ok') {
+                                    window.console && console.log("Newsletter subcribtion : success");
+                                } else {
+                                    window.console && console.log("Newsletter subcribtion : fail");
+                                }
+                            }
+                        }
+                    )};
+                    // FIN PROJET CHINE
+                    if (core.isTactile) {
+                        setTimeout( function() {$j('body').stop().animate( {scrollTop: (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop)+1 }, 0, 'linear');}, 100 );
+                    }
+
+                    if (response.status === 'nok') {
+                        var _error = "";
+                        if (response.errorMessages) {
+                            if (errorMessages.length) _error = response.errorMessages.join('');
+                            else _error = response.errorMessages;
+                        } else {
+                            _error = response.message;
+                        }
+                        modules.StockAlert.$form.show();
+                        modules.StockAlert.$legalBlock.hide();
+                        modules.StockAlert.$errorLegalField.hide();
+                        modules.StockAlert.$errorField.show().html( _error );
+                        modules.StockAlert.currentPopin.placeInWindow();
+                    }
+                    else {
+                        modules.StockAlert.$form.hide();
+                        modules.StockAlert.$popinsubtitle.hide();
+                        modules.StockAlert.$legalBlock.hide();
+                        modules.StockAlert.$errorField.hide();
+                        modules.StockAlert.$errorLegalField.hide();
+                        modules.StockAlert.$succesBlock.show().html(response.message);
+                        modules.StockAlert.currentPopin.placeInWindow();
+                        setTimeout( function() {
+                            modules.StockAlert.currentPopin.close();
+                        }, 3000 );
+                    }
+                },
+                error: function(xhr, status) {
+                    modules.StockAlert.$form.show();
+                    modules.StockAlert.$legalBlock.hide();
+                    modules.StockAlert.$errorLegalField.hide();
+                    modules.StockAlert.$errorField.show().html( status );
+                    modules.StockAlert.currentPopin.placeInWindow();
+                }
+            });
+            // WAIT FOR KEYBOARD DISAPPEAR
+        } else if (core.isTactile) {
+            setTimeout( function() {$j('body').stop().animate( {scrollTop: (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop)+1 }, 0, 'linear');}, 500 );
+        }
+    }
+};
+
+module.exports = modules.StockAlert;
+
+},{"../modules/popins/Popin.js":8}],16:[function(require,module,exports){
+modules.verticalCenter = {
+    defaultContainerSelector: '#container',
+    defaultSelector: '.js-center-vertical',
+    /**
+     * Function to centerize item inside container
+     * @param string itemContainerSelector
+     * @param string itemSelector
+     */
+    centerize: function(itemContainerSelector, itemSelector)
+    {
+        var container = itemContainerSelector ? itemContainerSelector : modules.verticalCenter.defaultContainerSelector,
+            selector = itemSelector ? itemSelector : modules.verticalCenter.defaultSelector,
+            $items = $j(container).find(selector);
+
+        $items.each(function(){
+            var $item = $j(this),
+                $container = $item.parents(container);
+
+            var containerHeight = $container.height(),
+                itemPositon = $item.css('position').toLowerCase();
+
+            if (itemPositon != "absolute") { //if absolute center with top
+                if (core.lte7) {
+                    var margTop = ( containerHeight - $item.height() ) * 0.5;
+                    $item.css('margin-top', margTop);
+                } else {
+                    $item.addClass('inline-block');
+                    $container.css('line-height', containerHeight + 'px');
+                }
+            }
+            else {
+                var top = ( containerHeight - $item.height() ) * 0.5;
+                $item.css({'top': top, 'bottom': 'auto'});
+            }
+        });
+    },
+    reset: function(itemContainerSelector, itemSelector)
+    {
+        var container = itemContainerSelector ? itemContainerSelector : modules.equalHeight.defaultContainer,
+            selector = itemSelector ? itemSelector : modules.verticalCenter.defaultSelector,
+            $items = $j(container).find(selector);
+
+        $items.each(function(){
+            var $item = $j(this),
+                $container = $item.parents(container);
+
+            var containerHeight = $container.height(),
+                itemPositon = $item.css('position').toLowerCase();
+
+            if (itemPositon != "absolute") { //if absolute center with top
+                if (core.lte7) {
+                    $item.css('margin-top', 0);
+                } else {
+                    $item.removeClass('inline-block');
+                    $container.css('line-height', 'normal');
+                }
+            }
+            else {
+                $item.css('top', 0);
+            }
+        });
+    }
+};
+module.exports = modules.verticalCenter;
+
+},{}],17:[function(require,module,exports){
+module.exports = function(Handlebars) {
+
+this["DiorTpl"] = this["DiorTpl"] || {};
+
+this["DiorTpl"]["fragrance"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, options, functionType="function", escapeExpression=this.escapeExpression, self=this, blockHelperMissing=helpers.blockHelperMissing, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  
+  return "hashtag--hidden";
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "<h2 class=\"quickbuy-subtitle\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.subtitle)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h2>";
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = "", stack1, helper, options;
+  buffer += "\n                            <li class=\"dropdown-item ";
+  options={hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data}
+  if (helper = helpers.active) { stack1 = helper.call(depth0, options); }
+  else { helper = (depth0 && depth0.active); stack1 = typeof helper === functionType ? helper.call(depth0, options) : helper; }
+  if (!helpers.active) { stack1 = blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data}); }
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " ";
+  stack1 = (helper = helpers.ifCond || (depth0 && depth0.ifCond),options={hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data},helper ? helper.call(depth0, (depth0 && depth0.stockStatus), "!==", "available", options) : helperMissing.call(depth0, "ifCond", (depth0 && depth0.stockStatus), "!==", "available", options));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\">\n                                <a href=\"#\" class=\"js-dropdown-item js-product-selector js-noclick-track\"\n                                   data-picture-target=\".js-quickbuy-img\"\n                                   data-picture-src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.assets)),stack1 == null || stack1 === false ? stack1 : stack1.packshot)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\"\n                                   data-exclu=\"";
+  if (helper = helpers.exclu) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.exclu); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                                   data-novelty=\"";
+  if (helper = helpers.novelty) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.novelty); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                                   data-availability=\"";
+  if (helper = helpers.stockStatus) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.stockStatus); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                                   data-sku=\"";
+  if (helper = helpers.skuCode) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.skuCode); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                                   data-track-object='"
+    + escapeExpression((helper = helpers.stringify || (depth0 && depth0.stringify),options={hash:{},data:data},helper ? helper.call(depth0, (depth0 && depth0.clickTrackObject), options) : helperMissing.call(depth0, "stringify", (depth0 && depth0.clickTrackObject), options)))
+    + "'>\n                                    <span class=\"label js-dropdown-label\">";
+  if (helper = helpers.optionValue) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.optionValue); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span><!--\n                                    --><span class=\"break\"></span><!--\n                                    --><span class=\"value js-dropdown-value\" data-value=\"";
+  if (helper = helpers.productPriceWithCurrency) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.productPriceWithCurrency); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.productPriceWithCurrency) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.productPriceWithCurrency); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n                                </a>\n                            </li>\n                            ";
+  return buffer;
+  }
+function program6(depth0,data) {
+  
+  
+  return "selected";
+  }
+
+function program8(depth0,data) {
+  
+  
+  return "item-not-available";
+  }
+
+function program10(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence1)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program12(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence2)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program14(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence3)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program16(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence4)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program18(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence5)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+  buffer += "<div class=\"popin-quickbuy--fragrance\">\n    <h2 class=\"popin-title\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinTitle)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h2>\n    <div class=\"popin-packshot js-equal-height\">\n        <img src=\""
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.assets)),stack1 == null || stack1 === false ? stack1 : stack1.packshot)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" class=\"js-quickbuy-img js-center-vertical png-bg\"/>\n    </div><!--\n    --><div class=\"quickbuy quickbuy--fragrance js-quickbuy js-equal-height js-equal-height-main\">\n    <ul class=\"quickbuy-hashtags js-hashtags\">\n        <li class=\"";
+  stack1 = helpers.unless.call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.novelty), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " js-hashtag--novelty\"><a href=\"#\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.hashtagNew)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n        <li class=\"";
+  stack1 = helpers.unless.call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.exclu), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " js-hashtag--exclu\"><a href=\"#\" class=\"gold\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.hashtagExclu)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n    </ul>\n    <h1 class=\"quickbuy-title\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.title)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h1>\n    ";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.subtitle), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n    <div class=\"quickbuy-details\">\n        <span class=\"details-price js-dropdown-activeValue\">"
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.productPriceWithCurrency)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span>\n    </div><!-- end .quickbuy-details -->\n    <p class=\"quickbuy-description\">"
+    + escapeExpression((helper = helpers.truncate || (depth0 && depth0.truncate),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.description), 170, options) : helperMissing.call(depth0, "truncate", ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.description), 170, options)))
+    + "</p>\n    <a href=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.href)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" class=\"details-link quickbuy-link\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinMore)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a>\n    <div class=\"quickbuy-order\">\n        <div class=\"order-details order-details--available js-order-details\">\n            <div class=\"order-form js-order-form\">\n                <div class=\"order-product-choice\">\n                    <div class=\"order-dropdown mod-dropdown js-dropdown order-value js-order-value js-products-selector\">\n                        <a href=\"#\" class=\"dropdown-trigger js-dropdown-trigger\">\n                            <small class=\"label js-dropdown-activeLabel\">"
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.optionValue)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</small>\n                            <i class=\"icon dropdown-arrow\"></i>\n                        </a>\n                        <ul class=\"dropdown-list js-dropdown-items\">\n                            ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.skus)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                        </ul>\n                    </div>\n                </div>\n                <a href=\"#\" class=\"btn btn-dark btn-order js-order-btn js-addtocart js-noclick-track\"\n                  data-quantity=\"1\"\n                  data-sku=\""
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.skuCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\"\n                  data-track-object='"
+    + escapeExpression((helper = helpers.stringify || (depth0 && depth0.stringify),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.clickTrackObject), options) : helperMissing.call(depth0, "stringify", ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.clickTrackObject), options)))
+    + "'>"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinOrder)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a>\n            </div>\n            <ul class=\"order-delivery\">\n                ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence1)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(10, program10, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence2)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(12, program12, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence3)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(14, program14, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence4)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(16, program16, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence5)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(18, program18, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n            </ul>\n            <div class=\"order-notonline\">\n                <ul><li><a href=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocatorUrl)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocator)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li></ul>\n            </div>\n            <div class=\"order-nostock\">\n                <span>"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinAvailabilityLabel)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span>\n                <ul>\n                    <li><a href=\"#\" class=\"js-stockalert-trigger\" data-sku=\""
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.skuCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.alertAvailability)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n                    <li><a href=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocatorUrl)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocator)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n                </ul>\n            </div>\n        </div><!-- end .order-details -->\n    </div><!-- end .quickbuy-order -->\n</div><!-- end .quickbuy -->\n</div><!-- end .popin -->\n\n";
+  return buffer;
+  });
+
+this["DiorTpl"]["makeup"] = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, options, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing, blockHelperMissing=helpers.blockHelperMissing;
+
+function program1(depth0,data) {
+  
+  
+  return "hashtag--hidden";
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "<h2 class=\"quickbuy-subtitle\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.subtitle)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h2>";
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = "", stack1, helper, options;
+  buffer += "\n            <li ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.active), {hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += ">\n                <a href=\"#\" class=\"js-swatch-hover js-product-selector js-noclick-track\"\n                   data-picture-target=\".js-quickbuy-img\"\n                   data-picture-src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.assets)),stack1 == null || stack1 === false ? stack1 : stack1.packshot)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\"\n                   data-exclu=\"";
+  if (helper = helpers.exclu) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.exclu); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                   data-novelty=\"";
+  if (helper = helpers.novelty) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.novelty); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                   data-availability=\"";
+  if (helper = helpers.stockStatus) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.stockStatus); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                   data-value=\"";
+  if (helper = helpers.productPriceWithCurrency) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.productPriceWithCurrency); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                   data-sku=\"";
+  if (helper = helpers.skuCode) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.skuCode); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                   data-swatch-name=\"";
+  if (helper = helpers.optionValue) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.optionValue); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"\n                   data-track-object='"
+    + escapeExpression((helper = helpers.stringify || (depth0 && depth0.stringify),options={hash:{},data:data},helper ? helper.call(depth0, (depth0 && depth0.clickTrackObject), options) : helperMissing.call(depth0, "stringify", (depth0 && depth0.clickTrackObject), options)))
+    + "'>\n                    <img src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.assets)),stack1 == null || stack1 === false ? stack1 : stack1.swatch)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" alt=\"\" />\n                </a>\n            </li>\n            ";
+  return buffer;
+  }
+function program6(depth0,data) {
+  
+  
+  return "class=\"selected\"";
+  }
+
+function program8(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence1)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program10(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence2)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program12(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence3)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program14(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence4)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+function program16(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "<li>";
+  stack1 = ((stack1 = ((stack1 = (depth1 && depth1.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence5)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</li>";
+  return buffer;
+  }
+
+  buffer += "<div class=\"popin-quickbuy--makeup\">\n    <h2 class=\"popin-title\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinTitle)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h2>\n    <div class=\"popin-packshot js-equal-height\">\n        <img src=\""
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.assets)),stack1 == null || stack1 === false ? stack1 : stack1.packshot)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" class=\"js-quickbuy-img js-center-vertical png-bg\"/>\n    </div><!--\n    --><div class=\"quickbuy quickbuy--makeup js-quickbuy js-equal-height js-equal-height-main\">\n    <ul class=\"quickbuy-hashtags js-hashtags\">\n        <li class=\"";
+  stack1 = helpers.unless.call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.novelty), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " js-hashtag--novelty\"><a href=\"#\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.hashtagNew)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n        <li class=\"";
+  stack1 = helpers.unless.call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.exclu), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " js-hashtag--exclu\"><a href=\"#\" class=\"gold\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.hashtagExclu)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n    </ul>\n    <h1 class=\"quickbuy-title\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.title)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h1>\n    ";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.subtitle), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n    <div class=\"quickbuy-details\">\n        <span class=\"details-price\">"
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.productPriceWithCurrency)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span>\n    </div><!-- end .quickbuy-details -->\n    <p class=\"quickbuy-description\">"
+    + escapeExpression((helper = helpers.truncate || (depth0 && depth0.truncate),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.description), 170, options) : helperMissing.call(depth0, "truncate", ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.description), 170, options)))
+    + "</p>\n    <a href=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.href)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" class=\"details-link quickbuy-link\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinMore)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a>\n    <div class=\"quickbuy-swatches\">\n        <div class=\"swatches-header\">\n            <span class=\"swatch-name js-swatch-name\">121 - LILI</span>\n        </div>\n        <ul class=\"swatches-list js-products-selector\" data-hover-target=\".js-swatch-name\">\n            ";
+  stack1 = (helper = helpers.foreach || (depth0 && depth0.foreach),options={hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.skus), options) : helperMissing.call(depth0, "foreach", ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.skus), options));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n            </ul>\n        </div>\n        <div class=\"quickbuy-order\">\n            <div class=\"order-details order-details--available js-order-details\">\n                <div class=\"order-form js-order-form\">\n                    <a href=\"#\" class=\"btn btn-dark btn-order js-order-btn js-addtocart js-noclick-track\"\n                      data-quantity=\"1\"\n                      data-sku=\""
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.skuCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\"\n                      data-track-object='"
+    + escapeExpression((helper = helpers.stringify || (depth0 && depth0.stringify),options={hash:{},data:data},helper ? helper.call(depth0, ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.clickTrackObject), options) : helperMissing.call(depth0, "stringify", ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.clickTrackObject), options)))
+    + "'>"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinOrder)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a>\n                </div>\n                <ul class=\"order-delivery\">\n                    ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence1)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(8, program8, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                    ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence2)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(10, program10, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                    ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence3)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(12, program12, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                    ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence4)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(14, program14, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                    ";
+  stack1 = ((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.sentence5)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1)),blockHelperMissing.call(depth0, stack1, {hash:{},inverse:self.noop,fn:self.programWithDepth(16, program16, data, depth0),data:data}));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n                </ul>\n                <div class=\"order-notonline\">\n                    <ul><li><a href=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocatorUrl)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocator)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li></ul>\n                </div>\n                <div class=\"order-nostock\">\n                    <span>"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.popinAvailabilityLabel)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span>\n                    <ul>\n                        <li><a href=\"#\" class=\"js-stockalert-trigger\" data-sku=\""
+    + escapeExpression(((stack1 = ((stack1 = ((stack1 = (depth0 && depth0.product)),stack1 == null || stack1 === false ? stack1 : stack1.selected)),stack1 == null || stack1 === false ? stack1 : stack1.skuCode)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.alertAvailability)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n                        <li><a href=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocatorUrl)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.wording)),stack1 == null || stack1 === false ? stack1 : stack1.storeLocator)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></li>\n                    </ul>\n                </div>\n            </div>\n        </div><!-- end .quickbuy-order -->\n    </div><!-- end .quickbuy -->\n</div>\n";
+  return buffer;
+  });
+
+return this["DiorTpl"];
+
+};
+},{}]},{},[5]);
+
+(function( core ) {
+    // DIOR.COM
+    /* core.trackName [String] 'DiorCom' defined in core.Config.js
+     * core.universe [String] 'PCD' | 'CDC' defined in core.Config.js
+     * core.trackPage [String] defined in pages.*.js
+     */
+    // MINISITES
+    /* core.trackName [String] Must be defined in inlined js in html page || in a simplified js core.Config.js file
+     * core.universe [String] Must be defined in inlined js in html page || in a simplified js core.Config.js file
+     * core.tracking.trackPage [String] Must be defined in inlined js in html page || in a simplified js core.Config.js file (minisites are actually single page website)
+     */
+    core.tracking = {
+
+
+        init : function () {
+
+            var _this = this;
+            var _eventAction ;
+            var _eventLabel;
+            var _page;
+
+            $j(document).on('click','.js-track', function(){
+
+                _eventAction = $j(this).attr('data-eventaction'),
+                    _eventLabel = $j(this).attr('data-eventlabel');
+                _page = $j(this).attr('data-tpv');
+
+                if (_eventAction && _eventLabel) _this.trackEvent(_eventAction,_eventLabel);
+
+                if (_page) _this.trackPageView(_page);
+
+            });
+
+            // Auto detect track object
+            $j(document).on("click","*[data-track-object]", function(e) {
+                if (!$j(this).hasClass("js-noclick-track") && $j(this).attr('data-track-object') !== "") {
+                    _this.trackObject($j(this).attr('data-track-object'));
+                }
+                if ($j(this).hasClass("js-stop-propagation")) {
+                    e.stopPropagation();
+                }
+            });
+
+            // Auto detect product track object
+            $j(document).on("click","*[data-product-track-object]", function(e) {
+                if (!$j(this).hasClass("js-noclick-track") && $j(this).attr('data-product-track-object') !== "") {
+                    _this.trackProductClick( $j(this).attr('data-product-track-object') );
+                }
+                if ($j(this).hasClass("js-stop-propagation")) {
+                    e.stopPropagation();
+                }
+            });
+        },
+
+        trackEvent: function(action, label) {
+            if (!core.tracking.trackPage) core.tracking.trackPage = $j("#wrapper").attr('data-page');
+            dataLayer.push( {'event':'trackEvent', 'eventCategory': core.trackName+'_'+core.universe+'_'+core.tracking.trackPage, 'eventAction': action, 'eventLabel': label} );
+        },
+
+        trackPageView: function(url) {
+            // IE COMPATIBILITY
+            dataLayer.push( {
+                'event': 'tpv',
+                'pageVirtualPath': url.charAt(0) != '/' ? '/' + url : url
+            });
+        },
+
+        trackObject: function(trackObject){
+            var trackObjects = $j.parseJSON(trackObject.replace(/(\&apos\;)/g, '\''));
+            if (!$j.isEmptyObject(trackObjects)) {
+                if ($j.isArray(trackObjects)) {
+                    for (var key in trackObjects) {
+                        dataLayer.push(trackObjects[key]);
+                    }
+                }
+                else if ($j.isPlainObject(trackObjects)) {
+                    dataLayer.push(trackObjects);
+                }
+            }
+        },
+
+        trackProductClick: function(trackObject) {
+            var trackObjects = $j.parseJSON(trackObject.replace(/(\&apos\;)/g, '\''));
+
+            if (!$j.isEmptyObject(trackObjects)) {
+                if ($j.isArray(trackObjects)) {
+                    for (var key in trackObjects) {
+                        trackObjects[key].ecommerce.click.actionField.list = dataLayer[0].pageType;
+                        dataLayer.push(trackObjects[key]);
+                    }
+                }
+                else if ($j.isPlainObject(trackObjects)) {
+                    trackObjects.ecommerce.click.actionField.list = dataLayer[0].pageType;
+                    dataLayer.push(trackObjects);
+                }
+            }
+        }
+    };
+
+    core.tracking.init();
+
+})( window.core = window.core || {} );
+
+
+/**
+ * PopinManager: handle overlay, popin's z-index, and page scroll.
+ * Can handle multiple popins opened at the same time
+ *
+ * DEPS: core (signals.popinSignal) / Modernizr (transition, prefixed)
+ */
+
+var DiorPopinManager = {
+
+    $overlay: null,
+    $popinWrapper: null,
+    opened: 0,
+    _popins: [],
+
+    _bodySyle: '',
+    _scrollLevel: 0,
+
+    /**
+     * Called by common
+     */
+    init: function() {
+
+        PopinManager.$popinWrapper = $j(".popin-wrapper-v6");
+        PopinManager.$overlay = $j(".popin-overlay");
+
+        if (!PopinManager.$overlay.length) {
+            PopinManager.$popinWrapper.prepend("<div class='popin-overlay'></div>");
+            PopinManager.$overlay = $j(".popin-overlay");
+        }
+
+
+        PopinManager.$overlay.off('click').on("click", function(e) {
+            PopinManager.close();
+        });
+
+        $j(window).on("resize", PopinManager.onResize );
+    },
+
+    /**
+     * Close specified popin
+     *  1. if called by Popin, first param is the popin instance
+     *  2. if called by a click on the overlay, close the highest (latest) popin
+     * @param {Popin} popin
+     */
+    open: function( popin ) {
+        //Scroll is already disabled if popins are already opened
+        //console.log( '[PopinMngr]:open' );
+        //console.log( popin.$popin );
+        //console.log( PopinManager.opened );
+        //console.log( popin );
+
+        if (!PopinManager.opened) {
+            PopinManager.disableScroll();
+            PopinManager.$overlay.fadeIn();
+        } else {
+            // get popin under z-index
+            var _zindex = (PopinManager._popins[PopinManager.opened-1]).$popin.css('z-index');
+            // place overlay under new popin
+            PopinManager.$overlay.css("z-index", _zindex+1);
+            popin.$popin.css("z-index", _zindex+2 );
+
+            // force scroll top
+            // case popin with scroll that are under (PopinRiche)
+            PopinManager.$popinWrapper.animate({scrollTop: 0});
+        }
+        ++PopinManager.opened;
+        PopinManager._popins.push( popin );
+
+        PopinManager.$popinWrapper.addClass("visible").animate({ scrollTop: 0 }, 600);
+        if (core.signals && core.signals.popinSignal) core.signals.popinSignal.dispatch("open");
+    },
+    onOpened: function() {
+        if (core.signals && core.signals.popinSignal) core.signals.popinSignal.dispatch("opened");
+    },
+
+    /**
+     * Called by Popin
+     * @param {Popin} popin
+     */
+    close: function( popin ) {
+        if (PopinManager.opened==0) return;
+        --PopinManager.opened;
+
+        if (!popin) {
+            popin = PopinManager._popins[ PopinManager.opened ];
+            popin.close();
+        }
+
+        // remove the popin from the opened list
+        PopinManager.removeFromList( popin );
+
+        if (!PopinManager.opened) PopinManager.$overlay.fadeOut();
+        else {
+            // => overlay must be under the highest popin
+            // get the last popin opened z-index
+            // to place the overlay under
+            var _lastPopin = PopinManager._popins[ PopinManager.opened-1 ];
+            PopinManager.$overlay.css("z-index", _lastPopin.$popin.css('z-index')-1 );
+        }
+
+        if (core.signals && core.signals.popinSignal) core.signals.popinSignal.dispatch("close");
+    },
+    onClosed: function() {
+        if (!PopinManager.opened) {
+            PopinManager.$popinWrapper.removeClass("visible");
+            PopinManager.$overlay.css('height', "");
+            PopinManager.enableScroll();
+        }
+        if (core.signals && core.signals.popinSignal) core.signals.popinSignal.dispatch("closed");
+    },
+
+    disableScroll: function() {
+        PopinManager._scrollLevel = $j("body").scrollTop() || $j("html").scrollTop();
+        $j("html,body").addClass("no-scroll");
+
+        if (core.signals && core.signals.popinSignal) core.signals.popinSignal.dispatch('disable-scroll');
+
+        if (Modernizr.csstransforms3d) {
+            $j("#container").css( Modernizr.prefixed('transform'), "translate3d(0,"+(-PopinManager._scrollLevel)+"px,0)" );
+            $j("#footer").css( Modernizr.prefixed('transform'), "translate3d(0,"+(-PopinManager._scrollLevel)+"px,0)" );
+        } else {
+            if (core.lte8) {
+                PopinManager._bodyStyle = $j("body").attr("style");
+                $j("body").height( $j(window).height() );
+
+                if (core.lte7) {
+                    $j("#popin-wrapper").css('top', PopinManager._scrollLevel);
+                }
+            }
+
+            $j("#container").css("top", -PopinManager._scrollLevel);
+            $j("#footer").css("top", -PopinManager._scrollLevel);
+        }
+    },
+
+    enableScroll: function() {
+        if (Modernizr.csstransforms3d) {
+            $j("#container").css( Modernizr.prefixed('transform'), "translate3d(0,0,0)" );
+            $j("#footer").css( Modernizr.prefixed('transform'), "translate3d(0,0,0)" );
+        } else {
+            if (core.lte8) {
+                $j("body").attr("style", PopinManager._bodyStyle)
+            }
+
+            $j("#container").css("top", 0);
+            $j("#footer").css("top", 0);
+        }
+
+        $j("html,body").removeClass("no-scroll");
+
+        if (core.signals && core.signals.popinSignal) core.signals.popinSignal.dispatch('enable-scroll');
+        // used by layout/header.js
+        if (core.signals && core.signals.global) core.signals.global.dispatch('Popin::enable-scroll');
+
+        $j("html, body").scrollTop( PopinManager._scrollLevel );
+    },
+
+
+    removeFromList: function( element ) {
+        for (var i=0, _l=PopinManager._popins.length; i<_l; ++i) {
+            if (PopinManager._popins[i] == element) {
+                PopinManager._popins.splice(i, 1);
+                return;
+            }
+        }
+    },
+
+    onResize: function() {
+        for (var i=0; i<PopinManager.opened; ++i) {
+            PopinManager._popins[i].resize();
+        }
+        if (core.signals && core.signals.popinSignal) core.signals.popinSignal.dispatch("resize");
+    }
+
+}
+
+if (!window.PopinManager) window.PopinManager = DiorPopinManager;
+
+(function( utils, window ) {
+
+    utils.FormValidator = {
+        init: function() {
+            $j( "form button[type='submit'][data-check=required]" ).on( 'click', utils.FormValidator.validFormFromSubmit );
+        },
+
+        validFormFromSubmit: function(event) {
+            event.preventDefault();
+            var form = $j(this).parents('form:first'),
+                errorField = $j(this).parents('#content, #popin-wrapper').find('.error-msg');
+            return utils.FormValidator.validForm( form, errorField);
+        },
+
+        validForm: function( form, errorField ) {
+            var $form = $j(form),
+                isValid = true,
+                errorTemplate = '',
+                requiredMessage      = $form.data('required-message') ? $form.data('required-message') : '',
+                emailMessage         = $form.data('email-message') ? $form.data('email-message') : '',
+                numberErrorsToShow   = parseInt($form.data('number-errors')) ? $form.data('number-errors') : $form.find('input').length,
+                errorArray = [],
+                checkboxGroups = {},
+                $this;
+
+            // SEARCH FOR STANDARD ERROR MSG IN DOM
+            if (!errorField || errorField.length==0) {
+                errorField = $j('#wrapper').find('.fstd-error:first');
+            }
+
+
+            if ($form.is(':visible')) {
+                // VALIDE LES CHAMPS OBLIGATOIRES
+                //
+                $form.find( "input[data-check=required]:visible,textarea[data-check=required]:visible" ).each( function() {
+                    $this = $j(this);
+
+                    var message = $this.data('error') ? $this.data('error') : requiredMessage;
+
+                    if( utils.FormValidator.isEmpty(this) ) {
+                        var label = $j('label[for="'+$this.attr('id')+'"]');
+                        if (label.length > 0) {
+                            $this.parents('li:first').addClass('error');
+                        }
+                        else {
+                            $this.addClass( "error" );
+                        }
+
+                        isValid = false;
+                        // message d'erreur
+                        errorArray.push(message);
+                    }
+
+                    else {
+                        $this.removeClass('error').parents('li:first').removeClass( "error" );
+                    }
+                });
+                // VALIDE LES CHAMPS EMAIL
+                $form.find( "input#email, input.email, .js-email" ).each( function() {
+                    $this = $j(this);
+                    var message = $this.data('error') ? $this.data('error') : emailMessage;
+
+                    if( !utils.FormValidator.isValidMail( this ) ) {
+
+                        $j( this ).addClass( "error" );
+                        isValid = false;
+                        // message d'erreur
+                        errorArray.push(message);
+
+                    } else {
+                        $j( this ).removeClass( "error" );
+                    }
+                });
+
+                // VALIDE LES CHECKBOXGroup OBLIGATOIRES
+                $form.find('*[data-checkboxgroup]').each( function(i) {
+                    $this = $j(this),
+                        group = $this.data('checkboxgroup'),
+                        minCheck = $this.data('checkboxgroup-mincheck'),
+                        message = $this.data('error'),
+                        _isChecked = false;
+
+                    if(checkboxGroups[group] != undefined) {
+                        checkboxGroups[group].items.push($this);
+                    }
+                    else {
+                        checkboxGroups[group] = {};
+                        checkboxGroups[group].items = [];
+                        checkboxGroups[group].items.push($this);
+                        checkboxGroups[group].minCheck = minCheck;
+                    }
+                });
+                for(var i in checkboxGroups) {
+                    var group = checkboxGroups[i];
+                    var nbCheck = 0;
+                    for(var j=0; j<group.items.length; j++) {
+                        var checkbox = group.items[j];
+                        if (checkbox.is(':checked')) nbCheck ++;
+                    }
+                    if (nbCheck < group.minCheck) {
+                        for(var j=0; j<group.items.length; j++) {
+                            group.items[j].parent().addClass( "error" );
+                        }
+                        isValid = false;
+                        // message d'erreur
+                        errorArray.push(message);
+                    }
+                    else {
+                        for(var j=0; j<group.items.length; j++) {
+                            group.items[j].parent().removeClass( "error" );
+                        }
+                    }
+                }
+
+                // VALIDE LES CHECKBOX OBLIGATOIRES
+                $form.find('.checkbox[data-check=checked], .js-force-check').not('[data-checkboxgroup]').each( function(i) {
+                    $this = $j(this);
+                    var message = $this.data('error') ? $this.data('error') : requiredMessage;
+
+                    if (!$j(this).is(':checked')) {
+                        $this.parent().addClass('error');
+                        isValid = false;
+                        // message d'erreur
+                        errorArray.push(message);
+                    } else {
+                        $this.parent().removeClass('error');
+                    }
+                });
+
+                // VALIDE LES SELECT OBLIGATOIRES
+                $form.find( "select[data-check=required]" ).each( function() {
+                    $this = $j(this);
+                    // CASE SELECT SUB COUNTRY (which can be hidden if no subcountry for the current country)
+                    if ($this.parents('li:first').is(':visible')) {
+                        var message = $this.data('error') ? $this.data('error') : requiredMessage;
+                        var _val = $this.parents('.custom-select:first').find('.custom-select:first p').html() || $this.val(),
+                            _default = $this.data('default'),
+                            selectIsVisible = $this.parents('.custom-select:first').is(':visible') || $this.is(':visible'),
+                            label = $j('label[for="'+$this.attr('id')+'"]');
+
+                        if(selectIsVisible && (!_val || _val==='' || _val=== '&nbsp;' || _val === '\xa0') || (_default && _val==_default)) {
+                            //if (label.length > 0) {
+                            $this.parents('li:first').addClass( "error" );
+                            //} else {
+                            //    $this.parents('.selectricWrapper:first').find('.selectric').addClass('error');
+                            //}
+                            isValid = false;
+                            // message d'erreur
+                            errorArray.push(message);
+                        } else {
+                            // Selected different from placeholder
+                            if ( !$this.find(":selected").data('default') ) {
+                                $this.parents('li:first').removeClass( "error" );
+                                //$this.parent().removeClass( "error" );
+                                //$this.parents('.selectricWrapper:first').find('.selectric').removeClass('error');
+
+                            } else { // Selected is the placeholder
+                                //if (label.length > 0) {
+                                $this.parents('li:first').addClass( "error" );
+                                //} else {
+                                //    $this.parents('.selectricWrapper:first').find('.selectric').addClass('error');
+                                //}
+                            }
+                        }
+
+                    }
+                });
+
+
+                // VALIDE LES CHAMPS DE CONFIRMATION
+                $form.find( 'input[name$="-valid"]:visible' ).each( function() {
+                    $this = $j(this);
+                    var id = $this.attr('id');
+                    var otherElement = $j( form ).find( "#"+id.split('-valid')[ 0 ] );
+
+                    if( $this.is(':visible') && ($this.val()=='' || $this.val() !== $j(otherElement).val()) ) {
+                        if (label.length > 0) {
+                            $this.parent().addClass('error');
+                        }
+                        else {
+                            $this.addClass( "error" );
+                        }
+                        isValid = false;
+                        // message d'erreur
+                        errorArray[$this.attr('tabindex')] = $this.attr('data-error');
+                    } else {
+                        $this.removeClass('error').parent().removeClass( "error" );
+                    }
+                });
+
+                // VALIDE LES CHAMPS ALPHA
+                $form.find( 'input[data-regex]:visible' ).each( function() {
+                    $this = $j(this);
+                    var message      = $this.data('error') ? $this.data('error') : emailMessage,
+                        regexType    = $this.data('regex'),
+                        regexIsValid = true;
+
+                    switch (regexType) {
+
+                        case 'alphanum':
+                            regexIsValid = utils.FormValidator.isValidAlphaNum( this );
+                            break;
+                        case 'alpha':
+                            regexIsValid = utils.FormValidator.isValidAlpha( this );
+                            break;
+                        case 'num':
+                            regexIsValid = utils.FormValidator.isValidNum( this );
+                            break;
+                        default :
+                            regexIsValid = false;
+                    }
+
+                    if( !regexIsValid ) {
+                        $j( this ).addClass( "error" );
+                        isValid = false;
+                        // message d'erreur
+                        errorArray.push(message);
+                    } else {
+                        $j( this ).removeClass( "error" );
+                    }
+                });
+
+                /* VALID FIELD SIZE */
+                var sizeInput = $form.find("input[data-size]");
+                if (sizeInput.length > 0) {
+                    sizeInput.each(function(i){
+                        $this = $j(this);
+                        if( $this.val().length > $this.data('size') && !utils.FormValidator.isEmpty(this) ) {
+                            $this.parents('li').find('label').addClass('error');
+                            isValid = false;
+                            /* message d'erreur */
+                            errorArray[$this.attr('tabindex')] = $this.attr('data-error');
+                        }
+                        else {
+                            $this.parents('li').find('label').removeClass('error');
+                        }
+                    });
+                }
+
+                // VALIDE size minimum
+                $form.find( 'input[data-minsize]:visible' ).each( function() {
+                    $this = $j(this);
+                    var message = $this.data('error') ? $this.data('error') : requiredMessage,
+                        minSize = parseInt($this.data('minsize'));
+
+                    if ( utils.FormValidator.isEmpty(this) || ( !utils.FormValidator.isEmpty(this) && $this.val().length < minSize ) ) {
+                        $j( this ).addClass( "error" );
+                        isValid = false;
+                        // message d'erreur
+                        errorArray.push(message);
+                    }
+                    else {
+                        $j( this ).removeClass( "error" );
+                    }
+                });
+
+                if (!isValid && errorField != undefined) {
+                    errorField.empty();
+                    //errorArray.push($j('#globalError').html());
+                    errorArray = jQuery.grep(errorArray, function(n, i){
+                        return (n !== "" && n != null && $j.inArray(n, errorArray) == i);
+                    });
+                    for (i= 0; i< numberErrorsToShow && i< errorArray.length ;i++) {
+                        errorField.append( '<li>' + errorArray[i]+'</li>');
+                    }
+                    errorField.show();
+
+                } else {
+
+                    if (errorField != undefined)
+                        errorField.empty();
+
+                    if(!$form.hasClass('noSubmit')) {
+
+                        if($j('#wrapper').hasClass('newsletter')) {
+                            dataLayer.push( {'event':'trackEvent', 'eventCategory': 'DiorCom_Newsletter', 'eventAction': 'InscriptionNewsletter', 'eventLabel': $j('#email').val()} );
+                        }
+                        $form.submit();
+                    }
+                };
+            }
+            return isValid;
+        },
+
+        isEmpty: function( el ) {
+            var value = $j(el).val(),
+                defaultValue = $j(el).data('default');
+
+            if (value) {
+                // check if default value
+                if (defaultValue && defaultValue!='') {
+                    return (utils.FormValidator.isEmptyString( value ) || value==defaultValue);
+                } else {
+                    return utils.FormValidator.isEmptyString( value );
+                }
+            } else {
+                return true;
+            }
+        },
+
+        isEmptyString: function( str) {
+            return ( str.split(" ").join("").split( '\xa0' ).join("").length == 0 );
+
+        },
+
+        isValidMail: function( el ) {
+            var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+            if( utils.FormValidator.isEmptyString( $j(el).val() ) ) return false;
+            return ( emailReg.test( $j( el ).val() )) ? true : false;
+        },
+
+        isValidAlpha: function( el ) {
+            var alphaReg = /^[a-zA-Z _'-]*$/;
+            if( utils.FormValidator.isEmptyString( $j(el).val() ) ) return false;
+            return ( alphaReg.test( $j( el ).val() )) ? true : false;
+        },
+
+        isValidNum: function( el ) {
+            var numReg = /^[0-9]*$/;
+            if( utils.FormValidator.isEmptyString( $j(el).val() ) ) return false;
+            return ( numReg.test( $j( el ).val() )) ? true : false;
+        },
+
+        isValidAlphaNum: function( el ) {
+            var alphaNumReg = /^[a-zA-Z0-9 _'-]*$/;
+            if( utils.FormValidator.isEmptyString( $j(el).val() ) ) return false;
+            return ( alphaNumReg.test( $j( el ).val() )) ? true : false;
+        },
+
+        isValidSize: function( el, size ) {
+            var value = $j(el).val();
+            return ( value.length < size+1 ) ? true : false;
+        },
+
+        getParams: function( $form ) {
+            return $form.serialize();
+        },
+
+        errors: function( $form, response ) {
+            for (var i=0, l=response.errorFields.length; i<l; ++i) {
+                $form.find('#'+response.errorFields[i]).addClass('error');
+            }
+            $form.find('.error-msg').show().html( response.errorMessages.join('<br/>') );
+        },
+        resetForm: function( $form, errorField ) {
+            var $form= $j($form);
+            $form.find('.error').removeClass('error');
+            $form[0].reset();
+
+            if(errorField) errorField.empty();
+        },
+        resetFieldset: function( $fieldset, errorField , resetJqtransform ){
+            var jqtransform = resetJqtransform ? resetJqtransform : false;
+
+            $fieldset.find('.error').removeClass('error');
+            $fieldset.find('input, select, textarea').each(function(){
+                if( $j(this).attr('data-default') ) {
+                    $j(this).val($j(this).attr('data-default'));
+                } else {
+                    $j(this).val('');
+                }
+            });
+
+            if ( resetJqtransform ) {
+                // Reset jqTransform Select
+                if ( $fieldset.find('.jqTransformSelectWrapper').length > 0 ) {
+                    $fieldset.find('.jqTransformSelectWrapper').each(function() {
+                        var dataDefault = '';
+                        // select with data-default
+                        if ($j(this).find('select[data-default]').length > 0) {
+                            dataDefault = $j(this).find('select[data-default]').attr('data-default');
+                        }
+                        else {
+                            dataDefault = $j(this).find('ul li:first a').html();
+                        }
+                        $j(this).find('span').html(dataDefault);
+                        $j(this).find('ul a.selected').removeClass('selected');
+                    });
+                }
+            }
+
+            if(errorField) errorField.empty();
+        }
+    };
+
+    utils.FormValidator.init();
+
+})( window.utils = window.utils || {}, window );
+
+
+$j(window).ready( function() {
+    PopinManager.init();
+    modules.AddToCart.init();
+});

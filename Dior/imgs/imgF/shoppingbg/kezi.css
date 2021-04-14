@@ -1,0 +1,588 @@
+.shoppCartContent h2.title {
+  border-bottom: none;
+}
+.shoppCartContent .cart-table tr {
+  border-bottom: none !important;
+  border-top: 1px solid #f5f5f5 !important;
+}
+.shoppCartContent .cart-table tr:first-child {
+  border-color: #C0C0C0 !important;
+}
+.shoppCartContent .cart-table tr td.product-cart-info {
+  padding-left: 10px !important;
+}
+.shoppCartContent .cart-table tr.kezi {
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+.shoppCartContent .cart-table tr.kezi > td {
+  padding-left: 172px !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+}
+.shoppCartContent .cart-table tr.kezi .kezi-border-top {
+  border-top: 1px solid #f5f5f5;
+}
+.shoppCartContent .cart-table tr.kezi .kezi-btn {
+  padding-top: 10px;
+  cursor: pointer;
+  width: 110px;
+}
+.shoppCartContent .cart-table tr.kezi .kezi-btn > span {
+  display: block;
+  width: 110px;
+  color: #fff;
+  background: #000;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 13px;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table {
+  width: 100%;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr {
+  border-top: none !important;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr td {
+  padding-top: 4px !important;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr td a {
+  cursor: pointer;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr td:first-child {
+  padding-left: 0 !important;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr td .kezi-content {
+  color: #818181;
+  padding-bottom: 14px;
+  word-break: break-all;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr td .kezi-qa {
+  position: relative;
+  padding-right: 17px;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr td .kezi-qa:after {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  content: '';
+  background: url("../../images/kezi/kezi-qa.jpg") no-repeat 0 0;
+  width: 12px;
+  height: 12px;
+  background-size: contain;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr td .kezi-edit {
+  text-decoration: underline;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr .kezi-content-bg {
+  padding: 10px 0;
+  width: 90%;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr .kezi-content-bg .clear {
+  clear: both;
+  overflow: hidden;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr .kezi-content-bg .kezi-edit {
+  float: right;
+  color: #666;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr .kezi-content-bg .kezi-content {
+  margin-top: 10px;
+  padding: 8px;
+  background: #e6e6e6;
+  border-radius: 5px;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr .kezi-content-bg .kezi-content span {
+  color: #000;
+  font-family: "Microsoft YaHei","CenturyGothic-Regular", CenturyGothic, AppleGothic, helvetica, sans-serif;
+  font-size: 12px;
+}
+.shoppCartContent .cart-table tr.kezi table.kezi-table tr .kezi-content-bg .kezi-btn {
+  border-top: none;
+}
+.shoppCartContent .cart-table tr.kezi table.AllowCustomText tr td {
+  padding-top: 14px !important;
+}
+.shoppCartContent .cart-table tr.kezi.last, .shoppCartContent .cart-table tr.kezi .kezi-list.last {
+  border-bottom: none !important;
+}
+.shoppCartContent .cart-table tr.suit-block .kezi-btn {
+  padding-top: 10px;
+  border-top: 1px solid #C0C0C0;
+  cursor: pointer;
+  padding-bottom: 10px;
+}
+.shoppCartContent .cart-table tr.suit-block .kezi-btn > span {
+  display: block;
+  width: 110px;
+  color: #fff;
+  background: #000;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 13px;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table {
+  width: 100%;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr {
+  border-top: none !important;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr td {
+  padding-top: 14px !important;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr td a {
+  cursor: pointer;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr td:first-child {
+  padding-left: 0 !important;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr td .kezi-content {
+  color: #818181;
+  padding-bottom: 14px;
+  word-break: break-all;
+  border-radius: 5px;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr td .kezi-qa {
+  position: relative;
+  padding-right: 17px;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr td .kezi-qa:after {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  content: '';
+  background: url("../../images/kezi/kezi-qa.jpg") no-repeat 0 0;
+  width: 12px;
+  height: 12px;
+  background-size: contain;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr td .kezi-edit {
+  text-decoration: underline;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg {
+  padding: 10px 0;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg .clear {
+  clear: both;
+  overflow: hidden;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg .kezi-edit {
+  float: right;
+  color: #666;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg .kezi-content {
+  background: #e6e6e6;
+  margin-top: 10px;
+  padding: 8px;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg .kezi-content span {
+  color: #000;
+  font-family: "CenturyGothic-Regular", CenturyGothic, AppleGothic, helvetica, sans-serif;
+  font-size: 12px;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg .kezi-content.kezi-pic .kezi-v-1, .shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg .kezi-content.kezi-pic .kezi-v-2 {
+  color: #000;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr .kezi-content-bg .kezi-btn {
+  border-top: none;
+}
+.shoppCartContent .cart-table tr.suit-block table.kezi-table tr.kezi-list.last {
+  border-bottom: none !important;
+}
+.shoppCartContent .cart-table tr.last {
+  border-bottom: 1px solid #C0C0C0 !important;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-block-input {
+  vertical-align: top !important;
+  padding-top: 49px !important;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-name {
+  font-size: 12px;
+  color: #000;
+  padding: 10px 0;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-block-td {
+  padding-right: 0 !important;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-block-td .kezi-table tr {
+  border-top: 1px solid #f5f5f5 !important;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-block-td .kezi-table tr:nth-child(1), .shoppCartContent .cart-table tr.suit-block .suit-block-td .kezi-table tr:nth-child(2) {
+  border-top: none !important;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-block-td .kezi-table tr.kezi-list.last {
+  border-bottom: none !important;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-block-td .kezi-table tr:nth-child(1) td {
+  padding-bottom: 0 !important;
+}
+.shoppCartContent .cart-table tr.suit-block .suit-block-td .kezi-table tr:nth-child(1) td:last-child {
+  padding-right: 0 !important;
+}
+.shoppCartContent .cart-table tr.customData p.title {
+  color: #666;
+}
+.shoppCartContent .cart-table tr.customData .customDataBlock {
+  padding: 8px;
+  width: 60%;
+  border-radius: 5px;
+}
+.shoppCartContent .cart-table tr.customData .customDataBlock p {
+  color: #000;
+  line-height: 20px;
+}
+.shoppCartContent .cart-table tr.customData .customDataBlock p span {
+  color: #666;
+}
+.shoppCartContent .cart-table tr.freeGift, .shoppCartContent .cart-table tr.couponCodeGift {
+  display: none;
+  font-size: 14px;
+}
+.shoppCartContent .cart-table tr.freeGift.freeGift0, .shoppCartContent .cart-table tr.couponCodeGift.freeGift0 {
+  display: table-row;
+}
+.shoppCartContent .cart-table tr.freeGift.couponCodeGift0, .shoppCartContent .cart-table tr.couponCodeGift.couponCodeGift0 {
+  display: table-row;
+}
+.shoppCartContent .cart-table tr.freeGift td, .shoppCartContent .cart-table tr.couponCodeGift td {
+  padding-left: 0 !important;
+  font-size: 14px;
+}
+
+.checkout-cart-index #lettering-block, .checkout-cart-index #q-lettering-block, .checkout-onepage-index #lettering-block, .checkout-onepage-index #q-lettering-block {
+  width: 300px;
+  margin: auto;
+  text-align: center;
+  font-size: 14px;
+}
+.checkout-cart-index #lettering-block .title, .checkout-cart-index #q-lettering-block .title, .checkout-onepage-index #lettering-block .title, .checkout-onepage-index #q-lettering-block .title {
+  font-size: 24px;
+  color: #000;
+  padding: 15px;
+}
+.checkout-cart-index #lettering-block .kezi-content input, .checkout-cart-index #q-lettering-block .kezi-content input, .checkout-onepage-index #lettering-block .kezi-content input, .checkout-onepage-index #q-lettering-block .kezi-content input {
+  display: block;
+  width: 100%;
+  height: 38px;
+  line-height: 38px;
+  text-align: left;
+  color: #000;
+  padding-left: 14px;
+  resize: none;
+  border-radius: 5px;
+  border: 1px solid #a9a9a9;
+}
+.checkout-cart-index #lettering-block .kezi-content input.error, .checkout-cart-index #q-lettering-block .kezi-content input.error, .checkout-onepage-index #lettering-block .kezi-content input.error, .checkout-onepage-index #q-lettering-block .kezi-content input.error {
+  border: 1px solid red;
+  font-weight: normal;
+}
+.checkout-cart-index #lettering-block .kezi-content > span, .checkout-cart-index #q-lettering-block .kezi-content > span, .checkout-onepage-index #lettering-block .kezi-content > span, .checkout-onepage-index #q-lettering-block .kezi-content > span {
+  display: block;
+  text-align: right;
+  padding-top: 8px;
+  color: #818181;
+}
+.checkout-cart-index #lettering-block .kezi-btn, .checkout-cart-index #q-lettering-block .kezi-btn, .checkout-onepage-index #lettering-block .kezi-btn, .checkout-onepage-index #q-lettering-block .kezi-btn {
+  clear: both;
+  overflow: hidden;
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+.checkout-cart-index #lettering-block .kezi-btn > span, .checkout-cart-index #q-lettering-block .kezi-btn > span, .checkout-onepage-index #lettering-block .kezi-btn > span, .checkout-onepage-index #q-lettering-block .kezi-btn > span {
+  width: 48%;
+  float: left;
+  height: 38px;
+  line-height: 38px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: 15px;
+}
+.checkout-cart-index #lettering-block .kezi-btn > span:last-child, .checkout-cart-index #q-lettering-block .kezi-btn > span:last-child, .checkout-onepage-index #lettering-block .kezi-btn > span:last-child, .checkout-onepage-index #q-lettering-block .kezi-btn > span:last-child {
+  float: right;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+}
+.checkout-cart-index #lettering-block .kezi-info, .checkout-cart-index #q-lettering-block .kezi-info, .checkout-onepage-index #lettering-block .kezi-info, .checkout-onepage-index #q-lettering-block .kezi-info {
+  color: #818181;
+}
+.checkout-cart-index #remove-box-kezi, .checkout-cart-index #delete-product-popup, .checkout-onepage-index #remove-box-kezi, .checkout-onepage-index #delete-product-popup {
+  width: 300px;
+  margin: 72px auto 0;
+  text-align: center;
+}
+.checkout-cart-index #remove-box-kezi > p, .checkout-cart-index #delete-product-popup > p, .checkout-onepage-index #remove-box-kezi > p, .checkout-onepage-index #delete-product-popup > p {
+  font-size: 20px;
+}
+.checkout-cart-index #remove-box-kezi .kezi-btn, .checkout-cart-index #remove-box-kezi .buttons, .checkout-cart-index #delete-product-popup .kezi-btn, .checkout-cart-index #delete-product-popup .buttons, .checkout-onepage-index #remove-box-kezi .kezi-btn, .checkout-onepage-index #remove-box-kezi .buttons, .checkout-onepage-index #delete-product-popup .kezi-btn, .checkout-onepage-index #delete-product-popup .buttons {
+  clear: both;
+  overflow: hidden;
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+.checkout-cart-index #remove-box-kezi .kezi-btn > span, .checkout-cart-index #remove-box-kezi .buttons > span, .checkout-cart-index #delete-product-popup .kezi-btn > span, .checkout-cart-index #delete-product-popup .buttons > span, .checkout-onepage-index #remove-box-kezi .kezi-btn > span, .checkout-onepage-index #remove-box-kezi .buttons > span, .checkout-onepage-index #delete-product-popup .kezi-btn > span, .checkout-onepage-index #delete-product-popup .buttons > span {
+  width: 48%;
+  float: left;
+  height: 38px;
+  line-height: 38px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: 15px;
+}
+.checkout-cart-index #remove-box-kezi .kezi-btn > span:last-child, .checkout-cart-index #remove-box-kezi .buttons > span:last-child, .checkout-cart-index #delete-product-popup .kezi-btn > span:last-child, .checkout-cart-index #delete-product-popup .buttons > span:last-child, .checkout-onepage-index #remove-box-kezi .kezi-btn > span:last-child, .checkout-onepage-index #remove-box-kezi .buttons > span:last-child, .checkout-onepage-index #delete-product-popup .kezi-btn > span:last-child, .checkout-onepage-index #delete-product-popup .buttons > span:last-child {
+  float: right;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+}
+.checkout-cart-index #kezi-sure, .checkout-onepage-index #kezi-sure {
+  width: 300px;
+  margin: 54px auto 0;
+  text-align: center;
+}
+.checkout-cart-index #kezi-sure .kezi-btn, .checkout-onepage-index #kezi-sure .kezi-btn {
+  clear: both;
+  overflow: hidden;
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+.checkout-cart-index #kezi-sure .kezi-btn > span, .checkout-onepage-index #kezi-sure .kezi-btn > span {
+  width: 48%;
+  float: left;
+  height: 38px;
+  line-height: 38px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: 15px;
+}
+.checkout-cart-index #kezi-sure .kezi-btn > span:last-child, .checkout-onepage-index #kezi-sure .kezi-btn > span:last-child {
+  float: right;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+}
+
+#my-orders-table .kezi-block {
+  margin-top: 20px;
+  word-break: break-all;
+  color: #000;
+}
+#my-orders-table .kezi-price {
+  margin-top: 26px;
+}
+
+.fancybox-close {
+  background: url("../../images/kezi-close.jpg") no-repeat 0 0;
+  width: 9px;
+  height: 9px;
+  background-size: contain;
+  top: 14px;
+  right: 14px;
+}
+
+/*shengdanjie*/
+.checkout-cart-index .christmas, .checkout-cart-index .mcd-block {
+  background: #f0f0f0;
+  padding: 30px 30px 80px;
+  position: relative;
+}
+.checkout-cart-index .christmas .title, .checkout-cart-index .mcd-block .title {
+  font-size: 14px;
+  color: #000;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #d9d9d9;
+  margin-bottom: 20px;
+}
+.checkout-cart-index .christmas .imgs, .checkout-cart-index .mcd-block .imgs {
+  clear: both;
+  overflow: hidden;
+}
+.checkout-cart-index .christmas .imgs li, .checkout-cart-index .mcd-block .imgs li {
+  float: left;
+  margin-right: 7px;
+  cursor: pointer;
+}
+.checkout-cart-index .christmas .imgs li .package, .checkout-cart-index .mcd-block .imgs li .package {
+  background: #fff url("../../images/sprite-icon.png") no-repeat -280px -150px;
+  height: 15px !important;
+  width: 15px !important;
+  display: block;
+  margin: 8px auto 0;
+}
+.checkout-cart-index .christmas .imgs li > p, .checkout-cart-index .mcd-block .imgs li > p {
+  font-size: 12px;
+  padding-top: 8px;
+  text-align: center;
+}
+.checkout-cart-index .christmas .imgs li.active, .checkout-cart-index .mcd-block .imgs li.active {
+  box-sizing: border-box;
+}
+.checkout-cart-index .christmas .imgs li.active .package, .checkout-cart-index .mcd-block .imgs li.active .package {
+  background-position: -242px -150px;
+}
+.checkout-cart-index .christmas .imgs li.disabled, .checkout-cart-index .mcd-block .imgs li.disabled {
+  position: relative;
+}
+.checkout-cart-index .christmas .imgs li.disabled:after, .checkout-cart-index .mcd-block .imgs li.disabled:after {
+  width: 120px;
+  height: 90px;
+  content: '';
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.checkout-cart-index .christmas .imgs li:last-child, .checkout-cart-index .mcd-block .imgs li:last-child {
+  margin-right: 0;
+}
+.checkout-cart-index .christmas .sure-btn, .checkout-cart-index .mcd-block .sure-btn {
+  position: absolute;
+  width: 78px;
+  height: 28px;
+  background: #000;
+  color: #fff;
+  text-align: center;
+  line-height: 28px;
+  bottom: 30px;
+  right: 30px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.checkout-cart-index .christmas .sure-btn.disabled, .checkout-cart-index .mcd-block .sure-btn.disabled {
+  background: #fff;
+  color: #000;
+  cursor: default;
+}
+.checkout-cart-index .mcd-block {
+  padding: 0 30px 40px;
+}
+.checkout-cart-index .mcd-block .imgs li.active {
+  border: none;
+}
+.checkout-cart-index .mcd-block span.package {
+  background: #fff url("../../images/sprite-icon.png") no-repeat -280px -150px;
+  height: 15px !important;
+  width: 15px !important;
+  display: block;
+  margin: 8px auto 0;
+}
+.checkout-cart-index .mcd-block span.package.packageChecked {
+  background-position: -260px -150px;
+}
+
+.tunnel-gifting > p.gifting-description {
+  width: 100%;
+  padding-right: 220px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+#calendar {
+  width: 400px;
+  margin: auto;
+  text-align: center;
+}
+#calendar #calendarTable {
+  margin: auto;
+}
+#calendar .calendar-title-box {
+  text-align: center;
+  padding: 0.35rem 0;
+  background: #000;
+  color: #FFF;
+}
+#calendar .calendar-body-box .calendar-table th {
+  padding: 0.5rem;
+  color: #000;
+  font-size: 14px;
+}
+#calendar .calendar-body-box .calendar-table td {
+  font-size: 14px;
+  padding: 0.2rem;
+  color: #cccccc;
+}
+#calendar .calendar-body-box .calendar-table td.currentTime {
+  color: #666666;
+  cursor: pointer;
+}
+#calendar .calendar-body-box .calendar-table td span {
+  font-size: 14px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  margin: auto;
+}
+#calendar .calendar-body-box .calendar-table td.on span {
+  background: #000;
+  color: #FFF;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  display: block;
+}
+#calendar .delivery-hours {
+  text-align: left;
+  clear: both;
+  overflow: hidden;
+  margin-top: 20px;
+}
+#calendar .delivery-hours > span {
+  float: left;
+  width: 116px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border: 1px solid #ccc;
+  margin-right: 25px;
+  font-size: 12px;
+  cursor: pointer;
+}
+#calendar .delivery-hours > span:last-child {
+  margin-right: 0;
+}
+#calendar .delivery-hours > span.on {
+  border: 1px solid #000;
+}
+#calendar .time-btn {
+  width: 140px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  margin: 20px auto 0;
+  background: #000;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.delivery-time {
+  display: none;
+  cursor: pointer;
+}
+.delivery-time.on {
+  display: block;
+  cursor: pointer;
+}
+
+.checkout-summary {
+  padding: 30px 14px !important;
+}
+.checkout-summary .summary-price-block {
+  margin-left: 10px;
+  border-bottom: 1px solid #a6a6a6;
+  padding-bottom: 14px;
+}
+
+/*# sourceMappingURL=kezi.css.map */
